@@ -8,6 +8,14 @@ import org.mongodb.morphia.annotations.*;
  */
 @Entity("user")
 public class User {
+    @Id
+    private ObjectId id;
+    private String name;
+    private Integer gender;
+    private Integer location;
+    private Integer commentNum;
+    private Integer messageNum;
+
     public ObjectId getId() {
         return id;
     }
@@ -56,11 +64,8 @@ public class User {
         this.messageNum = messageNum;
     }
 
-    @Id
-    private ObjectId id;
-    private String name;
-    private Integer gender;
-    private Integer location;
-    private Integer commentNum;
-    private Integer messageNum;
+    @Override
+    public String toString() {
+        return "name: " + name + "\ngender: " + gender;
+    }
 }

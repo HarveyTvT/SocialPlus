@@ -8,9 +8,8 @@ bin/
 /db
 .eclipse
 /logs/
+/project
 /modules
-/project/project
-/project/target
 /target
 tmp/
 test-result
@@ -21,4 +20,9 @@ server.pid
 .cache
 
 ### IntelliJ IDEA ###
-.idea
+/.idea
+/.idea_modules
+/.classpath
+/.project
+/.settings
+/RUNNING_PID
