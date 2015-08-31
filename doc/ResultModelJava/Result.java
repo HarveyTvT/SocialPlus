@@ -12,6 +12,7 @@ public class Result {
     private ArrayList<Time> time;
     private ArrayList<Location> location;
     private ArrayList<String> tag;
+    private String lastdate;
     
     
 	public Result () {
@@ -99,6 +100,7 @@ public class Result {
             }
         }
 
+        this.lastdate = json.optString("lastdate");
 
     }
     
@@ -156,6 +158,14 @@ public class Result {
 
     public void setTag(ArrayList<String> tag) {
         this.tag = tag;
+    }
+
+    public String getLastdate() {
+        return this.lastdate;
+    }
+
+    public void setLastdate(String lastdate) {
+        this.lastdate = lastdate;
     }
 
 
