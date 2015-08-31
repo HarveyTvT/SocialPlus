@@ -77,7 +77,7 @@ https://github.com/qibinlou/SinaWeibo-Emotion-Classification
 3. 内部最终分析结果
 	1. 时间线部分
 	2. 性别分析部分
-	3. 地理位置分析部分
+	3. 地理位置分析部分	
 	4. 关键词部分
 	5. 转发层次图部分
 	6. 情感分析部分

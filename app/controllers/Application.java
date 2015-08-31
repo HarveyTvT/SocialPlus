@@ -1,17 +1,21 @@
 package controllers;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import model.User;
-import org.junit.Assert;
 import play.*;
 import play.data.Form;
+import play.libs.F.Promise;
 import play.libs.Json;
 import play.mvc.*;
 
-import scala.reflect.internal.FatalError;
 import views.html.*;
 
+import javax.inject.Inject;
+
+import play.libs.ws.*;
+
 public class Application extends Controller {
+
+    @Inject WSClient ws;
 
     public Result index() {
         return ok(index.render("fuck"));
@@ -54,5 +58,28 @@ public class Application extends Controller {
             return forbidden("fuck not allow call");
         }
         return ok("Call delagete");
+    }
+
+
+    public Result getCaptcha(){
+
+    }
+
+
+    public Promise<Result> asyncRequest() {
+        WSRequest request = ws.url("http://www.baidu.com");
+        System.out.println(request.getUrl());
+        Promise<String> respond = request.get().map(response -> {
+            return response.getBody();
+        });
+        respond.onRedeem(value -> {//Promise then when success
+            Logger.info(value);
+        });
+        respond.onFailure(error -> {//Promise error when failure
+            Logger.error(error.toString());
+        });
+        return respond.map(text -> {
+            return ok(text);
+        });
     }
 }

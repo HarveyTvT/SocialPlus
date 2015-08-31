@@ -1,0 +1,20 @@
+{
+    "_id" : "N552503e26810d95f04fa4537",
+    "email" : "lizhuoli1126@126.com",
+    "validated" : true,
+    "password" : "shsalkdfjsalkdfhasklfjhweio2341",
+    "token" : {
+        "weibo" : {
+            "token" : "2.00QGSJEDwVtFsB92c29d85d90YWVlb",
+            "expire" : 100000
+        },
+        "renren" : {
+            "token" : "4.SDFDSFSDSDSAR14FFDSFS5d90YWVlb",
+            "expire" : 100000
+        }
+    },
+    "result_id" : [ 
+        "552503e26810d95f04fa4538", 
+        "552503e26810d95f04fa4539",
+    ]
+}
