@@ -1,6 +1,9 @@
 package controllers;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import model.Database;
+import model.User;
+import org.mongodb.morphia.Datastore;
 import play.*;
 import play.data.Form;
 import play.libs.F.Promise;
@@ -24,7 +27,8 @@ public class Application extends Controller {
     public Result addUser() {
         session("user",request().remoteAddress());
         User user = Form.form(User.class).bindFromRequest().get();
-        System.out.println(user.toString());
+        Datastore datastore = new Database().getDatastore();
+        datastore.save(user);
         return ok("Got request " + request() + "!");
     }
 
@@ -58,11 +62,6 @@ public class Application extends Controller {
             return forbidden("fuck not allow call");
         }
         return ok("Call delagete");
-    }
-
-
-    public Result getCaptcha(){
-
     }
 
 

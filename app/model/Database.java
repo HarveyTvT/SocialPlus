@@ -10,26 +10,20 @@ import org.mongodb.morphia.Morphia;
  */
 public class Database {
     final Morphia morphia = new Morphia();
+    public final Datastore datastore;
 
-    protected Datastore initDB(){
+    public Database(){
         morphia.mapPackage("org.mongodb.morphia.example");
         MongoClientURI uri = new MongoClientURI("mongodb://localhost:27017/morphia_example");
-        final Datastore datastore = morphia.createDatastore(new MongoClient(uri), "morphia_example");
-        datastore.ensureIndexes();
+        Datastore myDatastore = morphia.createDatastore(new MongoClient(uri), "morphia_example");
+        myDatastore.ensureIndexes();
+        datastore = myDatastore;
+    }
+
+    public Datastore getDatastore() {
         return datastore;
     }
-
-    public static void main(String[] args){
-        Database mydb = new Database();
-        Datastore datastore = mydb.initDB();
-        User myuser = new User();
-        myuser.setName("lizhuoli");
-        myuser.setGender(1);
-        myuser.setLocation(100);
-        datastore.save(myuser);
-    }
-
-// tell Morphia where to find your classes
+    // tell Morphia where to find your classes
 // can be called multiple times with different packages or classes
 // create the Datastore connecting to the default port on the local host
 }
