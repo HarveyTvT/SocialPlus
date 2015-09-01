@@ -507,23 +507,36 @@ pre.line-numbers > code {
 
 <p><code>_id</code>(ObjectID) : 结果唯一ObjectID</p>
 
+<p><code>url</code>(String) : 微博来源链接</p>
+
+<p><code>content</code>(String) : 微博内容缩略文字</p>
+
+<p><code>author</code>(String) : 微博作者</p>
+
 <p><code>time</code>([Integer]) : 纪录时间线的转发量的整形数组，共24个元素，按下标以此对应0-23时刻的转发量</p>
 
-<p><code>gender</code>.<code>male</code>(Integer) : 纪录性别比例，male为男性所占百分比</p>
+<p><code>gender</code>.<code>male</code>(Integer) : 纪录性别比例，male为男性个数</p>
 
-<p><code>gender</code>.<code>female</code>(Integer) : 纪录性别比例，female为女性所占百分比</p>
+<p><code>gender</code>.<code>female</code>(Integer) : 纪录性别比例，female为女性个数</p>
 
-<p><code>gender</code>.<code>other</code>(Integer) : 纪录性别比例，other为其他所占百分比</p>
+<p><code>gender</code>.<code>other</code>(Integer) : 纪录性别比例，other为其他个数组</p>
 
-<p><code>location</code>([(String,Integer)]) : 纪录各省份的转发量，为一个键值对数组，键为城市区号，值为转发量</p>
+<p><code>locations</code>([(String, Integer)]) : 纪录各省份的转发量，为一个键值对数组，键为城市区号，值为转发量</p>
 
-<p><code>tag</code>([String]) : 关键词数组，每个元素为一个关键词</p>
+<p><code>tags</code>([String]) : 关键词数组，每个元素为一个关键词</p>
 
-<p><code>forward</code>([{(String:String),(String,String)}]) : 纪录转发层级的对象数组，每个数组元素为一个对象，定义如下</p>
+<p><code>nodes</code>([{(String: String),(String, Integer)}]) : 纪录转发层级的结点对象数组，每个数组元素为一个对象，定义如下</p>
 
 <pre class="line-numbers"><code class="language-javascript">{
-    `from`(String) : 纪录转发来源的用户名
-    `to`(String) : 纪录转发目标的用户名
+    `name`(String) : 转发的用户名
+    `group`(Integer) : 从该结点被转发（出边）的次数
+}</code></pre>
+
+<p><code>links</code>([{(String: String),(String, String)}]) : 纪录转发层级的边的对象数组，每个数组元素为一个对象，定义如下</p>
+
+<pre class="line-numbers"><code class="language-javascript">{
+    `source`(String) : 转发来源的序号（根据`nodes`数组）
+    `target`(String) : 转发目标的序号（根据`nodes`数组）
 }</code></pre>
 
 <p><code>emotion</code>(Integer) : 微博情感分析，50表示中立，100表示正面，0表示负面</p>

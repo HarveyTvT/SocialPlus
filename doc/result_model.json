@@ -1,12 +1,15 @@
 {
     "_id" : "552503e26810d95f04fa4538",
+    "url" : "http://weibo.com/1746173800/Cywfc43Gh?ref=home&rid=0_0_1_618401159639898759",
+    "content" : "继MapReduce之后，Spark技术异军突起。在五年时间内……",
+    "author" : "InfoQ", 
     "time" : [4,4,2,5,5,6,6,6,8,2,3,12,3,3,3,4,2,5,5,6,6,6,8,2],
     "gender" : {
         "male" : 111,
         "female" : 222,
         "other" : 333
     },
-    "location" : [ 
+    "locations" : [ 
         {
             "023" : 11
         }, 
@@ -17,23 +20,33 @@
             "029" : 13
         }
     ],
-    "tag" : [ 
+    "tags" : [ 
         "git", 
         "shell", 
         "code"
     ],
-    "forward" : [ 
+    "nodes" : [
         {
-            "from" : "Zhuoli Li",
-            "to" : "Jiaxing Yang"
-        }, 
+            "name" : "Zhuoli Li",
+            "group" : 1
+        },
         {
-            "from" : "Jiaxing Yang",
-            "to" : "Haoyu Shi"
-        }, 
+            "name" : "Jiaxing Yang",
+            "group" : 1
+        },
         {
-            "from" : "Haoyu Shi",
-            "to" : "Yili Gao"
+            "name" : "Yili Gao",
+            "group" : 0
+        }
+    ],
+    "links" : [
+        {
+            "source" : 0,
+            "target" : 1,
+        },
+        {
+            "source" : 1,
+            "target" : 2,
         }
     ],
     "emotion" : 50,
