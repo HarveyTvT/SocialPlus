@@ -7,28 +7,28 @@ import java.util.*;
  */
 public class Token {
 
-    private List<String> weibo = new ArrayList<String>();
+    private Map<String,String> weibo = new HashMap<>();
 
-    private List<String> renren = new ArrayList<String>();
+    private Map<String,String> renren = new HashMap<>();
 
     /****************************************************
      *                          setter and getter                                 *
      *                          of all attributes                                    *
      ****************************************************/
 
-    public List<String> getWeibo() {
+    public Map<String,String> getWeibo() {
         return weibo;
     }
 
-    public void setWeibo(List<String> weibo) {
+    public void setWeibo(Map<String,String> weibo) {
         this.weibo = weibo;
     }
 
-    public List<String> getRenren() {
+    public Map<String,String> getRenren() {
         return renren;
     }
 
-    public void setRenren(List<String> renren) {
+    public void setRenren(Map<String,String> renren) {
         this.renren = renren;
     }
 }

@@ -6,15 +6,22 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
 import models.AsyncRequest;
+import models.Token;
+import models.User;
+import org.mongodb.morphia.Datastore;
 import play.mvc.*;
 import play.libs.ws.*;
 import play.libs.F.Promise;
+import utils.DbUtil;
+
+import java.util.HashMap;
 
 /**
  * Created by lizhuoli on 15/8/31.
  */
 public class AuthAction extends Controller {
     @Inject WSClient ws;
+    private Datastore datastore = DbUtil.getDataStore();
     private String weiboAppKey;
     private String weiboAppSecret;
     private String weiboRedirectURL;
@@ -32,15 +39,22 @@ public class AuthAction extends Controller {
 
         AsyncRequest request = new AsyncRequest(ws,baseURL,null);
 
-//        User user = new User();
+        User user = new User();
+        Token token = new Token();
 
         Promise<JsonNode> jsonNodePromise = request.post(parameter);
         return jsonNodePromise.map(value -> {
             String weiboToken = value.findPath("access_token").asText();
-            Integer weiboExpireTime = value.findPath("expires_in").asInt();
-            String weiboUid = value.findPath("uid").asText();
-//            user.setToken(weiboToken);
-//            user.setExpireTime(weiboExpireTime);
+            String weiboExpireTime = value.findPath("expires_in").asText();
+//            String weiboUid = value.findPath("uid").asText();
+
+            HashMap<String,String> tokenMap = new HashMap<>();
+            tokenMap.put("token",weiboToken);
+            tokenMap.put("expire",weiboExpireTime);
+            token.setWeibo(tokenMap);
+            user.setToken(token);
+
+            datastore.save(user);
             return ok(weiboToken);
         });
     }

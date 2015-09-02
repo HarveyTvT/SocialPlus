@@ -2,7 +2,9 @@ package utils;
 
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientURI;
-import models.User;
+import com.typesafe.config.Config;
+import com.typesafe.config.ConfigFactory;
+import net.sf.ehcache.config.ConfigurationFactory;
 import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.Morphia;
 
@@ -11,16 +13,18 @@ import org.mongodb.morphia.Morphia;
  */
 public class DbUtil {
 
-
+    private static String mongodbURI;
     final static Morphia morphia = new Morphia();
     private static  Datastore datastore;
 
     public DbUtil(){
     }
 
-    protected static  void initDB(){
+    protected static void initDB(){
+        Config config = ConfigFactory.load();
+        mongodbURI = config.getString("app.mongodb.uri");
         morphia.mapPackage("org.mongodb.morphia.example");
-        MongoClientURI uri = new MongoClientURI("mongodb://localhost:27017/socialplus");
+        MongoClientURI uri = new MongoClientURI(mongodbURI);
         datastore = morphia.createDatastore(new MongoClient(uri), "socialplus");
         datastore.ensureIndexes();
     }
@@ -32,22 +36,4 @@ public class DbUtil {
         }
         return datastore;
     }
-
-//    public static void main(String[] args){
-//        Datastore datastore = DbUtil.getDataStore();
-//        if(datastore!=null) {
-//            User myuser = new User();
-//            myuser.setId("ailuoli3");
-//            myuser.setEmail("ailuoli2@qq.com ");
-//            myuser.setPassword("holy@@@@ crash");githu
-//            datastore.save(myuser);
-//        }else{
-//            System.out.println("nothing");
-//        }
-//    }
-
-
-// tell Morphia where to find your classes
-// can be called multiple times with different packages or classes
-// create the Datastore connecting to the default port on the local host
 }
