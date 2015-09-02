@@ -11,6 +11,7 @@ import org.mongodb.morphia.Morphia;
  */
 public class DbUtil {
 
+
     final static Morphia morphia = new Morphia();
     private static  Datastore datastore;
 
@@ -38,7 +39,7 @@ public class DbUtil {
 //            User myuser = new User();
 //            myuser.setId("ailuoli3");
 //            myuser.setEmail("ailuoli2@qq.com ");
-//            myuser.setPassword("holy@@@@ crash");
+//            myuser.setPassword("holy@@@@ crash");githu
 //            datastore.save(myuser);
 //        }else{
 //            System.out.println("nothing");
