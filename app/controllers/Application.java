@@ -10,6 +10,8 @@ import play.libs.F.Promise;
 import play.libs.Json;
 import play.mvc.*;
 
+import utils.EncryptUtil;
+import utils.MailUtil;
 import views.html.*;
 
 import javax.inject.Inject;
@@ -21,11 +23,15 @@ public class Application extends Controller {
     @Inject WSClient ws;
 
     public Result index() {
-        return ok(index.render("fuck"));
+        response().setContentType("text/plain;charset=utf-8");
+        String raw = "dododo05";
+        String encrypt = EncryptUtil.MD5(raw);
+        String encrypt_sha = EncryptUtil.SHA1(raw);
+        return ok(raw + ":"+encrypt+":"+encrypt_sha);
     }
 
     public Result addUser() {
-        session("user",request().remoteAddress());
+        session("user", request().remoteAddress());
         User user = Form.form(User.class).bindFromRequest().get();
         Datastore datastore = DbUtil.getDataStore();
         datastore.save(user);
@@ -64,6 +70,10 @@ public class Application extends Controller {
         return ok("Call delagete");
     }
 
+    public  Result sendEmail(){
+        MailUtil.send("mercershy@qq.com","hello boy");
+        return ok("i have send you an email");
+    }
 
     public Promise<Result> asyncRequest() {
         WSRequest request = ws.url("http://www.baidu.com");
@@ -81,4 +91,6 @@ public class Application extends Controller {
             return ok(text);
         });
     }
+
+
 }

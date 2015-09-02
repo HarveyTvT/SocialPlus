@@ -15,29 +15,35 @@ public class DbUtil {
     private static  Datastore datastore;
 
     public DbUtil(){
-        initDB();
     }
 
-    protected static  Datastore initDB(){
+    protected static  void initDB(){
         morphia.mapPackage("org.mongodb.morphia.example");
         MongoClientURI uri = new MongoClientURI("mongodb://localhost:27017/socialplus");
         datastore = morphia.createDatastore(new MongoClient(uri), "socialplus");
         datastore.ensureIndexes();
-        return datastore;
     }
 
+    //singleton of datastore
     public static Datastore getDataStore(){
+        if(datastore==null){
+            initDB();
+        }
         return datastore;
     }
 
-    public static void main(String[] args){
-        Datastore datastore = DbUtil.initDB();
-        User myuser = new User();
-        myuser.setId("ailuoli2");
-        myuser.setEmail("ailuoli2@qq.com ");
-        myuser.setPassword("holy@@@@ crash");
-        datastore.save(myuser);
-    }
+//    public static void main(String[] args){
+//        Datastore datastore = DbUtil.getDataStore();
+//        if(datastore!=null) {
+//            User myuser = new User();
+//            myuser.setId("ailuoli3");
+//            myuser.setEmail("ailuoli2@qq.com ");
+//            myuser.setPassword("holy@@@@ crash");
+//            datastore.save(myuser);
+//        }else{
+//            System.out.println("nothing");
+//        }
+//    }
 
 
 // tell Morphia where to find your classes
