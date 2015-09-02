@@ -1,7 +1,7 @@
 package controllers;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import utils.Database;
+import utils.DbUtil;
 import models.User;
 import org.mongodb.morphia.Datastore;
 import play.*;
@@ -27,7 +27,7 @@ public class Application extends Controller {
     public Result addUser() {
         session("user",request().remoteAddress());
         User user = Form.form(User.class).bindFromRequest().get();
-        Datastore datastore = new Database().getDatastore();
+        Datastore datastore = DbUtil.getDataStore();
         datastore.save(user);
         return ok("Got request " + request() + "!");
     }
