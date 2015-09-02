@@ -5,7 +5,7 @@ import javax.inject.Inject;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
-import model.AsyncRequest;
+import models.AsyncRequest;
 import play.mvc.*;
 import play.libs.ws.*;
 import play.libs.F.Promise;

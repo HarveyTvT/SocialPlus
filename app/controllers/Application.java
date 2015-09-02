@@ -1,8 +1,8 @@
 package controllers;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import model.Database;
-import model.User;
+import utils.Database;
+import models.User;
 import org.mongodb.morphia.Datastore;
 import play.*;
 import play.data.Form;

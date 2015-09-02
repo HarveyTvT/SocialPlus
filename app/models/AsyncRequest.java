@@ -1,4 +1,4 @@
-package model;
+package models;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import play.libs.ws.WSResponse;
