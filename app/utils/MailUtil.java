@@ -15,7 +15,7 @@ import javax.mail.internet.MimeMessage;
 /**
  * Created by harvey on 15-9-2.
  *
- * Utils to send validation email
+ * Utils to send email
  */
 public class MailUtil {
     private static final String   HOST                = "smtp.163.com";

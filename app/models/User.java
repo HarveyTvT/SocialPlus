@@ -15,7 +15,9 @@ import java.util.ArrayList;
 public class User  {
 
     public User(){
-
+        for(int i=0;i<10;i++){
+            result_id.add("");
+        }
     }
 
     @Id
@@ -25,10 +27,10 @@ public class User  {
 
     private String password;
 
-    private boolean validated;
+    private boolean validated = false;
 
     @Embedded("token")
-    private Token token;
+    private Token token = new Token();
 
 
     @Embedded("result_id")

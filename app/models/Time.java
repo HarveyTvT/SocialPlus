@@ -1,11 +1,12 @@
 package models;
+import java.util.Date;
 
 /**
  * Created by harvey on 15-8-31.
  */
 public class Time {
 
-    private int time;//对应时刻
+    private Date time;
     private double result;//统计结果
 
     /****************************************************
@@ -13,11 +14,11 @@ public class Time {
      *                          of all attributes                                    *
      ****************************************************/
 
-    public int getTime() {
+    public Date getTime() {
         return time;
     }
 
-    public void setTime(int time) {
+    public void setTime(Date time) {
         this.time = time;
     }
 

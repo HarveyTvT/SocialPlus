@@ -1,0 +1,21 @@
+@(user:User)
+
+@import helper._
+
+@main("welcom"){
+    @if(user==null){
+        你尚未登录
+    }else{
+        @if(!user.isValidated){
+            <p>你的邮箱@user.getEmail 尚未验证，请点击此处发送验证邮件。</p>
+            @form(routes.UserAction.sendValidationMail(user.getEmail)){
+                <input type="submit" value="发送验证邮件"/>
+            }
+        }
+
+@user.getId <br/>
+    欢迎使用Social Plus!!!!!!!!!!!!!!! <br/>
+    Let`s ROCK!!!!
+}
+
+}

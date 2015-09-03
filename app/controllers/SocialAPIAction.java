@@ -28,6 +28,7 @@ public class SocialAPIAction extends Controller {
                 WeiboAPI weiboAPI = new WeiboAPI(url);
             }
         }
+        return null;
     }
     public JsonNode getSocialMessage(){
         return null;

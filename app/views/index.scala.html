@@ -1,3 +1,28 @@
-@(message: String)
+@(userForm:Form[User])
 
-@main("Welcome to Play")(message)(1)
+@import helper._
+
+@main("Welcome to SocialPlus"){
+    <h1>Welcome</h1>
+
+    <h1>注册</h1>
+    @form(routes.UserAction.newUser()) {
+
+        @inputText(userForm("id"))
+        @inputText(userForm("email"))
+        @inputPassword(userForm("password"))
+
+        <input type="submit" value="注册">
+
+    }
+    <h1>登录</h1>
+    @form(routes.UserAction.login()){
+        @inputText(userForm("email"))
+        @inputPassword(userForm("password"))
+
+        <input type="submit" value="登录">
+    }
+
+}
+
+

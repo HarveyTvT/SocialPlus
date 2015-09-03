@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import models.AsyncRequest;
 import play.libs.F.Promise;
 import play.libs.ws.WSClient;
-import utils.ConstUtil;
+import static utils.ConstUtil.*;
 
 import java.util.regex.Pattern;
 
@@ -15,10 +15,10 @@ public class WeiboAPI {
     private String weiboURL;
     private String weiboToken;
     private WSClient ws;
-    WeiboAPI(WSClient wsClient,String url,String token){
+    public WeiboAPI(String url){
         weiboURL = url;
-        weiboToken = token;
-        ws = wsClient;
+        //weiboToken = token;
+        //ws = wsClient;
     }
     public Promise<JsonNode> getSocialUser(){
         return null;
@@ -27,7 +27,7 @@ public class WeiboAPI {
     public Promise<JsonNode> getSocialMessage(){
         String baseURL = "https://api.weibo.com/2/statuses/show.json";
 
-        String weiboURLReg = ConstUtil.getURLRegex();
+        String weiboURLReg = URLRegex;
         Pattern pattern = Pattern.compile(weiboURLReg);
         String weiboMid = pattern.matcher(weiboURL).group(6);
 
