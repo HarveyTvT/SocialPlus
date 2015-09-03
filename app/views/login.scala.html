@@ -1,0 +1,27 @@
+@()
+
+@import helper._
+
+@main("登录"){
+    <h1>登录</h1>
+    @form(routes.UserAction.authenticate()){
+        <table>
+            <tr>
+                <td>邮箱:</td>
+                <td><input type="text"  name="email"></td>
+            </tr>
+            <tr>
+                <td>密码:</td>
+                <td><input type="password" name = "password"/></td>
+            </tr>
+            <tr>
+                <td><input type="submit" value="登录"></td>
+            </tr>
+        </table>
+
+    }
+
+    <a href=@routes.UserAction.register()>我还没有账号</a>
+
+    <a href=@routes.UserAction.InputEmail() >忘记密码？</a>
+}

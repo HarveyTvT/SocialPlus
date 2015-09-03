@@ -1,13 +1,7 @@
 package controllers;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import play.api.mvc.Cookie;
-import play.data.DynamicForm;
-import utils.DbUtil;
-import models.User;
-import org.mongodb.morphia.Datastore;
+
 import play.*;
-import play.data.Form;
 import play.libs.F.Promise;
 import play.mvc.*;
 
@@ -24,12 +18,6 @@ public class Application extends Controller {
 
     @Inject WSClient ws;
 
-    //index
-    public Result index() {
-        response().setContentType("text/html;charset=utf-8");
-        return ok(index.render(Form.form(User.class)));
-    }
-
 
     //delegateCall
     @With(ComposingAction.class)
@@ -39,8 +27,6 @@ public class Application extends Controller {
         }
         return ok("Call delagete");
     }
-
-
 
     //asyncRequest
     public Promise<Result> asyncRequest() {

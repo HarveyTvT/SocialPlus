@@ -4,7 +4,6 @@ import com.mongodb.MongoClient;
 import com.mongodb.MongoClientURI;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
-import net.sf.ehcache.config.ConfigurationFactory;
 import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.Morphia;
 
@@ -23,7 +22,7 @@ public class DbUtil {
     protected static void initDB(){
         Config config = ConfigFactory.load();
         mongodbURI = config.getString("app.mongodb.uri");
-        morphia.mapPackage("org.mongodb.morphia.example");
+        morphia.mapPackage("models");
         MongoClientURI uri = new MongoClientURI(mongodbURI);
         datastore = morphia.createDatastore(new MongoClient(uri), "socialplus");
         datastore.ensureIndexes();

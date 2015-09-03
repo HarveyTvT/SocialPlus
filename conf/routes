@@ -3,27 +3,43 @@
 # ~~~~
 
 # Home page
-GET         /                      controllers.Application.index()
+GET         /                                 controllers.UserAction.login()
 
 
 # Can use optional value(which means the either /get-optional?user=lizhuoli or /get-optional will do
 
 # AOP Test(delegate Action)
-GET         /delegate              controllers.Application.delegateCall()
+GET         /delegate                         controllers.Application.delegateCall()
 
-GET         /asyncRequest          controllers.Application.asyncRequest()
+GET         /asyncRequest                     controllers.Application.asyncRequest()
 
-GET         /api/weibo/auth        controllers.AuthAction.weiboCallback()
+GET         /api/weibo/auth                   controllers.AuthAction.weiboCallback()
 
 #Account management
-POST        /login                 controllers.UserAction.login()
 
-POST        /newUser               controllers.UserAction.newUser()
+GET         /user/:id                         controllers.UserAction.index(id:String)
 
-GET           /valid                 controllers.UserAction.processValidation(email,validCode)
+POST        /auth                             controllers.UserAction.authenticate()
 
-POST        /sendMail/:email        controllers.UserAction.sendValidationMail(email)
+POST        /newUser                          controllers.UserAction.newUser()
 
+GET         /valid                            controllers.UserAction.processValidation(id,valideCode)
+
+GET         /sendValideMail/:id/:email        controllers.UserAction.sendValidationMail(id,email)
+
+POST       /sendPswMail                      controllers.UserAction.sendPswMail()
+
+GET         /login                            controllers.UserAction.login()
+
+GET         /register                         controllers.UserAction.register()
+
+GET         /exit                             controllers.UserAction.exit()
+
+GET         /findpsw/setpsw/:email           controllers.UserAction.setPass(email:String)
+
+GET         /findpsw/inputpsw                   controllers.UserAction.InputPass(email,valideCode)
+
+GET         /findpsw/inputmail                controllers.UserAction.InputEmail()
 
 # Map static resources from the /public folder to the /assets URL path
-GET         /assets/*file          controllers.Assets.versioned(path="/public", file: Asset)
+GET         /assets/*file                     controllers.Assets.versioned(path="/public", file: Asset)

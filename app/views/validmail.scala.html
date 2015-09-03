@@ -1,4 +1,4 @@
-@(email:String)(validCode:String)
+@(id:String)(email:String)(valideCode:String)
 
 <!DOCTYPE html>
 
@@ -7,7 +7,7 @@
         <title>SocialPlus账户激活</title>
     </head>
     <body>
-        <h1>亲爱的用户</h1>
+        <h1>亲爱的@id</h1>
 
             恭喜您注册成功！<br/><br/>
 
@@ -15,7 +15,7 @@
 
             为了您的帐号安全，请点击如下链接完成安全邮箱激活，或把下面网页地址复制到浏览器的地址栏中打开：<br/><br/>
 
-        <a href="http://localhost:9000/valid?email=@email&validCode=@validCode">点此激活</a>
+        <a href="http://localhost:9000/valid?id=@id&valideCode=@valideCode">点此激活</a>
                    <br/><br/>
 
         <footer>

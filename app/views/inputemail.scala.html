@@ -1,0 +1,18 @@
+@()
+@import helper._
+@main("找回密码"){
+    @form(routes.UserAction.sendPswMail()){
+        <table>
+            <tr>
+                <td>请输入您的邮箱：</td>
+                <td><input type="text" name="email"/></td>
+            </tr>
+            <tr>
+                <td>
+                    <input type="submit" name="提交"/>
+                </td>
+            </tr>
+        </table>
+
+    }
+}

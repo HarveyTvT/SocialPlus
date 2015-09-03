@@ -1,0 +1,23 @@
+@(email:String)
+@import helper._
+
+@main("设置新密码"){
+    @form(routes.UserAction.setPass(email)){
+        <table>
+            <tr>
+                <td>请输入新密码：</td>
+                <td><input type="password" name="password"/></td>
+            </tr>
+            <tr>
+                <td>重复密码：</td>
+                <td><input type="password" name="password2"/></td>
+            </tr>
+            <tr>
+                <td>
+                    <input type="submit" value="确认"/>
+                </td>
+            </tr>
+        </table>
+
+    }
+}

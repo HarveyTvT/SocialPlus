@@ -1,28 +1,14 @@
-@(userForm:Form[User])
+@(user:User)
 
 @import helper._
 
-@main("Welcome to SocialPlus"){
-    <h1>Welcome</h1>
+@main("welcom") {
+    欢迎使用SocialPlus: @user.getId
 
-    <h1>注册</h1>
-    @form(routes.UserAction.newUser()) {
-
-        @inputText(userForm("id"))
-        @inputText(userForm("email"))
-        @inputPassword(userForm("password"))
-
-        <input type="submit" value="注册">
-
-    }
-    <h1>登录</h1>
-    @form(routes.UserAction.login()){
-        @inputText(userForm("email"))
-        @inputPassword(userForm("password"))
-
-        <input type="submit" value="登录">
+    <a href=@routes.UserAction.exit()> 注销 </a>
+    <br/>
+    @if(!user.isValidated){
+        <a href=@routes.UserAction.sendValidationMail(user.getId(),user.getEmail)>点击发送认证邮件 </a>
     }
 
 }
-
-

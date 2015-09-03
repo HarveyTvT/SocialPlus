@@ -41,10 +41,10 @@ public class MailUtil {
         return session;
     }
 
-    public static boolean send(String toEmail , String content) {
+    public static boolean send(String toEmail ,String subject, String content) {
         Session session = getSession();
         try {
-            System.out.println("--send--" + content);
+            //System.out.println("--send--" + content);
             // Instantiate a message
             Message msg = new MimeMessage(session);
 
@@ -52,7 +52,7 @@ public class MailUtil {
             msg.setFrom(new InternetAddress(FROM));
             InternetAddress[] address = {new InternetAddress(toEmail)};
             msg.setRecipients(Message.RecipientType.TO, address);
-            msg.setSubject("SocialPlus账号激活邮件");
+            msg.setSubject(subject);
             msg.setSentDate(new Date());
             msg.setContent(content, "text/html;charset=utf-8");
 

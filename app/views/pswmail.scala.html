@@ -1,0 +1,20 @@
+@(email:String)(valideCode:String)
+
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <title>SocialPlus找回密码确认</title>
+    </head>
+    <body>
+        <h1>亲爱的用户</h1>
+        你刚刚在SocialPlus发出了重置密码的请求。如果这不是你发出的请求，请忽略这封邮件。<br/>
+        请点击以下链接进行登录并重置你的密码，或把下面网页地址复制到浏览器的地址栏中打开：
+        <a href="http://localhost:9000/findpsw/inputpsw?email=@email&valideCode=@valideCode">点此重新设置密码</a>
+        <br/><br/>
+
+        <footer>
+            SocialPlus团队
+        </footer>
+    </body>
+</html>

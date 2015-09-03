@@ -1,0 +1,39 @@
+@()
+
+@import helper._
+
+@main("Welcome to SocialPlus"){
+    <h1>Welcome</h1>
+
+    <h1>注册</h1>
+    @form(routes.UserAction.newUser()) {
+        <table>
+            <tr>
+                <td>用户名：</td>
+                <td><input type="text" name="id"/></td>
+            </tr>
+            <tr>
+                <td>邮箱：</td>
+                <td><input type="text" name="email"/></td>
+            </tr>
+            <tr>
+                <td>密码：</td>
+                <td><input type="password" name="password"/></td>
+            </tr>
+            <tr>
+                <td>重复密码：</td>
+                <td>  <input type="password" name="password2"/></td>
+            </tr>
+            <tr>
+                <td><input type="submit" value="提交"></td>
+            </tr>
+        </table>
+
+
+
+
+
+
+
+    }
+}
