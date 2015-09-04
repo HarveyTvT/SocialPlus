@@ -1,18 +1,19 @@
 @()
 @import helper._
 @main("找回密码"){
-    @form(routes.UserAction.sendPswMail()){
-        <table>
-            <tr>
-                <td>请输入您的邮箱：</td>
-                <td><input type="text" name="email"/></td>
-            </tr>
-            <tr>
-                <td>
-                    <input type="submit" name="提交"/>
-                </td>
-            </tr>
-        </table>
 
-    }
+    <body>
+        <div class="container">
+            <div class="row text-center">
+                <h2 class="form-signin-heading">找回密码</h2>
+                <div class="col-lg-6 col-lg-push-3">
+                    <form class="form-control-file" method="POST" action=@routes.UserAction.sendPswMail()>
+                        <label for="email" class="sr-only">邮箱</label>
+                        <input class="form-control" type="text" name="email" placeholder="请输入您的邮箱"/>
+                        <input class="btn btn-primary" type="submit"  name="确认"/>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </body>
 }

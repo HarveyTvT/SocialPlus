@@ -2,22 +2,20 @@
 @import helper._
 
 @main("设置新密码"){
-    @form(routes.UserAction.setPass(email)){
-        <table>
-            <tr>
-                <td>请输入新密码：</td>
-                <td><input type="password" name="password"/></td>
-            </tr>
-            <tr>
-                <td>重复密码：</td>
-                <td><input type="password" name="password2"/></td>
-            </tr>
-            <tr>
-                <td>
-                    <input type="submit" value="确认"/>
-                </td>
-            </tr>
-        </table>
-
-    }
+    <body>
+        <div class="container">
+            <div class="row text-center">
+                <h2 class="form-signin-heading">设置新密码</h2>
+                <div class="col-lg-6 col-lg-push-3">
+                    <form class="form-signin" method="POST" action=@routes.UserAction.setPass(email)>
+                        <label for="password" class="sr-only">密码</label>
+                        <input type="password" class="form-control" placeholder="密码" name = "password" required/>
+                        <label for="password2" class="sr-only">密码</label>
+                        <input type="password" class="form-control" placeholder="密码" name = "password2" required/>
+                        <input type="submit" class="btn btn-lg btn-block btn-primary" value="确认">
+                    </form>
+                </div>
+            </div>
+        </div>
+    </body>
 }

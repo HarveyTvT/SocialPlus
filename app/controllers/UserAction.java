@@ -123,14 +123,11 @@ public class UserAction extends Controller{
         String email = dynamicForm.get("email");
         String password = dynamicForm.get("password");
         String password2 = dynamicForm.get("password2");
-
-
         if(password.equals(password2)){
             if(!datastore.createQuery(User.class).filter("_id",id).asList().isEmpty()||
                     !datastore.createQuery(User.class).filter("email",email).asList().isEmpty()){
                 return forbidden("用户名或邮箱已被使用");
             }
-
             User user = new User();
             user.setId(id);
             user.setEmail(email);

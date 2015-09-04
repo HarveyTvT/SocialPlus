@@ -1,27 +1,27 @@
 @()
 
-@import helper._
-
 @main("登录"){
-    <h1>登录</h1>
-    @form(routes.UserAction.authenticate()){
-        <table>
-            <tr>
-                <td>邮箱:</td>
-                <td><input type="text"  name="email"></td>
-            </tr>
-            <tr>
-                <td>密码:</td>
-                <td><input type="password" name = "password"/></td>
-            </tr>
-            <tr>
-                <td><input type="submit" value="登录"></td>
-            </tr>
-        </table>
+    <body>
+        <div class="container">
+            <div class="row text-center">
+                <h2 class="form-signin-heading">登录</h2>
+                <div class="col-lg-6 col-lg-push-3">
+                    <form class="form-signin" method="POST" action=@routes.UserAction.authenticate()>
+                        <label for="email" class="sr-only">邮箱</label>
+                        <input type="text" class="form-control "  name="email" placeholder="邮箱" required autofocus>
+                        <label for="password" class="sr-only">密码</label>
+                        <input type="password" class="form-control" placeholder="密码" name = "password" required/>
+                        <div class="checkbox">
+                            <label>
+                                <a class="pull-left" href=@routes.UserAction.register()>还没有账号？</a>
+                                <a class="pull-right" href=@routes.UserAction.InputEmail()>忘记密码？</a>
+                            </label>
+                        </div>
+                        <input type="submit" class="btn btn-lg btn-block btn-primary" value="登录">
+                    </form>
+                </div>
+            </div>
+        </div>
+    </body>
 
-    }
-
-    <a href=@routes.UserAction.register()>我还没有账号</a>
-
-    <a href=@routes.UserAction.InputEmail() >忘记密码？</a>
 }
