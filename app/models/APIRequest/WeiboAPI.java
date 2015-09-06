@@ -5,9 +5,9 @@ import models.AsyncRequest;
 import play.Logger;
 import play.libs.F.Promise;
 import play.libs.ws.WSClient;
-import static utils.ConstUtil.*;
 
-import java.util.regex.Pattern;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 /**
  * Created by lizhuoli on 15/9/2.
@@ -40,7 +40,7 @@ public class WeiboAPI {
 
         AsyncRequest request = new AsyncRequest(ws,baseUrl,parameter);
         Promise<JsonNode> jsonNodePromise = request.get();
-        jsonNodePromise.onFailure((err) -> {
+        jsonNodePromise.onFailure(err -> {
             Logger.error("Error at getting Weibo user: " + err);
         });
 
@@ -54,11 +54,12 @@ public class WeiboAPI {
      */
     public Promise<JsonNode> getSocialMessage(String id){
         String baseUrl = "https://api.weibo.com/2/statuses/show.json";
-        String parameter = String.format("access_token=%s&id=", weiboToken, id);
+        String parameter = String.format("access_token=%s&id=%s",
+                weiboToken, id);
 
         AsyncRequest request = new AsyncRequest(ws,baseUrl,parameter);
         Promise<JsonNode> jsonNodePromise = request.get();
-        jsonNodePromise.onFailure((err) -> {
+        jsonNodePromise.onFailure(err -> {
             Logger.error("Error at getting Weibo message: " + err);
         });
 
@@ -77,7 +78,7 @@ public class WeiboAPI {
 
         AsyncRequest request = new AsyncRequest(ws,baseUrl,parameter);
         Promise<JsonNode> jsonNodePromise = request.get();
-        jsonNodePromise.onFailure((err) -> {
+        jsonNodePromise.onFailure(err -> {
             Logger.error("Error at getting Weibo comment: " + err);
         });
 
@@ -96,7 +97,7 @@ public class WeiboAPI {
 
         AsyncRequest request = new AsyncRequest(ws,baseUrl,parameter);
         Promise<JsonNode> jsonNodePromise = request.get();
-        jsonNodePromise.onFailure((err) -> {
+        jsonNodePromise.onFailure(err -> {
             Logger.error("Error at getting Weibo user list: " + err);
         });
 
@@ -115,7 +116,10 @@ public class WeiboAPI {
 
         AsyncRequest request = new AsyncRequest(ws,baseUrl,parameter);
         Promise<JsonNode> jsonNodePromise = request.get();
-        jsonNodePromise.onFailure((err) -> {
+        jsonNodePromise.onRedeem(value -> {
+            Logger.info(value.toString());
+        });
+        jsonNodePromise.onFailure(err -> {
             Logger.error("Error at getting Weibo message list: " + err);
         });
 
@@ -135,7 +139,7 @@ public class WeiboAPI {
 
         AsyncRequest request = new AsyncRequest(ws,baseUrl,parameter);
         Promise<JsonNode> jsonNodePromise = request.get();
-        jsonNodePromise.onFailure((err) -> {
+        jsonNodePromise.onFailure(err -> {
             Logger.error("Error at getting Weibo comment list: " + err);
         });
 
@@ -146,10 +150,17 @@ public class WeiboAPI {
      * 直接从微博URL转换为内部id
      * @return
      */
-    public String parseUrlToId(String url){
-        String weiboUrlReg = UrlRegex;
-        Pattern pattern = Pattern.compile(weiboUrlReg);
-        String weiboMid = pattern.matcher(url).group(6);
+    public String parseUrlToId(String weiboUrl){
+        URL url;
+        try {
+            url = new URL(weiboUrl);
+        }
+        catch (MalformedURLException e){
+            Logger.error("Unsupported weibo url");
+            return null;
+        }
+        String weiboPath = url.getPath();
+        String weiboMid = weiboPath.substring(weiboPath.length()-9,weiboPath.length());
         String weiboId = WeiboUtils.mid2id(weiboMid);
 
         return weiboId;

@@ -1,17 +1,21 @@
 package controllers;
 
 
+import com.fasterxml.jackson.databind.JsonNode;
+import models.APIRequest.WeiboAPI;
+import models.User;
+import org.mongodb.morphia.Datastore;
 import play.*;
 import play.libs.F.Promise;
 import play.mvc.*;
 
-import utils.EncryptUtil;
-import utils.MailUtil;
-import views.html.*;
+import utils.DbUtil;
 
 import javax.inject.Inject;
 
 import play.libs.ws.*;
+
+import java.util.List;
 
 
 public class Application extends Controller {
@@ -41,9 +45,20 @@ public class Application extends Controller {
         respond.onFailure(error -> {//Promise error when failure
             Logger.error(error.toString());
         });
-        return respond.map(text -> {
-            return ok(text);
-        });
+        return respond.map(text -> ok(text));
+    }
+
+
+    public Promise<Result> getWeiboMessage(String email,String url){
+        Datastore dataStore = DbUtil.getDataStore();
+        List<User> users = dataStore.createQuery(User.class)
+                .filter("email",email).asList();
+        String weiboToken = users.get(0).getToken().getWeibo().get("token");
+
+        WeiboAPI weiboAPI = new WeiboAPI(url, weiboToken, ws);
+        Promise<JsonNode> jsonNodePromise = weiboAPI.getSocialMessage(weiboAPI.parseUrlToId(url));
+
+        return jsonNodePromise.map(json -> ok(json));
     }
 
 }

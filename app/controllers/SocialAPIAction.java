@@ -25,7 +25,8 @@ public class SocialAPIAction extends Controller {
     public JsonNode getSocialUser(){
         switch (url){
             case "weibo":{
-                WeiboAPI weiboAPI = new WeiboAPI(url);
+                String weiboToken = "";
+                WeiboAPI weiboAPI = new WeiboAPI(url ,weiboToken, ws);
             }
         }
         return null;

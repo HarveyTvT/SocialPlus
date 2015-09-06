@@ -15,6 +15,7 @@ GET         /asyncRequest                     controllers.Application.asyncReque
 
 GET         /api/weibo/auth                   controllers.AuthAction.weiboCallback()
 
+GET         /api/weibo/message                controllers.Application.getWeiboMessage(email, url)
 #Account management
 
 GET         /user/:id                         controllers.UserAction.index(id:String)
