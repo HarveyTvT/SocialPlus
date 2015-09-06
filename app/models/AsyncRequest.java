@@ -14,9 +14,9 @@ public class AsyncRequest  {
     public String parameter;
     private final WSClient client;
 
-    public AsyncRequest(WSClient wsClient,String requestURL,String requestParam){
+    public AsyncRequest(WSClient wsClient,String requestUrl,String requestParam){
         client = wsClient;
-        url = requestURL;
+        url = requestUrl;
         parameter = requestParam;
     }
 
@@ -42,8 +42,8 @@ public class AsyncRequest  {
     }
 
     public Promise<JsonNode> get(){
-        String requestURL = String.format("%s?%s",url,parameter);
-        WSRequest request = client.url(requestURL);
+        String requestUrl = String.format("%s?%s",url,parameter);
+        WSRequest request = client.url(requestUrl);
         Promise<WSResponse> responsePromise = request.get();
         Promise<JsonNode> jsonNodePromise = responsePromise.map(value -> {
             return value.asJson();
