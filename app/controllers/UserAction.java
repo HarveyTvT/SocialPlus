@@ -159,20 +159,20 @@ public class UserAction extends Controller{
     @Security.Authenticated(Secured.class)
     public Result authAdminRender(){
         String email = session("email");
-        if (email == null){
-            forbidden("Not login");
-        }
         Token tokenList = User.getUser(email).getToken();
         Map<String,String> weiboToken = tokenList.getWeibo();
         Map<String,String> renrenToken = tokenList.getRenren();
+        Map<String,String> twitteToken = tokenList.getTwitter();
 
         Long weiboExpire = weiboToken.containsKey("expire") ? Long.parseLong(weiboToken.get("expire")) : 0;
         String weiboAuthed = System.currentTimeMillis() < weiboExpire
                 ? "是" : "否";
-        int renrenExpire = renrenToken.containsKey("expire") ? Integer.parseInt(renrenToken.get("expire")) : 0;
-        String renrenAuthed = System.currentTimeMillis() - renrenExpire < renrenExpireMax
+        Long renrenExpire = renrenToken.containsKey("expire") ? Long.parseLong(renrenToken.get("expire")) : 0;
+        String renrenAuthed = System.currentTimeMillis() < renrenExpire
                 ? "是" : "否";
+        String twitterAuthed = twitteToken.containsKey("token") ? "是" : "否";
 
-        return ok(userAdmin.render(ConstUtil.weiboAuthUrl,weiboAuthed,ConstUtil.renrenAuthUrl,renrenAuthed));
+        return ok(userAdmin.render(ConstUtil.weiboAuthUrl,weiboAuthed,ConstUtil.renrenAuthUrl,renrenAuthed,
+                ConstUtil.twitterAuthUrl,twitterAuthed));
     }
 }

@@ -3,45 +3,55 @@
 # ~~~~
 
 # Home page
-GET         /                                 controllers.UserAction.login()
+GET         /                             controllers.UserAction.login()
 
 
 # Can use optional value(which means the either /get-optional?user=lizhuoli or /get-optional will do
 
 # API call
-GET         /api/weibo/auth                   controllers.AuthAction.weiboCallback()
+# Weibo
+GET         /api/weibo/auth               controllers.AuthAction.weiboAuth()
 
-GET         /api/weibo/message                controllers.Application.getWeiboMessage(email, url)
+GET         /api/weibo/message            controllers.Application.getWeiboMessage(url)
 
-GET         /api/weibo/user                   controllers.Application.getWeiboUser(uid);
+GET         /api/weibo/user               controllers.Application.getWeiboUser(uid)
 
-GET         /api/weibo/
+GET         /api/weibo/comment            controllers.Application.getWeiboComment(cid)
+
+GET         /api/weibo/messageList        controllers.Application.getWeiboMessageList(url)
+
+GET         /api/weibo/userList           controllers.Application.getWeiboUserList(uids)
+
+GET         /api/weibo/commentList        controllers.Application.getWeiboCommentList(cids)
+
+# Twitter
+GET         /api/twitter/auth             controllers.AuthAction.twitterAuth()
 # Account management
 
-GET         /user                             controllers.UserAction.index()
+GET         /user                         controllers.UserAction.index()
 
-POST        /auth                             controllers.UserAction.authenticate()
+POST        /auth                         controllers.UserAction.authenticate()
 
-POST        /newUser                          controllers.UserAction.newUser()
+POST        /newUser                      controllers.UserAction.newUser()
 
-GET         /valid                            controllers.UserAction.processValidation(id,valideCode)
+GET         /valid                        controllers.UserAction.processValidation(id,valideCode)
 
-GET         /sendValideMail       controllers.UserAction.sendValidationMail(id,email)
+GET         /sendValideMail               controllers.UserAction.sendValidationMail(id,email)
 
-POST        /sendPswMail                      controllers.UserAction.sendPswMail()
+POST        /sendPswMail                  controllers.UserAction.sendPswMail()
 
-GET         /login                            controllers.UserAction.login()
+GET         /login                        controllers.UserAction.login()
 
-GET         /register                         controllers.UserAction.register()
+GET         /register                     controllers.UserAction.register()
 
-GET         /exit                             controllers.UserAction.exit()
+GET         /exit                         controllers.UserAction.exit()
 
-GET         /findpsw/setpsw         controllers.UserAction.setPass(email:String)
+GET         /findpsw/setpsw               controllers.UserAction.setPass(email:String)
 
-GET         /findpsw/inputpsw                 controllers.UserAction.InputPass(email,valideCode)
+GET         /findpsw/inputpsw             controllers.UserAction.InputPass(email,valideCode)
 
-GET         /findpsw/inputmail                controllers.UserAction.InputEmail()
+GET         /findpsw/inputmail            controllers.UserAction.InputEmail()
 
-GET         /user/admin                       controllers.UserAction.authAdminRender()
+GET         /user/admin                   controllers.UserAction.authAdminRender()
 # Map static resources from the /public folder to the /assets URL path
-GET         /assets/*file                     controllers.Assets.versioned(path="/public", file: Asset)
+GET         /assets/*file                 controllers.Assets.versioned(path="/public", file: Asset)

@@ -11,7 +11,10 @@ public class ConstUtil {
         Config config = ConfigFactory.load();
         weiboAppKey = config.getString("app.weibo.appkey");
         weiboSecret = config.getString("app.weibo.secret");
-        weiboRedirectUrl = config.getString("app.weibo.redirectURL")
+        weiboRedirectUrl = config.getString("app.weibo.redirectURL");
+        twitterAppKey = config.getString("app.twitter.appkey");
+        twitterSecret = config.getString("app.twitter.secret");
+        twitterRedirectUrl = config.getString("app.twitter.redirectURL");
     }
 
 
@@ -26,20 +29,27 @@ public class ConstUtil {
             "response_type=code",
             ConstUtil.weiboAppKey,ConstUtil.weiboRedirectUrl);
 
-    public static final String renrenAuthUrl = "http://www.renren.com/callback";
-
-    public static final int weiboExipreMax = 86400;
-
-    public static final int renrenExpireMax = 86400;
-    public static final String XinZhiToken =
-            "23ICNCQ44G";
+    public static final String weiboAccessTokenUrl = "https://api.weibo.com/oauth2/access_token";
 
     /*****************************************************************
       　　　　　　　　　微博相关的信息　　　　　　　　　　　
      *****************************************************************/
-    public static final String weiboAppKey ;
+    public static final String weiboAppKey;
 
     public static final String weiboSecret;
 
-    public static final String weiboRedirectUrl ;
+    public static final String weiboRedirectUrl;
+
+
+    public static final String renrenAuthUrl = "https://renren.com";
+    /**
+     *
+     */
+    public static final String twitterAppKey;
+
+    public static final String twitterSecret;
+
+    public static final String twitterRedirectUrl;
+
+    public static final String twitterAuthUrl = "https://api.twitter.com/oauth/request_token";
 }

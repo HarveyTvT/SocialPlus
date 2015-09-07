@@ -1,4 +1,4 @@
-@(weiboAuthUrl:String)(weiboAuthed:String)(renrenAuthUrl:String)(renrenAuthed:String)
+@(weiboAuthUrl:String)(weiboAuthed:String)(renrenAuthUrl:String)(renrenAuthed:String)(twitterAuthUrl:String)(twitterAuthed:String)
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,8 +7,10 @@
 </head>
 <body>
   <h1>微博认证有效:</h1><h2>@weiboAuthed</h2>
-  <a href=@weiboAuthUrl>点击微博授权</a>
+  <a href="@weiboAuthUrl">点击微博授权</a>
   <h1>人人认证有效:</h1><h2>@renrenAuthed</h2>
-  <a href=@renrenAuthUrl>点击人人授权</a>
+  <a href="@renrenAuthUrl">点击人人授权</a>
+  <h1>Twitter认证有效:</h1><h2>@twitterAuthed</h2>
+  <a href="@twitterAuthUrl">点击Twitter授权</a>
 </body>
 </html>

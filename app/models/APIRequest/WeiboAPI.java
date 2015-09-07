@@ -17,14 +17,10 @@ public class WeiboAPI {
      * 其中内部id可以根据url中提取到的mid然后转换成id,在WeiboUtils中已有, 此处接口皆用内部id
      */
 
-    private String weiboUrl;
     private String weiboToken;
-    private String weiboId;
 
     private WSClient ws;
-    public WeiboAPI(String url, String token, WSClient wsClient){
-        weiboUrl = url;
-        weiboId = parseUrlToId(weiboUrl);
+    public WeiboAPI(String token, WSClient wsClient){
         weiboToken = token;
         ws = wsClient;
     }
@@ -36,7 +32,7 @@ public class WeiboAPI {
      */
     public Promise<JsonNode> getSocialUser(String uid){
         String baseUrl = "https://api.weibo.com/2/users/show.json";
-        String parameter = String.format("access_token=%s&uid=", weiboToken, uid);
+        String parameter = String.format("access_token=%s&uid=%s", weiboToken, uid);
 
         AsyncRequest request = new AsyncRequest(ws,baseUrl,parameter);
         Promise<JsonNode> jsonNodePromise = request.get();
@@ -87,13 +83,13 @@ public class WeiboAPI {
 
     /**
      * 根据uid数组批量获取用户列表
-     * @param uidList
+     * @param uids
      * @return
      */
-    public Promise<JsonNode> getSocialUserList(String[] uidList){
+    public Promise<JsonNode> getSocialUserList(String uids){
         String baseUrl = "https://api.weibo.com/2/users/counts.json";
-        String uids = WeiboUtils.arrayToString(uidList, ',');
-        String parameter = String.format("access_token=%s&uids=", weiboToken, uids);
+        Logger.error(uids);
+        String parameter = String.format("access_token=%s&uids=%s", weiboToken, uids);
 
         AsyncRequest request = new AsyncRequest(ws,baseUrl,parameter);
         Promise<JsonNode> jsonNodePromise = request.get();
@@ -128,14 +124,13 @@ public class WeiboAPI {
 
     /**
      * 根据cid数组批量获取评论列表
-     * @param cidList
+     * @param cids
      * @return
      */
-    public Promise<JsonNode> getSocialCommentList(String[] cidList){
+    public Promise<JsonNode> getSocialCommentList(String cids){
         String baseUrl = "https://api.weibo.com/2/comments/show_batch.json";
-        String uids = WeiboUtils.arrayToString(cidList, ',');
         String parameter = String.format("access_token=%s&cids=%s",
-                weiboToken, cidList);
+                weiboToken, cids);
 
         AsyncRequest request = new AsyncRequest(ws,baseUrl,parameter);
         Promise<JsonNode> jsonNodePromise = request.get();
@@ -160,7 +155,8 @@ public class WeiboAPI {
             return null;
         }
         String weiboPath = url.getPath();
-        String weiboMid = weiboPath.substring(weiboPath.length()-9,weiboPath.length());
+        String weiboMid = weiboPath.substring(weiboPath.length() - 9, weiboPath.length());
+        Logger.error(weiboMid);
         String weiboId = WeiboUtils.mid2id(weiboMid);
 
         return weiboId;
