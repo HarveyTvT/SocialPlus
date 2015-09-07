@@ -18,9 +18,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import models.Account.User;
+import play.data.DynamicForm;
+import play.data.Form;
+import play.mvc.Controller;
+import play.mvc.Result;
+import play.mvc.Security;
+
 import utils.EncryptUtil;
 import utils.MailUtil;
 import views.html.*;
+
 import static utils.ConstUtil.SHA1_SALT;
 import static utils.ConstUtil.renrenExpireMax;
 import static utils.ConstUtil.weiboExipreMax;
@@ -30,46 +38,32 @@ import static utils.ConstUtil.weiboExipreMax;
  */
 public class UserAction extends Controller{
 
-    private  Datastore datastore = DbUtil.getDataStore();
-
-
     public UserAction(){
     }
 
 
     @Security.Authenticated(Secured.class)
-    public Result index(String id){
-        Iterable <User> it = datastore.createQuery(User.class).fetch();
-        while(it.iterator().hasNext()){
-            User user = it.iterator().next();
-
-            if(user.getId().equals(id)){
-                return ok(index.render(user));
-            }
-        }
-       return badRequest("Internal Error");
+    public Result index(String email){
+        User user = User.getUser(email);
+        if(user!=null)
+            return ok(index.render(user));
+        else
+        return badRequest("Internal Error");
     }
     //登录验证
     public  Result authenticate(){
         DynamicForm dynamicForm = Form.form().bindFromRequest();
         String email = dynamicForm.get("email");
         String password = dynamicForm.get("password");
+        password =  EncryptUtil.SHA1(EncryptUtil.SHA1(password)+SHA1_SALT);
 
-        Iterable <User> it = datastore.createQuery(User.class).fetch();
-
-        while(it.iterator().hasNext()){
-            User user = it.iterator().next();
-            if(user.getEmail().equals(email)
-                    &&user.getPassword().equals(
-                        EncryptUtil.SHA1(EncryptUtil.SHA1(password)+SHA1_SALT))
-                    ){
-                session().clear();
-                session("email", email);
-                Cache.set("user_" + email, user, 300);
-                return redirect(routes.UserAction.index(user.getId()));
-            }
-        }
+        if(User.Authenticate(email,password)!=null){
+            session().clear();
+            session("email", email);
+            return redirect(routes.UserAction.index(email));
+        }else{
             return forbidden("invalid password");
+        }
     }
     //渲染注册页面
     public Result register(){
@@ -77,7 +71,7 @@ public class UserAction extends Controller{
     }
     //发送邮箱验证邮件
     public  Result sendValidationMail(String id,String email) {
-        User user = datastore.createQuery(User.class).filter("email", email).asList().get(0);
+        User user = User.getUser(email);
         //TODO 校验码的自动生成和验证
 
         if(!user.isValidated()) {
@@ -91,11 +85,10 @@ public class UserAction extends Controller{
     //发送设置密码确认邮件
     public Result sendPswMail(){
         String email = Form.form().bindFromRequest().get("email");
-        List<User> users = datastore.createQuery(User.class).filter("email", email).asList();
-        if(users.isEmpty()){
+        User user = User.getUser(email);
+        if(user==null){
             return ok("用户不存在");
         }else{
-            User user = users.get(0);
             //TODO 校验码的自动生成
             String valideCode =EncryptUtil.SHA1(EncryptUtil.SHA1("mongo")+SHA1_SALT);
             MailUtil.send(email,"SocialPlus找回密码",pswmail.render(email,valideCode).toString());
@@ -108,13 +101,7 @@ public class UserAction extends Controller{
                 //TODO 校验码的校验
                 EncryptUtil.SHA1(EncryptUtil.SHA1(id) + SHA1_SALT)
         )){
-            final Query<User> query = datastore.createQuery(User.class)
-                    .filter("_id",id);
-            final UpdateOperations<User> updateOperation  = datastore.createUpdateOperations(User.class)
-                    .set("validated",true);
-
-            final UpdateResults results = datastore.update(query, updateOperation);
-
+            User.validEmail(id);
             return redirect(routes.UserAction.index(id));
         }else{
             return ok("邮箱认证失败！");
@@ -132,17 +119,17 @@ public class UserAction extends Controller{
         String password = dynamicForm.get("password");
         String password2 = dynamicForm.get("password2");
         if(password.equals(password2)){
-            if(!datastore.createQuery(User.class).filter("_id",id).asList().isEmpty()||
-                    !datastore.createQuery(User.class).filter("email",email).asList().isEmpty()){
+            password = EncryptUtil.SHA1(EncryptUtil.SHA1(password)+SHA1_SALT);
+            if(!User.isAvailable(email, password)){
                 return forbidden("用户名或邮箱已被使用");
             }
             User user = new User();
             user.setId(id);
             user.setEmail(email);
             user.setPassword(
-                    EncryptUtil.SHA1(EncryptUtil.SHA1(password) + SHA1_SALT)
+                    password
             );
-            datastore.save(user);
+            User.saveUser(user);
             session("email", email);
             return redirect(routes.UserAction.index(id));
         }else{
@@ -177,13 +164,8 @@ public class UserAction extends Controller{
         String password = Form.form().bindFromRequest().get("password");
         String password2 = Form.form().bindFromRequest().get("password2");
         if(password.equals(password2)){
-            final Query<User> query = datastore.createQuery(User.class)
-                    .filter("email",email);
-            final UpdateOperations<User> updateOperation  = datastore.createUpdateOperations(User.class)
-                    .set("password",EncryptUtil.SHA1(EncryptUtil.SHA1(password)+SHA1_SALT));
-
-            final UpdateResults results = datastore.update(query, updateOperation);
-
+            password = EncryptUtil.SHA1(EncryptUtil.SHA1(password)+SHA1_SALT);
+            User.updatePsw(email,password);
             return redirect(routes.UserAction.login());
         }else{
             return ok("两次输入密码不一致");
