@@ -18,7 +18,7 @@ GET         /api/weibo/auth                   controllers.AuthAction.weiboCallba
 GET         /api/weibo/message                controllers.Application.getWeiboMessage(email, url)
 #Account management
 
-GET         /user/:id                         controllers.UserAction.index(id:String)
+GET         /user                      controllers.UserAction.index(email:String)
 
 POST        /auth                             controllers.UserAction.authenticate()
 
@@ -26,7 +26,7 @@ POST        /newUser                          controllers.UserAction.newUser()
 
 GET         /valid                            controllers.UserAction.processValidation(id,valideCode)
 
-GET         /sendValideMail/:id/:email        controllers.UserAction.sendValidationMail(id,email)
+GET         /sendValideMail       controllers.UserAction.sendValidationMail(id,email)
 
 POST       /sendPswMail                      controllers.UserAction.sendPswMail()
 
@@ -36,7 +36,7 @@ GET         /register                         controllers.UserAction.register()
 
 GET         /exit                             controllers.UserAction.exit()
 
-GET         /findpsw/setpsw/:email           controllers.UserAction.setPass(email:String)
+GET         /findpsw/setpsw         controllers.UserAction.setPass(email:String)
 
 GET         /findpsw/inputpsw                   controllers.UserAction.InputPass(email,valideCode)
 

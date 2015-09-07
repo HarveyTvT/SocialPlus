@@ -1,20 +1,19 @@
 package controllers;
 
-import javax.inject.Inject;
-
 import com.fasterxml.jackson.databind.JsonNode;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
+import models.Account.Token;
+import models.Account.User;
 import models.AsyncRequest;
-import models.Token;
-import models.User;
 import org.mongodb.morphia.Datastore;
-import play.api.mvc.Session;
-import play.mvc.*;
-import play.libs.ws.*;
 import play.libs.F.Promise;
+import play.libs.ws.WSClient;
+import play.mvc.Controller;
+import play.mvc.Result;
 import utils.DbUtil;
 
+import javax.inject.Inject;
 import java.util.HashMap;
 import java.util.List;
 
@@ -41,7 +40,7 @@ public class AuthAction extends Controller {
         String code = request().getQueryString("code");
         String baseURL = "https://api.weibo.com/oauth2/access_token";
         String parameter = String.format("client_id=%s&client_secret=%s&grant_type=authorization_code&redirect_uri=%s&code=%s",
-                weiboAppKey,weiboAppSecret,weiboRedirectURL,code);
+                weiboAppKey, weiboAppSecret, weiboRedirectURL, code);
 
         AsyncRequest request = new AsyncRequest(ws,baseURL,null);
 

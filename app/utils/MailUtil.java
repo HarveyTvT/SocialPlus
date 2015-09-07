@@ -1,16 +1,10 @@
 package utils;
 
-import java.util.Date;
-import java.util.Properties;
-
-import javax.mail.Authenticator;
-import javax.mail.Message;
-import javax.mail.MessagingException;
-import javax.mail.PasswordAuthentication;
-import javax.mail.Session;
-import javax.mail.Transport;
+import javax.mail.*;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
+import java.util.Date;
+import java.util.Properties;
 
 /**
  * Created by harvey on 15-9-2.
@@ -41,7 +35,7 @@ public class MailUtil {
         return session;
     }
 
-    public static boolean send(String toEmail ,String subject, String content) {
+    public static boolean send(String toEmail ,String subject, String content)  {
         Session session = getSession();
         try {
             //System.out.println("--send--" + content);
