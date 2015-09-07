@@ -12,6 +12,10 @@ GET         /                                 controllers.UserAction.login()
 GET         /api/weibo/auth                   controllers.AuthAction.weiboCallback()
 
 GET         /api/weibo/message                controllers.Application.getWeiboMessage(email, url)
+
+GET         /api/weibo/user                   controllers.Application.getWeiboUser(uid);
+
+GET         /api/weibo/
 # Account management
 
 GET         /user                             controllers.UserAction.index()

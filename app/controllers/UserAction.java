@@ -166,8 +166,8 @@ public class UserAction extends Controller{
         Map<String,String> weiboToken = tokenList.getWeibo();
         Map<String,String> renrenToken = tokenList.getRenren();
 
-        int weiboExpire = weiboToken.containsKey("expire") ? Integer.parseInt(weiboToken.get("expire")) : 0;
-        String weiboAuthed = System.currentTimeMillis() - weiboExpire < weiboExipreMax
+        Long weiboExpire = weiboToken.containsKey("expire") ? Long.parseLong(weiboToken.get("expire")) : 0;
+        String weiboAuthed = System.currentTimeMillis() < weiboExpire
                 ? "是" : "否";
         int renrenExpire = renrenToken.containsKey("expire") ? Integer.parseInt(renrenToken.get("expire")) : 0;
         String renrenAuthed = System.currentTimeMillis() - renrenExpire < renrenExpireMax

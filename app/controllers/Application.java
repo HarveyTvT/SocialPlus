@@ -4,17 +4,14 @@ package controllers;
 import com.fasterxml.jackson.databind.JsonNode;
 import models.APIRequest.WeiboAPI;
 import models.Account.User;
-import org.mongodb.morphia.Datastore;
 import play.Logger;
 import play.libs.F.Promise;
 import play.libs.ws.WSClient;
 import play.libs.ws.WSRequest;
 import play.mvc.Controller;
 import play.mvc.Result;
-import utils.DbUtil;
 
 import javax.inject.Inject;
-import java.util.List;
 
 
 public class Application extends Controller {
@@ -37,11 +34,13 @@ public class Application extends Controller {
     }
 
 
-    public Promise<Result> getWeiboMessage(String email,String url){
-        Datastore dataStore = DbUtil.getDataStore();
-        List<User> users = dataStore.createQuery(User.class)
-                .filter("email",email).asList();
-        String weiboToken = users.get(0).getToken().getWeibo().get("token");
+    public Promise<Result> getWeiboUser(String url){
+        String email = session("email");
+        if (email == null){
+            forbidden("not login");
+        }
+        User user = User.getUser(email);
+        String weiboToken = user.getToken().getWeibo().get("token");
 
         WeiboAPI weiboAPI = new WeiboAPI(url, weiboToken, ws);
         Promise<JsonNode> jsonNodePromise = weiboAPI.getSocialMessage(weiboAPI.parseUrlToId(url));
@@ -49,4 +48,72 @@ public class Application extends Controller {
         return jsonNodePromise.map(json -> ok(json));
     }
 
+    public Promise<Result> getWeiboMessage(String url){
+        String email = session("email");
+        if (email == null){
+            forbidden("not login");
+        }
+        User user = User.getUser(email);
+        String weiboToken = user.getToken().getWeibo().get("token");
+
+        WeiboAPI weiboAPI = new WeiboAPI(url, weiboToken, ws);
+        Promise<JsonNode> jsonNodePromise = weiboAPI.getSocialMessage(weiboAPI.parseUrlToId(url));
+
+        return jsonNodePromise.map(json -> ok(json));
+    }
+
+    public Promise<Result> getWeiboComment(String url){
+        String email = session("email");
+        if (email == null){
+            forbidden("not login");
+        }
+        User user = User.getUser(email);
+        String weiboToken = user.getToken().getWeibo().get("token");
+
+        WeiboAPI weiboAPI = new WeiboAPI(url, weiboToken, ws);
+        Promise<JsonNode> jsonNodePromise = weiboAPI.getSocialMessage(weiboAPI.parseUrlToId(url));
+
+        return jsonNodePromise.map(json -> ok(json));
+    }
+
+    public Promise<Result> getWeiboUserList(String url){
+        String email = session("email");
+        if (email == null){
+            forbidden("not login");
+        }
+        User user = User.getUser(email);
+        String weiboToken = user.getToken().getWeibo().get("token");
+
+        WeiboAPI weiboAPI = new WeiboAPI(url, weiboToken, ws);
+        Promise<JsonNode> jsonNodePromise = weiboAPI.getSocialMessage(weiboAPI.parseUrlToId(url));
+
+        return jsonNodePromise.map(json -> ok(json));
+    }
+
+    public Promise<Result> getWeiboMessageList(String url){
+        String email = session("email");
+        if (email == null){
+            forbidden("not login");
+        }
+        User user = User.getUser(email);
+        String weiboToken = user.getToken().getWeibo().get("token");
+
+        WeiboAPI weiboAPI = new WeiboAPI(url, weiboToken, ws);
+        Promise<JsonNode> jsonNodePromise = weiboAPI.getSocialMessage(weiboAPI.parseUrlToId(url));
+
+        return jsonNodePromise.map(json -> ok(json));
+    }
+    public Promise<Result> getWeiboCommentList(String url){
+        String email = session("email");
+        if (email == null){
+            forbidden("not login");
+        }
+        User user = User.getUser(email);
+        String weiboToken = user.getToken().getWeibo().get("token");
+
+        WeiboAPI weiboAPI = new WeiboAPI(url, weiboToken, ws);
+        Promise<JsonNode> jsonNodePromise = weiboAPI.getSocialMessage(weiboAPI.parseUrlToId(url));
+
+        return jsonNodePromise.map(json -> ok(json));
+    }
 }
