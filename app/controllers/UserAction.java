@@ -1,24 +1,10 @@
 package controllers;
 
-import models.Token;
-import org.mongodb.morphia.query.Query;
-import org.mongodb.morphia.query.UpdateOperations;
-import org.mongodb.morphia.query.UpdateResults;
-import play.cache.Cache;
-import play.data.DynamicForm;
+import models.Account.Token;
+import play.Logger;
 import utils.ConstUtil;
-import utils.DbUtil;
-import models.User;
-import org.mongodb.morphia.Datastore;
-import play.*;
-import play.data.Form;
-import play.mvc.*;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import models.Account.User;
+
 import play.data.DynamicForm;
 import play.data.Form;
 import play.mvc.Controller;
@@ -29,9 +15,9 @@ import utils.EncryptUtil;
 import utils.MailUtil;
 import views.html.*;
 
+import java.util.Map;
+
 import static utils.ConstUtil.SHA1_SALT;
-import static utils.ConstUtil.renrenExpireMax;
-import static utils.ConstUtil.weiboExipreMax;
 
 /**
  * Created by harvey on 15-9-2.
@@ -177,14 +163,15 @@ public class UserAction extends Controller{
         if (email == null){
             forbidden("Not login");
         }
-        Token tokenList = datastore.createQuery(User.class).filter("email",email).asList().get(0).getToken();
+        Token tokenList = User.getUser(email).getToken();
         Map<String,String> weiboToken = tokenList.getWeibo();
         Map<String,String> renrenToken = tokenList.getRenren();
-        int weiboExpire = weiboToken.containsKey("expire") ? Integer.parseInt(weiboToken.get("expire")) : 0;
-        String weiboAuthed = System.currentTimeMillis() - weiboExpire < weiboExipreMax
+        Long weiboExpire = weiboToken.containsKey("expire") ? Long.parseLong(weiboToken.get("expire")) : 0;
+        Logger.error(String.format("%d", System.currentTimeMillis()));
+        String weiboAuthed = System.currentTimeMillis() < weiboExpire
                 ? "是" : "否";
-        int renrenExpire = renrenToken.containsKey("expire") ? Integer.parseInt(renrenToken.get("expire")) : 0;
-        String renrenAuthed = System.currentTimeMillis() - renrenExpire < renrenExpireMax
+        Long renrenExpire = renrenToken.containsKey("expire") ? Long.parseLong(renrenToken.get("expire")) : 0;
+        String renrenAuthed = System.currentTimeMillis() < renrenExpire
                 ? "是" : "否";
 
         return ok(userAdmin.render(ConstUtil.weiboAuthUrl,weiboAuthed,ConstUtil.renrenAuthUrl,renrenAuthed));

@@ -1,67 +1,52 @@
 package controllers;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.typesafe.config.Config;
-import com.typesafe.config.ConfigFactory;
 import models.Account.Token;
 import models.Account.User;
 import models.AsyncRequest;
-import org.mongodb.morphia.Datastore;
+import utils.ConstUtil;
 import views.html.*;
-import play.mvc.*;
-import play.libs.ws.*;
 import play.libs.F.Promise;
 import play.libs.ws.WSClient;
 import play.mvc.Controller;
 import play.mvc.Result;
-import utils.DbUtil;
 
 import javax.inject.Inject;
 import java.util.HashMap;
-import java.util.List;
 
 /**
  * Created by lizhuoli on 15/8/31.
  */
 public class AuthAction extends Controller {
     @Inject WSClient ws;
-    private Datastore datastore = DbUtil.getDataStore();
-    private String weiboAppKey;
-    private String weiboAppSecret;
-    private String weiboRedirectURL;
 
     public Promise<Result> weiboCallback(){
         String email = session("email");
         if (email == null){
             return Promise.promise(() -> forbidden("Not login"));
         }
-        Config config = ConfigFactory.load();
-        weiboAppKey = config.getString("app.weibo.appkey");
-        weiboAppSecret = config.getString("app.weibo.secret");
-        weiboRedirectURL = config.getString("app.weibo.redirectURL");
 
         String code = request().getQueryString("code");
         String baseURL = "https://api.weibo.com/oauth2/access_token";
         String parameter = String.format("client_id=%s&client_secret=%s&grant_type=authorization_code&redirect_uri=%s&code=%s",
-                weiboAppKey, weiboAppSecret, weiboRedirectURL, code);
+                ConstUtil.weiboAppKey, ConstUtil.weiboSecret, ConstUtil.weiboRedirectUrl, code);
 
         AsyncRequest request = new AsyncRequest(ws,baseURL,null);
-        List<User> users = datastore.createQuery(User.class)
-                .filter("email",email).asList();
-        User user = users.get(0);
-        Token token = new Token();
 
         Promise<JsonNode> jsonNodePromise = request.post(parameter);
         return jsonNodePromise.map(value -> {
             try {
                 String weiboToken = value.findPath("access_token").asText();
-                String weiboExpireTime = value.findPath("expires_in").asText();
+                Long weiboExpireTime = value.findPath("expires_in").asLong();
 
+                User user = User.getUser(email);
+                Token token = new Token();
                 HashMap<String, String> tokenMap = new HashMap<>();
                 tokenMap.put("token", weiboToken);
-                tokenMap.put("expire", weiboExpireTime);
+                tokenMap.put("expire", String.format("%d",(System.currentTimeMillis() + weiboExpireTime)));
                 token.setWeibo(tokenMap);
                 user.setToken(token);
+                User.saveUser(user);
 
                 return ok(authResult.render("微博","成功"));
             }
