@@ -46,16 +46,13 @@ public class User  {
                                some useful methods to access database
      *****************************************************************/
     public static User Authenticate(String email,String password){
-        Iterable <User> it = DbUtil.getDataStore().createQuery(User.class).fetch();
-        while(it.iterator().hasNext()){
-            User user = it.iterator().next();
-            if(user.getEmail().equals(email)
-                    &&user.getPassword().equals(
-                    password)){
-                return user;
-            }
-        }
-        return null;
+        List<User> users = DbUtil.getDataStore().createQuery(User.class)
+                .filter("email",email)
+                .filter("password",password).asList();
+        if(!users.isEmpty())
+            return users.get(0);
+        else
+            return null;
     }
 
     public static User getUser(String email){
@@ -86,19 +83,24 @@ public class User  {
 
     public static boolean updatePsw(String email,String psw){
         Datastore datastore = DbUtil .getDataStore();
-        final Query<User> query = datastore.createQuery(User.class)
+        final Query<User> query =
+                datastore.createQuery(User.class)
                 .filter("email",email);
-        final UpdateOperations<User> updateOperation  = datastore.createUpdateOperations(User.class)
+        final UpdateOperations<User> updateOperation  =
+                datastore.createUpdateOperations(User.class)
                 .set("password",psw);
 
-        final UpdateResults results = datastore.update(query, updateOperation);
+        final UpdateResults results =
+                datastore.update(query, updateOperation);
         return true;
     }
 
     public static boolean isAvailable(String id,String email){
         Datastore datastore = DbUtil.getDataStore();
-        if (!datastore.createQuery(User.class).filter("_id",id).asList().isEmpty()||
-                !datastore.createQuery(User.class).filter("email",email).asList().isEmpty())
+        if (!datastore.createQuery(User.class)
+                        .filter("_id", id).asList().isEmpty()||
+                !datastore.createQuery(User.class)
+                        .filter("email", email).asList().isEmpty())
             return false;
         else
             return true;

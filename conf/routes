@@ -18,7 +18,7 @@ GET         /api/weibo/auth                   controllers.AuthAction.weiboCallba
 GET         /api/weibo/message                controllers.Application.getWeiboMessage(email, url)
 #Account management
 
-GET         /user                             controllers.UserAction.index(id:String)
+GET         /user                             controllers.UserAction.index()
 
 POST        /auth                             controllers.UserAction.authenticate()
 

@@ -1,37 +1,20 @@
 package controllers;
 
-import models.Token;
-import org.mongodb.morphia.query.Query;
-import org.mongodb.morphia.query.UpdateOperations;
-import org.mongodb.morphia.query.UpdateResults;
-import play.cache.Cache;
-import play.data.DynamicForm;
-import utils.ConstUtil;
-import utils.DbUtil;
-import models.User;
-import org.mongodb.morphia.Datastore;
-import play.*;
-import play.data.Form;
-import play.mvc.*;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import models.Account.Token;
 import models.Account.User;
 import play.data.DynamicForm;
 import play.data.Form;
 import play.mvc.Controller;
 import play.mvc.Result;
 import play.mvc.Security;
-
+import utils.ConstUtil;
 import utils.EncryptUtil;
 import utils.MailUtil;
 import views.html.*;
 
-import static utils.ConstUtil.SHA1_SALT;
-import static utils.ConstUtil.renrenExpireMax;
-import static utils.ConstUtil.weiboExipreMax;
+import java.util.Map;
+
+import static utils.ConstUtil.*;
 
 /**
  * Created by harvey on 15-9-2.
@@ -43,7 +26,8 @@ public class UserAction extends Controller{
 
 
     @Security.Authenticated(Secured.class)
-    public Result index(String email){
+    public Result index(){
+        String email = session("email");
         User user = User.getUser(email);
         if(user!=null)
             return ok(index.render(user));
@@ -60,7 +44,7 @@ public class UserAction extends Controller{
         if(User.Authenticate(email,password)!=null){
             session().clear();
             session("email", email);
-            return redirect(routes.UserAction.index(email));
+            return redirect(routes.UserAction.index());
         }else{
             return forbidden("invalid password");
         }
@@ -102,7 +86,7 @@ public class UserAction extends Controller{
                 EncryptUtil.SHA1(EncryptUtil.SHA1(id) + SHA1_SALT)
         )){
             User.validEmail(id);
-            return redirect(routes.UserAction.index(id));
+            return redirect(routes.UserAction.index());
         }else{
             return ok("邮箱认证失败！");
         }
@@ -131,7 +115,7 @@ public class UserAction extends Controller{
             );
             User.saveUser(user);
             session("email", email);
-            return redirect(routes.UserAction.index(id));
+            return redirect(routes.UserAction.index());
         }else{
             return forbidden("两次输入的密码不一致");
         }
@@ -172,14 +156,16 @@ public class UserAction extends Controller{
         }
     }
     //用户授权管理
+    @Security.Authenticated(Secured.class)
     public Result authAdminRender(){
         String email = session("email");
         if (email == null){
             forbidden("Not login");
         }
-        Token tokenList = datastore.createQuery(User.class).filter("email",email).asList().get(0).getToken();
+        Token tokenList = User.getUser(email).getToken();
         Map<String,String> weiboToken = tokenList.getWeibo();
         Map<String,String> renrenToken = tokenList.getRenren();
+
         int weiboExpire = weiboToken.containsKey("expire") ? Integer.parseInt(weiboToken.get("expire")) : 0;
         String weiboAuthed = System.currentTimeMillis() - weiboExpire < weiboExipreMax
                 ? "是" : "否";
