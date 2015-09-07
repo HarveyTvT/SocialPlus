@@ -11,7 +11,6 @@ import play.libs.ws.WSClient;
 import play.libs.ws.WSRequest;
 import play.mvc.Controller;
 import play.mvc.Result;
-import play.mvc.With;
 import utils.DbUtil;
 
 import javax.inject.Inject;
@@ -19,18 +18,7 @@ import java.util.List;
 
 
 public class Application extends Controller {
-
     @Inject WSClient ws;
-
-
-    //delegateCall
-    @With(ComposingAction.class)
-    public Result delegateCall(){
-        if (ctx().args.get("secret") != "test"){//get AOP args
-            return forbidden("fuck not allow call");
-        }
-        return ok("Call delagete");
-    }
 
     //asyncRequest
     public Promise<Result> asyncRequest() {

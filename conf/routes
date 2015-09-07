@@ -8,15 +8,11 @@ GET         /                                 controllers.UserAction.login()
 
 # Can use optional value(which means the either /get-optional?user=lizhuoli or /get-optional will do
 
-# AOP Test(delegate Action)
-GET         /delegate                         controllers.Application.delegateCall()
-
-GET         /asyncRequest                     controllers.Application.asyncRequest()
-
+# API call
 GET         /api/weibo/auth                   controllers.AuthAction.weiboCallback()
 
 GET         /api/weibo/message                controllers.Application.getWeiboMessage(email, url)
-#Account management
+# Account management
 
 GET         /user                             controllers.UserAction.index()
 
