@@ -9,7 +9,7 @@ import models.AsyncRequest;
 import models.Token;
 import models.User;
 import org.mongodb.morphia.Datastore;
-import play.api.mvc.Session;
+import views.html.*;
 import play.mvc.*;
 import play.libs.ws.*;
 import play.libs.F.Promise;
@@ -44,28 +44,28 @@ public class AuthAction extends Controller {
                 weiboAppKey,weiboAppSecret,weiboRedirectURL,code);
 
         AsyncRequest request = new AsyncRequest(ws,baseURL,null);
-
-        Datastore dataStore = DbUtil.getDataStore();
-        List<User> users = dataStore.createQuery(User.class)
+        List<User> users = datastore.createQuery(User.class)
                 .filter("email",email).asList();
         User user = users.get(0);
         Token token = new Token();
 
         Promise<JsonNode> jsonNodePromise = request.post(parameter);
         return jsonNodePromise.map(value -> {
-            String weiboToken = value.findPath("access_token").asText();
-            String weiboExpireTime = value.findPath("expires_in").asText();
+            try {
+                String weiboToken = value.findPath("access_token").asText();
+                String weiboExpireTime = value.findPath("expires_in").asText();
 
-            HashMap<String,String> tokenMap = new HashMap<>();
-            tokenMap.put("token",weiboToken);
-            tokenMap.put("expire", weiboExpireTime);
-            token.setWeibo(tokenMap);
-            user.setToken(token);
+                HashMap<String, String> tokenMap = new HashMap<>();
+                tokenMap.put("token", weiboToken);
+                tokenMap.put("expire", weiboExpireTime);
+                token.setWeibo(tokenMap);
+                user.setToken(token);
 
-            return ok(weiboToken);
+                return ok(authResult.render("微博","成功"));
+            }
+            catch (Exception e){
+                return forbidden(authResult.render("微博","失败"));
+            }
         });
     }
-
-
-
 }

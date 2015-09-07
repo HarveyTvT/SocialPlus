@@ -18,7 +18,7 @@ GET         /api/weibo/auth                   controllers.AuthAction.weiboCallba
 GET         /api/weibo/message                controllers.Application.getWeiboMessage(email, url)
 #Account management
 
-GET         /user/:id                         controllers.UserAction.index(id:String)
+GET         /user                             controllers.UserAction.index(id:String)
 
 POST        /auth                             controllers.UserAction.authenticate()
 
@@ -28,7 +28,7 @@ GET         /valid                            controllers.UserAction.processVali
 
 GET         /sendValideMail/:id/:email        controllers.UserAction.sendValidationMail(id,email)
 
-POST       /sendPswMail                      controllers.UserAction.sendPswMail()
+POST        /sendPswMail                      controllers.UserAction.sendPswMail()
 
 GET         /login                            controllers.UserAction.login()
 
@@ -36,11 +36,12 @@ GET         /register                         controllers.UserAction.register()
 
 GET         /exit                             controllers.UserAction.exit()
 
-GET         /findpsw/setpsw/:email           controllers.UserAction.setPass(email:String)
+GET         /findpsw/setpsw/:email            controllers.UserAction.setPass(email:String)
 
-GET         /findpsw/inputpsw                   controllers.UserAction.InputPass(email,valideCode)
+GET         /findpsw/inputpsw                 controllers.UserAction.InputPass(email,valideCode)
 
 GET         /findpsw/inputmail                controllers.UserAction.InputEmail()
 
+GET         /user/admin                       controllers.UserAction.authAdminRender()
 # Map static resources from the /public folder to the /assets URL path
 GET         /assets/*file                     controllers.Assets.versioned(path="/public", file: Asset)
