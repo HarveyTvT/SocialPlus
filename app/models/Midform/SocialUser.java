@@ -1,8 +1,16 @@
 package models.Midform;
 
+import org.mongodb.morphia.Datastore;
+import org.mongodb.morphia.annotations.Entity;
+import org.mongodb.morphia.annotations.Id;
+import utils.DbUtil;
+
+import java.util.List;
+
 /**
  * Created by lizhuoli on 15/9/2.
  */
+@Entity("socialuser")
 public class SocialUser {
     public SocialUser(){
         name = "name";
@@ -10,13 +18,29 @@ public class SocialUser {
         weight = "0";
         location = "北京";
     }
-
-    private String id;
-    private String name;
-    private String gender;
+    @Id
+    private String id;//"weibo-uid"
+    private String name;//"少雨的夏天"
+    private String gender;//"m" or "f"
     private String weight;
-    private String location;
-    private SocialUser[] friendList;
+    private String location;//"北京”
+    private String[] friendList;//""
+
+    public static void save(SocialUser user){
+        Datastore datastore = DbUtil.getDataStore();
+        datastore.save(user);
+    }
+
+    public static SocialUser getSocialUser(String id){
+        Datastore datastore = DbUtil.getDataStore();
+        List<SocialUser> users = datastore.createQuery(SocialUser.class)
+                .filter("_id",id).asList();
+        if(!users.isEmpty()){
+            return users.get(0);
+        }else{
+            return null;
+        }
+    }
 
     /*****************************************************************
                                 Setter and getter of all attributes
@@ -62,11 +86,11 @@ public class SocialUser {
         this.location = location;
     }
 
-    public SocialUser[] getFriendList() {
+    public String[] getFriendList() {
         return friendList;
     }
 
-    public void setFriendList(SocialUser[] friendList) {
+    public void setFriendList(String[] friendList) {
         this.friendList = friendList;
     }
 }

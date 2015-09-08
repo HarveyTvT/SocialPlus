@@ -22,28 +22,20 @@ public class SocialMessage {
         repostCount = "123";
         commentCount = "321";
         author = new SocialUser();
-        author.setFriendList(
-                new SocialUser[]{
-                        new SocialUser(), new SocialUser()
-                }
-        );
-        comments = new SocialComment[]{
-                new SocialComment(), new SocialComment(), new SocialComment()
-        };
     }
     @Id
-    private String id;
-    private String createTime;
-    private String url;
-    private String content;
+    private String id;//"weibo-uid"
+    private String createTime;//"Mon Oct 27 11:04:04 +0800 2014"
+    private String url;//"http://weibo.com/2691199564/CzhEbku3Z?from=page_1005052691199564_profile&wvr=6&mod=weibotime"
+    private String content;//"content"
     private String[] tags;
     @Embedded("repostlist")
     private SocialMessage[] repostList;
     @Embedded("source")
     private SocialMessage source;
-    private String location;
-    private String repostCount;
-    private String commentCount;
+    private String location;//"北京“
+    private String repostCount;//”123“
+    private String commentCount;//"213"
     @Embedded("author")
     private SocialUser author;
     @Embedded("comments")

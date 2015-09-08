@@ -1,11 +1,13 @@
 package models.Results;
 
+import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.annotations.Embedded;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Id;
-import org.mongodb.morphia.annotations.Property;
+import utils.DbUtil;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -35,14 +37,41 @@ public class Result {
     @Embedded("links")
     private List<Link> links = new ArrayList<Link>();
 
-    @Property("tags")
-    private List<String> tags = new ArrayList<String>();
+    private String[] tags ;
 
     @Embedded("time")
     private List<Time> time = new ArrayList<Time>();
 
     @Embedded("gender")
     private Gender gender = new Gender();
+
+    /**
+     * save a result instance to database
+     * @param result
+     */
+    public static void save(Result result) {
+        Datastore datastore = DbUtil.getDataStore();
+        datastore.save(result);
+    }
+
+    /**
+     * get Result from database by id
+     * @param id
+     * @return
+     */
+    public static Result getResult(String id){
+        Datastore datastore = DbUtil.getDataStore();
+        List<Result> results = datastore.createQuery(Result.class)
+                .filter("_id",id).asList();
+        if(!results.isEmpty()){
+            Result result = results.get(0);
+            result.setLastData(String.valueOf(new Date()));
+            Result.save(result);
+            return result;
+        } else {
+            return null;
+        }
+    }
 
 
     /****************************************************
@@ -122,11 +151,11 @@ public class Result {
         this.links = links;
     }
 
-    public List<String> getTags() {
+    public String[] getTags() {
         return tags;
     }
 
-    public void setTags(List<String> tags) {
+    public void setTags(String[] tags) {
         this.tags = tags;
     }
 
