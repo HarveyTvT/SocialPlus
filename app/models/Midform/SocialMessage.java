@@ -1,7 +1,6 @@
 package models.Midform;
 
 import org.mongodb.morphia.Datastore;
-import org.mongodb.morphia.annotations.Embedded;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Id;
 import utils.DbUtil;
@@ -21,7 +20,6 @@ public class SocialMessage {
         location = "beijing";
         repostCount = "123";
         commentCount = "321";
-        author = new SocialUser();
     }
     @Id
     private String id;//"weibo-uid"
@@ -29,17 +27,13 @@ public class SocialMessage {
     private String url;//"http://weibo.com/2691199564/CzhEbku3Z?from=page_1005052691199564_profile&wvr=6&mod=weibotime"
     private String content;//"content"
     private String[] tags;
-    @Embedded("repostlist")
-    private SocialMessage[] repostList;
-    @Embedded("source")
-    private SocialMessage source;
+    private String[] repostList;
+    private String source;
     private String location;//"北京“
     private String repostCount;//”123“
     private String commentCount;//"213"
-    @Embedded("author")
-    private SocialUser author;
-    @Embedded("comments")
-    private SocialComment[] comments;
+    private String author;
+    private String[] comments;
 
     public static void save(SocialMessage socialMessage){
         Datastore datastore = DbUtil.getDataStore();
@@ -134,19 +128,19 @@ public class SocialMessage {
         this.commentCount = commentCount;
     }
 
-    public SocialUser getAuthor() {
+    public String  getAuthor() {
         return author;
     }
 
-    public void setAuthor(SocialUser author) {
+    public void setAuthor(String author) {
         this.author = author;
     }
 
-    public SocialComment[] getComments() {
+    public String[] getComments() {
         return comments;
     }
 
-    public void setComments(SocialComment[] comments) {
+    public void setComments(String[] comments) {
         this.comments = comments;
     }
 
