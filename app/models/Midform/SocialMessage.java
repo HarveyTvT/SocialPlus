@@ -88,19 +88,19 @@ public class SocialMessage {
         this.content = content;
     }
 
-    public SocialMessage[] getRepostList() {
+    public String[] getRepostList() {
         return repostList;
     }
 
-    public void setRepostList(SocialMessage[] repostList) {
+    public void setRepostList(String[] repostList) {
         this.repostList = repostList;
     }
 
-    public SocialMessage getSource() {
+    public String getSource() {
         return source;
     }
 
-    public void setSource(SocialMessage source) {
+    public void setSource(String  source) {
         this.source = source;
     }
 
