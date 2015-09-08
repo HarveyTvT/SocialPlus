@@ -41,7 +41,7 @@ public class PreProcess {
         result.setId(message.getId());
         result.setUrl(message.getUrl());
         result.setTags(message.getTags());
-        result.setAuthor(message.getAuthor().getName());
+        result.setAuthor(message.getAuthor());
     }
 
     /**

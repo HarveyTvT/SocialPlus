@@ -9,6 +9,7 @@ GET         /                             controllers.UserAction.login()
 # Can use optional value(which means the either /get-optional?user=lizhuoli or /get-optional will do
 
 # API call
+
 # Weibo
 GET         /api/weibo/auth               controllers.AuthAction.weiboAuth()
 
@@ -24,6 +25,7 @@ GET         /api/weibo/userList           controllers.Application.getWeiboUserLi
 
 GET         /api/weibo/commentList        controllers.Application.getWeiboCommentList(cids)
 
+GET         /api/weibo/test               controllers.Application.weiboEntryTest(url)
 # Twitter
 GET         /api/twitter/auth             controllers.AuthAction.twitterAuth()
 # Account management
