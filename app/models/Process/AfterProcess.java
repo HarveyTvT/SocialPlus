@@ -1,4 +1,4 @@
-package models;
+package models.Process;
 
 /**
  * Created by lizhuoli on 15/8/31.

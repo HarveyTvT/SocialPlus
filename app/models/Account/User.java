@@ -83,15 +83,18 @@ public class User  {
 
     public static boolean updatePsw(String email,String psw){
         Datastore datastore = DbUtil .getDataStore();
-        final Query<User> query =
-                datastore.createQuery(User.class)
-                .filter("email",email);
-        final UpdateOperations<User> updateOperation  =
-                datastore.createUpdateOperations(User.class)
-                .set("password",psw);
-
-        final UpdateResults results =
-                datastore.update(query, updateOperation);
+//        final Query<User> query =
+//                datastore.createQuery(User.class)
+//                .filter("email",email);
+//        final UpdateOperations<User> updateOperation  =
+//                datastore.createUpdateOperations(User.class)
+//                .set("password",psw);
+//
+//        final UpdateResults results =
+//                datastore.update(query, updateOperation);
+        User user = User.getUser(email);
+        user.setPassword(psw);
+        User.saveUser(user);
         return true;
     }
 
