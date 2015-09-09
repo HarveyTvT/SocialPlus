@@ -1,9 +1,9 @@
 package models.RawConverter;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import models.Midform.SocialUser;
 import models.Midform.SocialComment;
 import models.Midform.SocialMessage;
-import models.Midform.SocialUser;
 import play.libs.F.Promise;
 
 import java.util.List;
@@ -12,10 +12,12 @@ import java.util.List;
  * Created by lizhuoli on 15/9/2.
  */
 public interface RawConverter {
-    public SocialUser convertUser(Promise<JsonNode> json);
-    public SocialMessage convertMessage(Promise<JsonNode> json);
-    public SocialComment convertComment(Promise<JsonNode> json);
-    public List<SocialUser> convertUserList(Promise<JsonNode> json);
-    public List<SocialMessage> convertMessageList(Promise<JsonNode> json);
-    public List<SocialComment> convertCommentList(Promise<JsonNode> json);
+    public void convertUser(Promise<List<JsonNode>> promiseList);
+    public void convertMessage(Promise<List<JsonNode>> promiseList,String url);
+    public void convertComment(Promise<List<JsonNode>> promiseList);
+
+    public SocialUser getUser(String[] list,String... args);
+    public SocialMessage getMessage(String[] tags,String[] repostsList,
+                                    String... args);
+    public SocialComment getComment(String... args);
 }

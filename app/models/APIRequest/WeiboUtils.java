@@ -1,5 +1,12 @@
 package models.APIRequest;
 
+import utils.ConstUtil;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 /**
  * Created by lizhuoli on 15/9/6.
  */
@@ -149,5 +156,15 @@ public abstract class WeiboUtils {
         stringList = stringList.substring(0, stringList.length()-1);
 
         return stringList;
+    }
+
+    public static String[] getMessageTags(String message){
+        List<String> tagList = new ArrayList<String>();
+        Matcher matcher = Pattern.compile(ConstUtil.HashtagRegex).matcher(message);
+        while (matcher.find()){
+            tagList.add(matcher.group(1));
+        }
+        String[] tags = tagList.toArray(new String[0]);
+        return tags;
     }
 }

@@ -2,18 +2,15 @@ package controllers;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import models.Account.User;
-import models.AsyncRequest;
 import play.libs.oauth.OAuth;
 import play.libs.oauth.OAuth.*;
 import play.mvc.Security;
 import utils.ConstUtil;
 import views.html.*;
 import play.libs.F.Promise;
-import play.libs.ws.WSClient;
 import play.mvc.Controller;
 import play.mvc.Result;
 
-import javax.inject.Inject;
 import java.util.HashMap;
 
 import com.google.common.base.Strings;
@@ -22,7 +19,6 @@ import com.google.common.base.Strings;
  * Created by lizhuoli on 15/8/31.
  */
 public class AuthAction extends Controller {
-    @Inject WSClient ws;
 
     @Security.Authenticated(Secured.class)
     public Promise<Result> weiboAuth(){
@@ -32,7 +28,7 @@ public class AuthAction extends Controller {
         String parameter = String.format("client_id=%s&client_secret=%s&grant_type=authorization_code&redirect_uri=%s&code=%s",
                 ConstUtil.weiboAppKey, ConstUtil.weiboSecret, ConstUtil.weiboRedirectUrl, code);
 
-        AsyncRequest request = new AsyncRequest(ws,baseURL,null);
+        AsyncRequest request = new AsyncRequest(baseURL,null);
 
         Promise<JsonNode> jsonNodePromise = request.post(parameter);
         return jsonNodePromise.map(value -> {
