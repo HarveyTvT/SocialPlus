@@ -9,8 +9,7 @@ public class ConverterUtil {
     public static int calculateWeight(int follow,int star,int favorite){
         return (follow + star + favorite)/3;
     }
-
-    public static SocialMessage setMessage(String id,String fuck){
-        return null;
+    public static String weiboPrefix(String id){
+        return "weibo" + id;
     }
 }

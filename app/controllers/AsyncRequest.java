@@ -38,7 +38,6 @@ public class AsyncRequest extends Controller{
 
         responsePromise.onFailure(error -> {
             Logger.error(error.toString());
-            forbidden("something error with request");
         });
 
         return jsonNodePromise;
@@ -57,7 +56,6 @@ public class AsyncRequest extends Controller{
 
         responsePromise.onFailure(error -> {
             Logger.error(error.toString());
-            forbidden("something error with request");
         });
 
         return jsonNodePromise;

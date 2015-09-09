@@ -13,11 +13,10 @@ import java.util.List;
  */
 public interface RawConverter {
     public void convertUser(Promise<List<JsonNode>> promiseList);
-    public void convertMessage(Promise<List<JsonNode>> promiseList,String url);
+    public void convertMessage(Promise<List<JsonNode>> promiseList);
     public void convertComment(Promise<List<JsonNode>> promiseList);
 
-    public SocialUser getUser(String[] list,String... args);
-    public SocialMessage getMessage(String[] tags,String[] repostsList,
-                                    String... args);
-    public SocialComment getComment(String... args);
+    public SocialUser getUser(JsonNode userJson);
+    public SocialMessage getMessage(JsonNode messageJson,Boolean isOriginal);
+    public SocialComment getComment(JsonNode commentJson);
 }

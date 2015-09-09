@@ -7,6 +7,8 @@ import models.Midform.SocialComment;
 import models.Midform.SocialMessage;
 import models.Midform.SocialUser;
 import play.libs.F.Promise;
+
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -14,100 +16,119 @@ import java.util.List;
  */
 public class WeiboConverter implements RawConverter{
     private final String weiboToken;
-    public WeiboConverter(String token){
+    private final String weiboUrl;
+    public WeiboConverter(String token,String url){
         weiboToken = token;
+        weiboUrl = url;
     }
 
     @Override
-    public void convertMessage(Promise<List<JsonNode>> promiseList,String url) {
+    public void convertMessage(Promise<List<JsonNode>> promiseList){
         WeiboAPI weiboAPI = new WeiboAPI(weiboToken);
 
-        promiseList.onRedeem(jsonList->{
-            JsonNode messageJson = jsonList.get(0);
-            JsonNode repostsListJson = jsonList.get(1);
+        promiseList.onRedeem(jsonList -> {
+            JsonNode messageList = jsonList.get(0).get("reposts");
 
-            JsonNode userNode = messageJson.path("user");
+            if (messageList.size() == 0){
+                return;
+            }
 
-            String id = messageJson.get("id").asText();
-            String createTime = messageJson.get("created_at").asText();
-            String content = messageJson.get("text").asText();
-            String authorId = userNode.get("id").asText();
-            String source = messageJson.has("retweeted_status") ? "null" :
-                    messageJson.get("retweeted_status").get("id").asText();
-            String location = messageJson.get("geo").asText();
-            String repostsCount = messageJson.get("reposts_count").asText();
-            String commentCount = messageJson.get("comments_count").asText();
-            String[] tags = WeiboUtils.getMessageTags(content);
-            String[] repostsList = repostsListJson.findValuesAsText("statuses").toArray(new String[0]);
+            //First get the original message json
+            JsonNode originalJson = messageList.get(0).get("retweeted_status");
+            SocialMessage originalMessage = getMessage(originalJson, true);
+            List<String> repostList = new ArrayList<String>();
+            //Next get the repost message json array, process each message with its author
+            for (JsonNode messageJson : messageList) {
+                //add each repost messageId to original message repostList
+                repostList.add(ConverterUtil.weiboPrefix(messageJson.get("id").asText()));
 
-            String userId = userNode.get("id").asText();
-            String userName = userNode.get("screen_name").asText();
-            String userGender = userNode.get("gender").asText();
-            String userWeight = String.format("%d", ConverterUtil.calculateWeight(
-                            userNode.get("followers_count").asInt(),
-                            userNode.get("friends_count").asInt(),
-                            userNode.get("favourites_count").asInt()
-                    )
-            );
-            String userLocation = userNode.get("province").asText();
+                SocialMessage repostMessage = getMessage(messageJson, false);
+                SocialUser author = getUser(messageJson.get("user"));
 
-            weiboAPI.getUserFriendList(userId).onRedeem(result -> {
-                String[] friendList = (String[])result.findValuesAsText("ids").toArray(new String[0]);
-                SocialUser author = getUser(friendList,userId,userName,
-                        userGender,userWeight,userLocation);
-                SocialMessage message = getMessage(tags,repostsList,id,createTime,url,content,
-                        source,location,repostsCount,commentCount,authorId);
                 SocialUser.save(author);
-                SocialMessage.save(message);
-            });
+                SocialMessage.save(repostMessage);
+            }
+            originalMessage.setRepostList(repostList.toArray(new String[0]));
+            SocialMessage.save(originalMessage);
         });
+    }
+
+    @Override
+    public void convertUser(Promise<List<JsonNode>> promiseList){
 
     }
 
     @Override
-    public void convertUser(Promise<List<JsonNode>> promiseList) {
+    public void convertComment(Promise<List<JsonNode>> promiseList){
 
     }
 
     @Override
-    public void convertComment(Promise<List<JsonNode>> promiseList) {
-
-    }
-
-    @Override
-    public SocialUser getUser(String[] list,String... args) {
+    public SocialUser getUser(JsonNode userJson) {
         SocialUser socialUser = new SocialUser();
-        socialUser.setId(args[0]);
-        socialUser.setName(args[1]);
-        socialUser.setGender(args[2]);
-        socialUser.setWeight(args[3]);
-        socialUser.setLocation(args[4]);
-        socialUser.setFriendList(list);
+
+        String id = ConverterUtil.weiboPrefix(userJson.get("id").asText());
+        String name = userJson.get("screen_name").asText();
+        String gender = userJson.get("gender").asText();
+        String weight = String.format("%d", ConverterUtil.calculateWeight(
+                        userJson.get("followers_count").asInt(),
+                        userJson.get("friends_count").asInt(),
+                        userJson.get("favourites_count").asInt()
+                )
+        );
+        String location = userJson.get("province").asText();
+
+
+        socialUser.setId(id);
+        socialUser.setName(name);
+        socialUser.setGender(gender);
+        socialUser.setWeight(weight);
+        socialUser.setLocation(location);
+        socialUser.setFriendList(null);
 
         return socialUser;
     }
 
     @Override
-    public SocialMessage getMessage(String[] tags,String[] repostsList,
-                                    String... args) {
+    public SocialMessage getMessage(JsonNode messageJson,Boolean isOriginal) {
         SocialMessage socialMessage = new SocialMessage();
-        socialMessage.setId(args[0]);
-        socialMessage.setCreateTime(args[1]);
-        socialMessage.setUrl(args[2]);
-        socialMessage.setContent(args[3]);
+
+        String id = ConverterUtil.weiboPrefix(messageJson.get("id").asText());
+        String createTime = messageJson.get("created_at").asText();
+        String content = messageJson.get("text").asText();
+        String authorId = ConverterUtil.weiboPrefix(messageJson.path("user").
+                get("id").asText());
+        String location = messageJson.get("geo").asText();
+        String repostsCount = messageJson.get("reposts_count").asText();
+        String commentCount = messageJson.get("comments_count").asText();
+        String[] tags = WeiboUtils.getMessageTags(content);
+        String source = null;
+        String[] repostList = null;
+
+        if (isOriginal){
+            repostList = null;
+        }
+        else{
+            source = ConverterUtil.weiboPrefix(messageJson.get("retweeted_status")
+                    .get("id").asText());
+        }
+
+        socialMessage.setId(id);
+        socialMessage.setCreateTime(createTime);
+        socialMessage.setUrl(weiboUrl);
+        socialMessage.setContent(content);
         socialMessage.setTags(tags);
-        socialMessage.setLocation(args[4]);
-        socialMessage.setAuthor(args[5]);
-        socialMessage.setRepostCount(args[6]);
-        socialMessage.setCommentCount(args[7]);
-        socialMessage.setRepostList(repostsList);
-        socialMessage.setAuthor(args[8]);
+        socialMessage.setLocation(location);
+        socialMessage.setAuthor(authorId);
+        socialMessage.setRepostCount(repostsCount);
+        socialMessage.setCommentCount(commentCount);
+        socialMessage.setRepostList(repostList);
 
         return socialMessage;
     }
 
     @Override
-    public SocialComment getComment(String... args) {
+    public SocialComment getComment(JsonNode commentJson) {
         return null;
     }
 }

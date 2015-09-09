@@ -6,10 +6,7 @@ import models.APIRequest.WeiboAPI;
 import models.Account.User;
 import models.RawConverter.RawConverter;
 import models.RawConverter.WeiboConverter;
-import play.Logger;
 import play.libs.F.Promise;
-import play.libs.ws.WSClient;
-import play.libs.ws.WSRequest;
 import play.mvc.Controller;
 import play.mvc.Result;
 import play.mvc.Security;
@@ -39,7 +36,6 @@ public class Application extends Controller {
 
         WeiboAPI weiboAPI = new WeiboAPI(weiboToken);
         Promise<JsonNode> jsonNodePromise = weiboAPI.getSocialMessage(weiboAPI.parseUrlToId(url));
-        RawConverter converter = new WeiboConverter(weiboToken);
 
         return jsonNodePromise.map(json -> ok(json));
     }
@@ -75,7 +71,7 @@ public class Application extends Controller {
         String weiboToken = user.getToken().getWeibo().get("token");
 
         WeiboAPI weiboAPI = new WeiboAPI(weiboToken);
-        Promise<JsonNode> jsonNodePromise = weiboAPI.getSocialMessage(weiboAPI.parseUrlToId(url));
+        Promise<JsonNode> jsonNodePromise = weiboAPI.getSocialMessageList(weiboAPI.parseUrlToId(url));
 
         return jsonNodePromise.map(json -> ok(json));
     }
@@ -99,17 +95,13 @@ public class Application extends Controller {
         String weiboToken = user.getToken().getWeibo().get("token");
 
         WeiboAPI weiboAPI = new WeiboAPI(weiboToken);
-        WeiboConverter converter = new WeiboConverter(weiboToken);
+        RawConverter converter = new WeiboConverter(weiboToken,url);
 
         String id = weiboAPI.parseUrlToId(url);
-        Promise<List<JsonNode>> promiseList = Promise.sequence(weiboAPI.getSocialMessage(id),
-                weiboAPI.getMessageRepostList(id));
-        try {
-            converter.convertMessage(promiseList, url);
-            return ok("db ok");
-        }
-        catch (Exception e){
-            return internalServerError("fuck");
-        }
+        Promise<List<JsonNode>> promiseList = Promise.sequence(weiboAPI.getSocialMessageList(id));
+
+        converter.convertMessage(promiseList);
+
+        return ok("Database insert ok");
     }
 }

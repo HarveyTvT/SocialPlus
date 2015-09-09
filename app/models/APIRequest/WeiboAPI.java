@@ -106,7 +106,7 @@ public class WeiboAPI{
     public Promise<JsonNode> getSocialMessageList(String id){
         String baseUrl = "https://api.weibo.com/2/statuses/repost_timeline.json";
         String parameter = String.format("access_token=%s&id=%s&page=%s&count=%s",
-                weiboToken, id, 1, 200);//最后的参数为转发微博单页个数
+                weiboToken, id, 1, 200);//最后的参数为单页转发微博上限
 
         AsyncRequest request = new AsyncRequest(baseUrl,parameter);
         Promise<JsonNode> jsonNodePromise = request.get();
@@ -145,33 +145,14 @@ public class WeiboAPI{
      */
 
     public Promise<JsonNode> getUserFriendList(String uid){
-        String baseUrl = "https://api.weibo.com/2/friendships/friends/ids.json";
-        String parameter = String.format("access_token=%s&uid=%s",
-                weiboToken, uid);
+        String baseUrl = "https://api.weibo.com/2/friendships/friends.json";
+        String parameter = String.format("access_token=%s&uid=%s&count=%d",
+                weiboToken, uid, 100);//最后参数为单页用户上限
 
         AsyncRequest request = new AsyncRequest(baseUrl,parameter);
         Promise<JsonNode> jsonNodePromise = request.get();
         jsonNodePromise.onFailure(err -> {
             Logger.error("Error at getting Weibo friend list: " + err);
-        });
-
-        return jsonNodePromise;
-    }
-
-    /**
-     * 获取原创微博的转发列表
-     * @param id
-     * @return
-     */
-    public Promise<JsonNode> getMessageRepostList(String id){
-        String baseUrl = "https://api.weibo.com/2/statuses/repost_timeline/ids.json";
-        String parameter = String.format("access_token=%s&id=%s",
-                weiboToken,id);
-
-        AsyncRequest request = new AsyncRequest(baseUrl,parameter);
-        Promise<JsonNode> jsonNodePromise = request.get();
-        jsonNodePromise.onFailure(err -> {
-            Logger.error("Error at getting Weibo message repost list: " + err);
         });
 
         return jsonNodePromise;
