@@ -14,7 +14,7 @@ import java.util.List;
  * Created by harvey on 15-8-31.
  */
 @Entity("result")
-public class Result {
+public class Outcome {
     @Id
     private String id;
 
@@ -46,28 +46,28 @@ public class Result {
     private Gender gender = new Gender();
 
     /**
-     * save a result instance to database
-     * @param result
+     * save a outcome instance to database
+     * @param outcome
      */
-    public static void save(Result result) {
+    public static void save(Outcome outcome) {
         Datastore datastore = DbUtil.getDataStore();
-        datastore.save(result);
+        datastore.save(outcome);
     }
 
     /**
-     * get Result from database by id
+     * get Outcome from database by id
      * @param id
      * @return
      */
-    public static Result getResult(String id){
+    public static Outcome getResult(String id) {
         Datastore datastore = DbUtil.getDataStore();
-        List<Result> results = datastore.createQuery(Result.class)
+        List<Outcome> outcomes = datastore.createQuery(Outcome.class)
                 .filter("_id",id).asList();
-        if(!results.isEmpty()){
-            Result result = results.get(0);
-            result.setLastData(String.valueOf(new Date()));
-            Result.save(result);
-            return result;
+        if (!outcomes.isEmpty()) {
+            Outcome outcome = outcomes.get(0);
+            outcome.setLastData(String.valueOf(new Date()));
+            Outcome.save(outcome);
+            return outcome;
         } else {
             return null;
         }

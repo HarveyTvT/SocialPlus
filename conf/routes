@@ -5,6 +5,9 @@
 # Home page
 GET         /                             controllers.UserAction.login()
 
+#Entrance of analysis
+
+GET         /service                      controllers.Service.analysis(url)
 
 # Can use optional value(which means the either /get-optional?user=lizhuoli or /get-optional will do
 
