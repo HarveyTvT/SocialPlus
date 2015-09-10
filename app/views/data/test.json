@@ -18,10 +18,10 @@
     }, {
         "date": 5441898482,
         "number": 20
-    }, {
+    },{
         "date": 57441998482,
         "number": 10
-    }, {
+    },{
         "date": 64420984820,
         "number": 4
     }],
@@ -57,10 +57,10 @@
     }],
     "links": [{
         "source": 0,
-        "target": 1,
+        "target": 1
     }, {
         "source": 1,
-        "target": 2,
+        "target": 2
     }],
     "emotion": 50,
     "lastdate": "2015-8-19 19:00:00"

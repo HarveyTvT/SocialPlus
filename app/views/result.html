@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" type="text/css" href="css/semantic.min.css">
+    <link rel="stylesheet" type="text/css" href="css/result.css">
+</head>
+
+<body>
+    <div class="ui fixed inverted menu">
+        <div class="ui container">
+            <div href="#" class="header item">
+                Socialplus
+            </div>
+            <a href="#" class="item">Home</a>
+            <div class="right item">
+                <a href="#" class="ui teal button" id="save_result">保存分析结果</a>
+            </div>
+            <!-- <div class="right floated button"id="save_result">
+                保存分析结果
+            </div>
+ -->
+        </div>
+    </div>
+    <div class="ui two column grid container">
+        <div class="twelve wide column chart">
+            <a class="ui card" href="">
+                <div class="ui embed" data-url="">
+                </div>
+            </a>
+        </div>
+        <div class="four wide column chart">
+            <div class="ui small header">
+                情感分析
+            </div>
+            <div id="emotionChart" class="draw">
+                <svg id="emotionChartSVG">
+                    <div id="emotionText">
+                        偏好值：
+                        <span id="valueText">00</span>
+                    </div>
+                </svg>
+            </div>
+        </div>
+        <div class="left floated ten wide column">
+            <div class="ui small header">
+                时间/转发量关系
+            </div>
+            <div id="timeChart" class="draw">
+                <svg id="timeChartSVG">
+                    <defs>
+                        <linearGradient id="lineChart--gradientBackgroundArea" x1="0" x2="0" y1="0" y2="1">
+                            <stop class="lineChart--gradientBackgroundArea--top" offset="0%" />
+                            <stop class="lineChart--gradientBackgroundArea--bottom" offset="100%" />
+                        </linearGradient>
+                    </defs>
+                </svg>
+            </div>
+        </div>
+        <div class="ten wide column chart">
+            <div class="ui small header">
+                转发层次
+            </div>
+            <div id="forceChart" class="draw">
+            </div>
+        </div>
+        <div class="six wide column chart">
+            <div class="ui small header">
+                关键词统计
+            </div>
+            <div id="keywordChart" class="draw"></div>
+        </div>
+        <div class="twelve wide column chart">
+            <div class="ui small header">
+                地域分析
+            </div>
+            <div id="mapChart" class="draw">
+                <!-- <div class="ui small header">
+                    地域分析
+                </div>
+ -->
+                <svg>
+                    <div id="tooltip" class="hidden">
+                        <p><strong id="province">省份</strong></p>
+                        <p><span id="value">转发量: 0</span></p>
+                    </div>
+                </svg>
+            </div>
+        </div>
+        <div class="four wide column chart">
+            <div class="ui small header">
+                性别分析
+            </div>
+            <div id="genderChart" class="draw">
+                <!-- <div class="ui small header">
+                    性别分析
+                </div>
+ --></div>
+        </div>
+    </div>
+    <script type="text/javascript" src="d3/d3.min.js"></script>
+    <script type="text/javascript" src="js/d3.layout.cloud.js"></script>
+    <script type="text/javascript" src="js/result.js"></script>
+</body>
+
+</html>
