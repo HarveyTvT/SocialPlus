@@ -1,24 +1,106 @@
 /* 
 * @Author: gyl
-* @Date:   2015-09-08 10:49:19
+* @Date:   2015-09-10 14:44:23
 * @Last Modified by:   gyl
-* @Last Modified time: 2015-09-10 15:36:16
+* @Last Modified time: 2015-09-12 11:38:44
 */
+
 body {
-    background-color: #f1f1f1;
+    font-size: 14px;
+    font-family: sans-serif;
+    font-weight: 100;
+    background-color: #ccc;
+    background-image: linear-gradient(transparent 50%, rgba(255, 255, 255, 0.5) 25%);
+    background-size: 4px 4px;
+}
+
+button.ui.icon.button {
+    margin-top: 30px;
 }
 
 .ui.grid {
-    margin-top: 7em;
-}
-a.ui.card{
-    width:100%;
+    margin-top: 1.5em;
 }
 
-.column.chart {
+.weiboInfo {
+    float: left;
+    background-color: #fff;
+    width: 100%;
+    height: 120px;
+}
+
+.weiboleft {
+    width: 30%;
+    height: 100%;
+    border-right: 1px solid rgba(201, 204, 204, 0.3);
     position: relative;
     float: left;
-    margin-top: 30px;
+}
+
+.weiboleft img {
+    margin-left: 20px;
+    margin-top: 17px;
+    margin-bottom: 15px;
+    margin-right: 5px;
+    float: left;
+}
+
+.source-name {
+    float: left;
+    color: #000000;
+    font-size: 1.5em;
+    width: 127px;
+    margin-top: 10px;
+    margin-bottom: 5px;
+    margin-left: 2px;
+}
+
+ul {
+    padding-left: 5px;
+    float: left;
+    text-align: center;
+}
+
+li {
+    list-style-type: none;
+    width: 46px;
+    color: #333;
+    font-size: 14px;
+    float: left;
+    padding: 0px 3px 0px 3px;
+}
+
+li span {
+    width: 100%;
+    float: left;
+}
+
+.weiboright {
+    float: left;
+    width: 65%;
+    color: #333;
+    font-size: 13px;
+    margin-left: 16px;
+    margin-top: 11px
+}
+
+.text {
+    height: 70px;
+}
+
+.weibobottom {
+    float: left;
+}
+
+.grid.container {
+    padding-left: 100px;
+}
+
+.ui.header.chartHeader {
+    margin-bottom: 0em;
+    margin-top: 0em;
+    margin-left: 10px;
+    color: #666;
 }
 
 .draw {
@@ -34,66 +116,14 @@ a.ui.card{
 }
 
 
-/*emotionChart*/
-
-#emotionChart {
-    font-family: Helvetica, Arial, sans-serif;
-    height: 200px;
-    padding-left: 10px;
-    padding-right: 10px;
-    padding-top: 10px;
-    padding-bottom: 10px;
-    /*background-color:  #f1f1f1;*/
-}
-
-#emotionChart g.arc {
-    fill: "steel";
-}
-
-#emotionChart g.pointer {
-    fill: #e85116;
-    stroke: #b64011;
-}
-
-#emotionChart g.label text {
-    text-anchor: middle;
-    font-size: 14px;
-    font-weight: bold;
-    fill: #777;
-}
-
-#emotionText {
-    font: 20px sans-serif;
-    text-align: center;
-}
-
-
 /*timeChart*/
 
 #timeChart {
     font: 12px sans-serif;
-    height: 400px;
+    height: 380px;
+    padding-top: 0px;
 }
 
-/*#timeChart .axis path,
-.axis line {
-    fill: none;
-    stroke: #000;
-    shape-rendering: crispEdges;
-}*/
-
-/*#timeChart .x.axis path {
-    display: none;
-}
-*/
-
-
-/*#timeChart .line {
-    fill: none;
-    stroke: #069;
-    stroke-width: 1.5px;
-}
-*/
 .lineChart--area {
     fill: url(#lineChart--gradientBackgroundArea);
 }
@@ -104,6 +134,7 @@ a.ui.card{
     stroke-width: 3;
 }
 
+
 /*.lineChart--bubble--label {
     fill: none;
     stroke: #6bb7c7;
@@ -112,6 +143,7 @@ a.ui.card{
     font-weight: 100;
 }
 */
+
 .lineChart--bubble--value {
     fill: #fff;
     stroke: #fff;
@@ -152,25 +184,111 @@ a.ui.card{
 }
 
 .lineChart--xAxis .tick line,
-.lineChart--yAxis .tick line{
+.lineChart--yAxis .tick line {
     display: none;
 }
 
 .lineChart--xAxisTicks .tick line,
-.lineChart--yAxisTicks .tick line
-{
+.lineChart--yAxisTicks .tick line {
     fill: none;
     stroke: #b3b3b3;
     stroke-width: 1;
     stroke-dasharray: 2, 2;
+}
 
+#bigUser,
+#keyPath {
+    height: 280px;
+    margin-left: 0;
+    margin-right: 0;
+    padding: 10px;
+}
+
+.bigUser-left {
+    margin-left: 10px;
+    margin-top: 8px;
+    width: 43%;
+    /*border-right: 1px solid #4c4c4c;*/
+    float: left;
+    height: 90%;
+    padding: 9px, 0px, 0px, 10px;
+}
+
+.bigUser-info {
+    width: 100%;
+    height: 80px;
+}
+
+.bigUser-info img {
+    margin: 17px, 8px, 0px, 18px;
+    float: left;
+}
+
+.bigUser-name {
+    float: left;
+    width: 172px;
+    font-size: 15px;
+    margin-top: 12px;
+    margin-bottom: 5px;
+}
+
+.bigUser-fans {
+    float: left;
+    width: 139px;
+    font-size: 13px;
+}
+
+.repost-time-box {
+    width: 120px;
+    text-align: center;
+    font-size: 12px;
+    height: 66px;
+    float: left;
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+.repost-date,
+.repost-time {
+    font-size: 18px;
+}
+
+.repost-number-box {
+    font-size: 12px;
+    width: 80px;
+    height: 66px;
+    float: left;
+}
+
+.repost-number {
+    font-size: 27px;
+    margin-top: 10px;
+}
+
+.bigUser-right {
+    width: 52%;
+    float: left;
+    height: 90%;
+    font-size: 16px;
+    padding: 9px, 0px, 0px, 10px;
+}
+
+.bigUser-right span {
+    font-size: 14px;
+}
+
+.repost-content {
+    font-size: 12px;
 }
 
 
 /*forceChart*/
 
-#forceChart {
-    height: 400px;
+#forceChart,
+#forceList {
+    height: 500px;
+    margin-left: 0;
+    margin-right: 0;
 }
 
 #forceChart .node {
@@ -184,17 +302,12 @@ a.ui.card{
 }
 
 
-/*keywordChart*/
-
-#keywordChart {
-    height: 400px;
-}
-
-
 /*mapChart*/
 
 #mapChart {
-    height: 500px;
+    height: 400px;
+    margin-left: 0;
+    margin-right: 0;
 }
 
 #tooltip {
@@ -223,21 +336,133 @@ a.ui.card{
     line-height: 20px;
 }
 
-.valueText {
-    font-family: arial;
-    font-size: 12px;
-    text-anchor: middle;
+.mapBarAxis text {
+    font: 10px sans-serif;
+}
+
+.mapBarAxis path,
+.mapBarAxis line {
+    fill: none;
+    stroke: #000;
+    shape-rendering: crispEdges;
+}
+
+.mapBar {
+    fill: steelblue;
+    fill-opacity: .6;
+}
+
+.x.mapBarAxis path {
+    display: none;
 }
 
 
 /*genderChart*/
 
-#genderChart {
+#genderChart,
+#resourceChart,
+#identifyChart {
+    margin-left: 0;
+    margin-right: 0;
+    height: 300px;
+}
+
+.pieChart--center--innerCircle {
+    fill: #fff;
+}
+
+.pieChart--center--text {
+    font-size: 18px;
+}
+
+.pieChart--center--outerCircle {
+    fill: rgba(255, 255, 255, 0.75);
+}
+
+.pieChart--detail--divider {
+    stroke: gray;
+    stroke-width: 1;
+}
+
+.pieChart--detail--percentage {
+    font-size: 24px;
+    font-weight: 60;
+    fill: #333;
+    stroke-width: 1px;
+}
+
+.pieChart--detail--textContainer {
+	width:100;
+    background-color: transparent;
+    padding: 10px 0 0 0;
+    margin: 0;
+    color: #666;
+    font-style: italic;
+}
+
+.pieChart--detail__left {
+    text-align: left;
+}
+
+.pieChart--detail__right {
+    text-align: right;
+}
+
+.pieChart__male {
+    fill: #6bb7c7;
+}
+
+.pieChart__female {
+    fill: #d79d91;
+}
+
+.pieChart__other {
+    fill: #ccc;
+}
+
+
+/*emotionChart*/
+
+#emotionChart {
+    font-family: Helvetica, Arial, sans-serif;
+    height: 300px;
+    margin-left: 0;
+    /*background-color:  #f1f1f1;*/
+}
+
+#emotionChart g.arc {
+    fill: "steel";
+}
+
+#emotionChart g.pointer {
+    fill: #e85116;
+    stroke: #b64011;
+}
+
+#emotionChart g.label text {
+    text-anchor: middle;
+    font-size: 14px;
+    font-weight: bold;
+    fill: #777;
+}
+
+#emotionText {
+    font: 60px sans-serif;
+    color: #666;
+    text-align: left;
     padding-left: 10px;
-    padding-right: 10px;
-    padding-top: 10px;
-    padding-bottom: 10px;
-    height: 200px;
+}
+
+#keywordsChart {
+    margin-left: 0;
+    margin-top: 20px;
+    height: 400px;
+}
+
+#keywordChart {
+    margin-left: 0;
+    margin-right: 0;
+    height: 300px;
 }
 
 .hidden {

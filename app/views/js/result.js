@@ -2,7 +2,7 @@
  * @Author: gyl
  * @Date:   2015-09-08 11:04:28
  * @Last Modified by:   gyl
- * @Last Modified time: 2015-09-10 20:38:33
+ * @Last Modified time: 2015-09-12 21:15:26
  */
 
 (function() {
@@ -109,7 +109,7 @@
                         .select("svg")
                         .attr('class', 'gauge')
                         .attr('width', config.clipWidth)
-                        .attr('height', config.clipHeight / 2 + 30);
+                        .attr('height', config.clipHeight / 2);
 
                     var centerTx = centerTranslation();
 
@@ -300,7 +300,7 @@
                 .attr("class", "lineChart--yAxis")
                 .attr("transform", "translate(" + (detailWidth / 2 - 7) + "," + 0 + ")")
                 .call(yAxis);
-        
+
             svg.append('path').datum(startData)
                 .attr('class', 'lineChart--areaLine')
                 .attr('d', line)
@@ -309,7 +309,7 @@
                 .each('end', function() {
                     drawCircles(data.time);
                 });
-        
+
             svg.append('path')
                 .datum(startData)
                 .attr('class', 'lineChart--area')
@@ -364,15 +364,15 @@
                     return result;
                 });
                 details.append('path')
-                .attr('d', 'M2.99990186,0 C1.34310181,0 0,1.34216977 0,2.99898218 L0,47.6680579 C0,49.32435 1.34136094,50.6670401 3.00074875,50.6670401 L44.4095996,50.6670401 C48.9775098,54.3898926 44.4672607,50.6057129 49,54.46875 C53.4190918,50.6962891 49.0050244,54.4362793 53.501875,50.6670401 L94.9943116,50.6670401 C96.6543075,50.6670401 98,49.3248703 98,47.6680579 L98,2.99898218 C98,1.34269006 96.651936,0 95.0000981,0 L2.99990186,0 Z M2.99990186,0')
-                .attr('width', detailWidth).attr('height', detailHeight);
+                    .attr('d', 'M2.99990186,0 C1.34310181,0 0,1.34216977 0,2.99898218 L0,47.6680579 C0,49.32435 1.34136094,50.6670401 3.00074875,50.6670401 L44.4095996,50.6670401 C48.9775098,54.3898926 44.4672607,50.6057129 49,54.46875 C53.4190918,50.6962891 49.0050244,54.4362793 53.501875,50.6670401 L94.9943116,50.6670401 C96.6543075,50.6670401 98,49.3248703 98,47.6680579 L98,2.99898218 C98,1.34269006 96.651936,0 95.0000981,0 L2.99990186,0 Z M2.99990186,0')
+                    .attr('width', detailWidth).attr('height', detailHeight);
                 var text = details.append('text').attr('class', 'lineChart--bubble--text');
                 text.append('tspan')
-                .attr('class', 'lineChart--bubble--label')
-                .attr('x', detailWidth / 2)
-                .attr('y', detailHeight / 3)
-                // .attr('text-anchor', 'middle').text( +
-                //     showTime[index]);
+                    .attr('class', 'lineChart--bubble--label')
+                    .attr('x', detailWidth / 2)
+                    .attr('y', detailHeight / 3)
+                    // .attr('text-anchor', 'middle').text( +
+                    //     showTime[index]);
                 text.append('tspan').attr('class', 'lineChart--bubble--value').attr('x', detailWidth / 2).attr('y', detailHeight / 4 * 3).attr('text-anchor', 'middle').text(data.number);
             }
 
@@ -421,7 +421,7 @@
             });
         }
 
-        function drawKeywordChart(elementId) {
+        function drawKeywordsChart(elementId) {
             var containerEl = document.getElementById(elementId),
                 padding = 20,
                 width = containerEl.clientWidth - padding,
@@ -489,11 +489,35 @@
 
             var projection = d3.geo.mercator()
                 .center([105, 36])
-                .scale(width * 3 / 4)
-                .translate([width / 2, height / 2]);
+                ////////////////////////to fix
+                .scale(height * 3 / 4 + 50)
+                .translate([width / 4, height / 2]);
 
             var path = d3.geo.path()
                 .projection(projection);
+
+            var barMargin = {
+                    top: 40,
+                    right: 20,
+                    bottom: 30,
+                    left: 40
+                },
+                barWidth = width / 2 - barMargin.left - barMargin.right,
+                barHeight = height * 4 / 5 - barMargin.top - barMargin.bottom;
+
+            var x = d3.scale.ordinal()
+                .rangeRoundBands([0, barWidth], .04, 1);
+
+            var y = d3.scale.linear()
+                .range([barHeight, 0]);
+
+            var xAxis = d3.svg.axis()
+                .scale(x)
+                .orient("bottom");
+
+            var yAxis = d3.svg.axis()
+                .scale(y)
+                .orient("left");
 
             d3.json("./data/China.json", function(error, map) {
 
@@ -510,19 +534,49 @@
                     .attr("stroke-width", 1)
                     .attr("d", path);
 
-                var values = [];
+                var values = d3.map({
+                    "00": 0
+                });
+                var names = d3.map({
+                    "00": "其他"
+                });
+                //////////!!!!!!!!!!!!!!!!!!!!!!!
                 for (var i = 0; i < map.features.length; i++) {
                     var id = map.features[i].properties.id;
-                    var number = 0;
-                    values[id] = 0;
+                    var name = map.features[i].properties.name;
+                    names.set(id, name);
+                    values.set(id, 0);
                 }
 
 
-                for (var m = 0; m < data.locations.length; m++) {
-                    var id = data.locations[m].id;
-                    var number = data.locations[m].number;
-                    values[id] = number;
+                var provinceBars = svg.append("g")
+                    .attr("width", barWidth + barMargin.left + barMargin.right)
+                    .attr("height", barHeight + barMargin.top + barMargin.bottom)
+                    .attr("transform", "translate(" + (width / 2 + 50) + "," + 50 + ")");
+
+                for (var n = 0; n < data.locations.length; n++) {
+                    var id = data.locations[n].id;
+                    var value = data.locations[n].number;
+                    values.set(id, value);
                 }
+                ordinalNames = names.entries().sort(function(a, b) {
+                    if (values.get(a.key) > values.get(b.key))
+                        return -1;
+                    if (values.get(a.key) < values.get(b.key))
+                        return 1;
+                    return 0;
+                });
+                var showNames = [];
+                for (var k = 0; k < ordinalNames.length; k++) {
+                    if (k < 10)
+                        showNames.push(ordinalNames[k]);
+                    else
+                        break;
+                }
+
+                x.domain(showNames.map(function(d) {
+                    return d.value;
+                }));
 
                 var maxvalue = d3.max(data.locations, function(d) {
                     return d.number;
@@ -537,8 +591,8 @@
                     .range([lightBlue, darkBlue]);
 
 
-                provinces.style("fill", function(d, i) {
-                        return colorScale(values[d.properties.id]);
+                provinces.style("fill", function(d) {
+                        return colorScale(values.get(d.properties.id));
                     })
                     .on("mouseover", function(d, i) {
                         var xPosition = d3.mouse(this)[0];
@@ -550,7 +604,7 @@
                             .text(d.properties.name)
 
                         d3.select("#value")
-                            .text("转发量: " + values[d.properties.id]);
+                            .text("转发量: " + values.get(d.properties.id));
                         d3.select("#tooltip")
                             .classed("hidden", false);
 
@@ -559,71 +613,171 @@
                         d3.select("#tooltip")
                             .classed("hidden", true);
                     });
+
+                var defs = svg.append("defs");
+
+                var linearGradient = defs.append("linearGradient")
+                    .attr("id", "linearColor")
+                    .attr("x1", "0%")
+                    .attr("y1", "0%")
+                    .attr("x2", "0%")
+                    .attr("y2", "100%");
+
+                var stop1 = linearGradient.append("stop")
+                    .attr("offset", "0%")
+                    .style("stop-color", darkBlue.toString());
+
+                var stop2 = linearGradient.append("stop")
+                    .attr("offset", "100%")
+                    .style("stop-color", lightBlue.toString());
+
+                var colorRect = svg.append("rect")
+                    .attr("x", 50)
+                    .attr("y", height / 2 + 50)
+                    // .attr("dy,0)
+                    .attr("width", 20)
+                    .attr("height", 60)
+                    .style("fill", "url(#" + linearGradient.attr("id") + ")");
+
+
+                var minValueText = svg.append("text")
+                    .attr("class", "valueText")
+                    .attr("x", 50)
+                    .attr("y", height / 2 + 110)
+                    .attr("dy", "1.3em")
+                    .text(function() {
+                        return minvalue;
+                    });
+
+                var maxValueText = svg.append("text")
+                    .attr("class", "valueText")
+                    .attr("x", 50)
+                    .attr("y", height / 2 + 50)
+                    .attr("dy", "-0.3em")
+                    .text(function() {
+                        return maxvalue;
+                    });
+                var explainText = svg.append("text")
+                    .attr("class", "valueText")
+                    .attr("x", 160)
+                    .attr("y", 0)
+                    .attr("dy", "-0.3em")
+                    .text(function() {
+                        return maxvalue;
+                    });
+
+                y.domain([minvalue, maxvalue]);
+
+                provinceBars.append("g")
+                    .attr("class", "x mapBarAxis")
+                    .attr("transform", "translate(0," + barHeight + ")")
+                    .call(xAxis);
+
+                provinceBars.append("g")
+                    .attr("class", "y mapBarAxis")
+                    .call(yAxis)
+                    .append("text")
+                    .attr("transform", "rotate(-90)")
+                    .attr("y", 6)
+                    .attr("dy", ".71em")
+                    .style("text-anchor", "end")
+                    .text("转发量");
+
+
+                provinceBars.selectAll(".mapBar")
+                    .data(showNames)
+                    .enter()
+                    .append("rect")
+                    .attr("class", "mapBar")
+                    .attr("x", function(d) {
+                        return x(d.value);
+                    })
+                    .attr("width", x.rangeBand())
+                    .attr("y", function(d) {
+                        return y(values.get(d.key));
+                    })
+                    .attr("height", function(d) {
+                        return barHeight - y(values.get(d.key));
+                    });
+
             });
         }
 
         function drawGenderChart(elementId) {
+
             var containerEl = document.getElementById(elementId),
                 padding = 20,
                 width = containerEl.clientWidth - padding,
-                height = containerEl.clientHeight - padding,
+                height = containerEl.clientHeight - padding ,
+                radius = Math.min(width*4/5, height*4/5) / 2,
+                DURATION = 1500,
+                DELAY = 500,
                 container = d3.select(containerEl),
-                svg = container.append("svg")
+                svg = container.select("svg")
                 .attr("width", width)
                 .attr("height", height);
 
+            var pie = svg.append('g').attr('transform', 'translate(' + width / 2 + ',' + height / 2 + ')');
+            var detailedInfo = svg.append('g').attr('class', 'pieChart--detailedInformation');
+            var twoPi = 2 * Math.PI;
+            var pieData = d3.layout.pie().value(function(d) {
+                return d.value;
+            });
+            var arc = d3.svg.arc().outerRadius(radius - 20).innerRadius(0);
+            var pieChartPieces = pie.datum(d3.entries(data.gender)).selectAll('path').data(pieData).enter().append('path').attr('class', function(d) {
+                return 'pieChart__' + d.data.key;
+            }).attr('filter', 'url(#pieChartInsetShadow)').attr('d', arc).each(function() {
+                this._current = {
+                    startAngle: 0,
+                    endAngle: 0
+                };
+            }).transition().duration(DURATION).attrTween('d', function(d) {
+                var interpolate = d3.interpolate(this._current, d);
+                this._current = interpolate(0);
+                return function(t) {
+                    return arc(interpolate(t));
+                };
+            }).each('end', function handleAnimationEnd(d) {
+                drawDetailedInformation(d.data, this);
+            });
+            drawChartCenter();
 
-            var outerRadius = Math.min(width, height) / 2;
-            var innerRadius = 0;
-            var pie = d3.layout.pie()
-                .sort(null);
-            var arc = d3.svg.arc()
-                .innerRadius(innerRadius)
-                .outerRadius(outerRadius);
+            function drawChartCenter() {
+                var centerContainer = pie.append('g').attr('class', 'pieChart--center');
+                centerContainer.append('circle').attr('class', 'pieChart--center--outerCircle').attr('r', 0).attr('filter', 'url(#pieChartDropShadow)').transition().duration(DURATION).delay(DELAY).attr('r', radius - 50);
+                centerContainer.append('circle').attr('id', 'pieChart-clippy').attr('class', 'pieChart--center--innerCircle').attr('r', 0).transition().delay(DELAY).duration(DURATION).attr('r', radius - 55).attr('fill', '#fff');
+            }
 
-            var color = d3.scale.category20c();
-            var path = svg.selectAll("g")
-                .data(pie(d3.values(data.gender)))
-                .enter()
-                .append("g")
-                .attr("transform", "translate(" + outerRadius + "," + outerRadius + ")");
-            path.append("path")
-                .attr("fill", function(d, i) {
-                    return color(i);
-                })
-                .attr("d", arc);
-            var gender_text = path.append("text")
-                .attr("transform", function(d) {
-                    return "translate(" + arc.centroid(d) + ")";
-                })
-                .attr("dy", "1em")
-                .attr("text-anchor", "middle")
-                .attr("fill", "white")
-                .text(function(d) {
-                    return d.value;
+            function drawDetailedInformation(data, element) {
+                var bBox = element.getBBox(),
+                    infoWidth = width * 0.3,
+                    anchor, infoContainer, position;
+                if (bBox.x + bBox.width / 2 > 0) {
+                    infoContainer = detailedInfo.append('g').attr('width', infoWidth).attr('transform', 'translate(' + (width - infoWidth) + ',' + (bBox.height + bBox.y+height/4) + ')');
+                    anchor = 'end';
+                    position = 'right';
+                } else {
+                    infoContainer = detailedInfo.append('g').attr('width', infoWidth).attr('transform', 'translate(' + 0 + ',' + (bBox.height + bBox.y+height/4) + ')');
+                    anchor = 'start';
+                    position = 'left';
+                }
+                infoContainer.data([data.value]).append('text').text('0 ').attr('class', 'pieChart--detail--percentage').attr('x', position === 'left' ? 0 : infoWidth).attr('y', -10).attr('text-anchor', anchor).transition().duration(DURATION).tween('text', function(d) {
+                    var i = d3.interpolateRound(+this.textContent.replace(/\s%/gi, ''), d);
+                    return function(t) {
+                        this.textContent = i(t) ;
+                    };
                 });
+                infoContainer.append('line').attr('class', 'pieChart--detail--divider').attr('x1', 0).attr('x2', 0).attr('y1', 0).attr('y2', 0).transition().duration(DURATION).attr('x2', infoWidth);
+                infoContainer.data([data.key]).append("text").attr('width', infoWidth).attr('height', 100).attr('class', 'pieChart--detail--textContainer ' + 'pieChart--detail__' + position).text(data.key);
+            }
 
-
-            var value_text = path.append("text")
-                .attr("transform", function(d) {
-                    return "translate(" + arc.centroid(d) + ")";
-                })
-                .attr("dy", "-0.4em")
-                .attr("text-anchor", "middle")
-                .attr("fill", "white")
-                .text(function(d, i) {
-                    return d3.keys(data.gender)[i];
-
-
-
-                });
         }
 
         function drawAllChart() {
             drawEmotionChart("emotionChart");
             drawTimeChart("timeChart");
             drawForceChart("forceChart");
-            drawKeywordChart("keywordChart");
+            drawKeywordsChart("keywordsChart");
             drawMapChart("mapChart");
             drawGenderChart("genderChart");
 

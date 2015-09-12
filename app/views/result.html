@@ -8,47 +8,60 @@
 </head>
 
 <body>
-    <div class="ui fixed inverted menu">
-        <div class="ui container">
-            <div href="#" class="header item">
-                Socialplus
-            </div>
-            <a href="#" class="item">Home</a>
-            <div class="right item">
-                <a href="#" class="ui teal button" id="save_result">保存分析结果</a>
-            </div>
-            <!-- <div class="right floated button"id="save_result">
-                保存分析结果
-            </div>
- -->
-        </div>
+    <div class="ui left demo vertical inverted visible sidebar labeled icon menu">
+        <a href="" class="item"><i class="home icon"></i>Socialplus</a>
+        <a href="#anlysis" class="item"><i class="space shuttle icon"></i>传播分析</a>
+        <a href="#path" class="item"><i class="world icon"></i>传播路径</a>
+        <a href="#participant" class="item"><i class="users icon"></i>参与者信息</a>
+        <a href="#content" class="item"><i class="quote right icon"></i>内容分析</a>
+        <button class="ui big teal circular icon  button"><i class="save icon"></i></button>
     </div>
-    <div class="ui two column grid container">
-        <div class="twelve wide column chart">
-            <a class="ui card" href="">
-                <div class="ui embed" data-url="">
-                </div>
-            </a>
-        </div>
-        <div class="four wide column chart">
-            <div class="ui small header">
-                情感分析
-            </div>
-            <div id="emotionChart" class="draw">
-                <svg id="emotionChartSVG">
-                    <div id="emotionText">
-                        偏好值：
-                        <span id="valueText">00</span>
+    <div class="ui grid container">
+        <div class="sixteen wide column">
+            <div class="weiboInfo">
+                <div class="weiboleft">
+                    <!-- 微博头像 -->
+                    <a href="" target="_blank">
+                        <img src="" height="63px" width="63px">
+                    </a>
+                    <!-- 微博姓名 -->
+                    <div class="source-name">
+                        <a href="" target="_blank"></a>
                     </div>
-                </svg>
+                    <ul>
+                        <li style="padding-left:0px;">
+                            <span></span>
+                            <span>关注</span>
+                        </li>
+                        <li style="border-left: 1px solid #555 ;border-right: 1px solid #555 ;">
+                            <span></span>
+                            <span>粉丝</span>
+                        </li>
+                        <li>
+                            <span></span>
+                            <span>微博</span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="weiboright">
+                    <div class="text">
+                    </div>
+                    <div class="weibobottom">
+                        <span class="time"><a href = "" target = "_blank"></a></span> | <span class="client">iPad客户端</span> 转发(
+                        <span class="zf"></span>) | 评论(<span class="pl"></span>)
+                    </div>
+                    <span class="bottomtj">提交时间：<span class = "time"></span></span>
+                </div>
             </div>
         </div>
-        <div class="left floated ten wide column">
-            <div class="ui small header">
-                时间/转发量关系
-            </div>
-            <div id="timeChart" class="draw">
-                <svg id="timeChartSVG">
+        <!-- ～～～～～～～～～传播分析～～～～～～～ -->
+        <div class="row" id="anlysis">
+            <div class="draw column" id="timeChart">
+                <div class="ui small header chartHeader">
+                    <i class="history icon"></i>
+                    <span class="content">转发时间趋势</span>
+                </div>
+                <svg class="timeChartSVG">
                     <defs>
                         <linearGradient id="lineChart--gradientBackgroundArea" x1="0" x2="0" y1="0" y2="1">
                             <stop class="lineChart--gradientBackgroundArea--top" offset="0%" />
@@ -58,28 +71,100 @@
                 </svg>
             </div>
         </div>
-        <div class="ten wide column chart">
-            <div class="ui small header">
-                转发层次
-            </div>
-            <div id="forceChart" class="draw">
-            </div>
-        </div>
-        <div class="six wide column chart">
-            <div class="ui small header">
-                关键词统计
-            </div>
-            <div id="keywordChart" class="draw"></div>
-        </div>
-        <div class="twelve wide column chart">
-            <div class="ui small header">
-                地域分析
-            </div>
-            <div id="mapChart" class="draw">
-                <!-- <div class="ui small header">
-                    地域分析
+        <div class="ten wide column">
+            <div class="draw" id="bigUser">
+                <div class="ui small header chartHeader">
+                    <i class="user icon"></i>
+                    <span class="content">传播关键用户</span>
                 </div>
- -->
+                <div class="bigUser-left item">
+                    <div class="bigUser-info">
+                        <a href="" target="_blank">
+                            <img src="" width="40px" height="40px">
+                        </a>
+                        <div class="bigUser-name"><a style="float:left;" href="" target="_blank"><span></span></a>
+                            <div class="ico"></div>
+                        </div>
+                        <div class="bigUser-fans">粉丝数：<span></span></div>
+                    </div>
+                    <div class="repost-time-box">
+                        <div style="text-align: center;">转发时间</div>
+                        <div class="repost-date"></div>
+                        <div class="repost-time"></div>
+                    </div>
+                    <div class="repost-number-box">
+                        <div style="text-align: center;">转发数</div>
+                        <div class="repost-number"></div>
+                    </div>
+                </div>
+                <div class="bigUser-right">
+                    <span>转发内容：</span>
+                    <span class="repost-content"></span>
+                </div>
+            </div>
+        </div>
+        <div class="six wide  column">
+            <div class="draw" id="bigUser">
+                <div class="ui small header chartHeader">
+                    <i class=" ellipsis horizontal icon"></i>
+                    <span class="content">关键用户传播路径</span>
+                </div>
+            </div>
+        </div>
+        <!-- ～～～～～～～～～传播路径～～～～～～～-->
+        <div class="ten wide column" id="path">
+            <div id="forceChart" class="draw">
+                <div class="ui small header chartHeader">
+                    <i class="world icon"></i>
+                    <span class="content">传播路径</span>
+                </div>
+            </div>
+        </div>
+        <div class="six wide column">
+            <div id="forceTable" class="draw">
+                <div class="ui small header chartHeader">
+                    <i class="feed icon"></i>
+                    <span class="content">层级分析</span>
+                </div>
+                <table class="ui center aligned selectable table">
+                    <thead>
+                        <tr>
+                            <th>层级</th>
+                            <th>比例</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>第一层</td>
+                            <td id="firstClassValue"></td>
+                        </tr>
+                        <tr>
+                            <td>第二层</td>
+                            <td id="sencondClassValue"></td>
+                        </tr>
+                        <tr>
+                            <td>第三层</td>
+                            <td class="thirdCladdValue"></td>
+                        </tr>
+                        <tr>
+                            <td>第四层</td>
+                            <td class="thirdCladdValue"></td>
+                        </tr>
+                        <tr>
+                            <td>四层＋</td>
+                            <td class="thirdCladdValue"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!--～～～～～～参与者信息～～～～～～ -->
+        <div class="sixteen wide column" id="participant">
+            <div class="draw" id="mapChart">
+                <div class="ui small header chartHeader">
+                    <i class="map icon"></i>
+                    <span class="content">地域分布</span>
+                </div>
                 <svg>
                     <div id="tooltip" class="hidden">
                         <p><strong id="province">省份</strong></p>
@@ -88,15 +173,79 @@
                 </svg>
             </div>
         </div>
-        <div class="four wide column chart">
-            <div class="ui small header">
-                性别分析
-            </div>
-            <div id="genderChart" class="draw">
-                <!-- <div class="ui small header">
-                    性别分析
+        <div class="three column row">
+            <div class="column">
+                <div class="draw" id="genderChart">
+                    <div class="ui small header chartHeader">
+                        <i class="child icon"></i>
+                        <span class="content">性别比例</span>
+                    </div>
+                    <svg id="pieChartSVG">
+                        <defs>
+                            <filter id='pieChartInsetShadow'>
+                                <feOffset dx='0' dy='0' />
+                                <feGaussianBlur stdDeviation='3' result='offset-blur' />
+                                <feComposite operator='out' in='SourceGraphic' in2='offset-blur' result='inverse' />
+                                <feFlood flood-color='black' flood-opacity='1' result='color' />
+                                <feComposite operator='in' in='color' in2='inverse' result='shadow' />
+                                <feComposite operator='over' in='shadow' in2='SourceGraphic' />
+                            </filter>
+                            <filter id="pieChartDropShadow">
+                                <feGaussianBlur in="SourceAlpha" stdDeviation="3" result="blur" />
+                                <feOffset in="blur" dx="0" dy="3" result="offsetBlur" />
+                                <feMerge>
+                                    <feMergeNode />
+                                    <feMergeNode in="SourceGraphic" />
+                                </feMerge>
+                            </filter>
+                        </defs>
+                    </svg>
                 </div>
- --></div>
+            </div>
+            <div class="column">
+                <div class="draw" id="resourceChart">
+                    <div class="ui small header chartHeader">
+                        <i class="bullseye icon"></i>
+                        <span class="content">微博来源</span>
+                    </div>
+                </div>
+            </div>
+            <div class="column">
+                <div class="draw" id="identifyChart">
+                    <div class="ui small header chartHeader">
+                        <i class="sun icon"></i>
+                        <span class="content">认证比例</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- 内容分析 -->
+        <div class="six wide column" id="content">
+            <div class="draw row" id="emotionChart">
+                <div class="ui small header chartHeader">
+                    <i class="heart icon"></i>
+                    <span class="content">情感值</span>
+                </div>
+                <svg id="emotionChartSVG">
+                    <div id="emotionText">
+                        <span id="valueText">00</span>
+                    </div>
+                </svg>
+            </div>
+            <div class="draw row" id="keywordsChart">
+                <div class="ui small header chartHeader">
+                    <i class="comments outline icon"></i>
+                    <span class="content">关键词</span>
+                </div>
+            </div>
+        </div>
+        <div class="ten wide column">
+            <div class="draw" id="keywordChart">
+                <div class="ui small header chartHeader">
+                    <i class="write icon"></i>
+                    <span class="content">关键字</span>
+                </div>
+            </div>
         </div>
     </div>
     <script type="text/javascript" src="d3/d3.min.js"></script>
