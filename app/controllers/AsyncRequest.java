@@ -12,12 +12,12 @@ import play.mvc.Controller;
 /**
  * Created by lizhuoli on 15/8/31.
  */
-public class AsyncRequest extends Controller{
+public class AsyncRequest extends Controller {
     private WSClient ws;
     private String url;
     private String parameter;
 
-    public AsyncRequest(String requestUrl,String requestParam){
+    public AsyncRequest(String requestUrl, String requestParam) {
         ws = WS.client();
         url = requestUrl;
         parameter = requestParam;
@@ -46,6 +46,7 @@ public class AsyncRequest extends Controller{
     /**
      * GET Request
      * no args. Use the construct method and send with URL query
+     *
      * @return
      */
     public Promise<JsonNode> get(){

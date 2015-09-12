@@ -158,10 +158,10 @@ public abstract class WeiboUtils {
         return stringList;
     }
 
-    public static String[] getMessageTags(String message){
+    public static String[] getMessageTags(String message) {
         List<String> tagList = new ArrayList<String>();
         Matcher matcher = Pattern.compile(ConstUtil.HashtagRegex).matcher(message);
-        while (matcher.find()){
+        while (matcher.find()) {
             tagList.add(matcher.group(1));
         }
         String[] tags = tagList.toArray(new String[0]);

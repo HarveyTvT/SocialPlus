@@ -28,7 +28,7 @@ public class AuthAction extends Controller {
         String parameter = String.format("client_id=%s&client_secret=%s&grant_type=authorization_code&redirect_uri=%s&code=%s",
                 ConstUtil.weiboAppKey, ConstUtil.weiboSecret, ConstUtil.weiboRedirectUrl, code);
 
-        AsyncRequest request = new AsyncRequest(baseURL,null);
+        AsyncRequest request = new AsyncRequest(baseURL, null);
 
         Promise<JsonNode> jsonNodePromise = request.post(parameter);
         return jsonNodePromise.map(value -> {

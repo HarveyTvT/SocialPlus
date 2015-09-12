@@ -84,7 +84,6 @@ public class WeiboConverter implements RawConverter{
         socialUser.setGender(gender);
         socialUser.setWeight(weight);
         socialUser.setLocation(location);
-        socialUser.setFriendList(null);
 
         return socialUser;
     }

@@ -29,7 +29,7 @@ public class SocialMessage {
     private String[] tags;
     private String[] repostList;
     private String source;
-    private String location;//"北京“
+    private String location;//"12“
     private String repostCount;//”123“
     private String commentCount;//"213"
     private String author;

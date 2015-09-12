@@ -4,17 +4,19 @@ import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.annotations.Embedded;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Id;
+import org.mongodb.morphia.annotations.Reference;
 import utils.DbUtil;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by harvey on 15-8-31.
  */
-@Entity("result")
+@Entity("outcome")
 public class Outcome {
+    public Outcome() {
+
+    }
     @Id
     private String id;
 
@@ -26,21 +28,21 @@ public class Outcome {
 
     private String lastData;
 
-    private double emotion;
+    private String[] emotion;
 
     @Embedded("nodes")
-    private List<Node> nodes = new ArrayList<Node>();
+    private List<HashMap<String, Integer>> nodes = new ArrayList<>();
 
     @Embedded("locations")
-    private List<Location> locations = new ArrayList<Location>();
+    private List<HashMap<String, Integer>> locations = new ArrayList<>();
 
     @Embedded("links")
-    private List<Link> links = new ArrayList<Link>();
+    private List<HashMap<String, String>> links = new ArrayList();
 
-    private String[] tags ;
+    private List<String> tags = new ArrayList();
 
     @Embedded("time")
-    private List<Time> time = new ArrayList<Time>();
+    private List<HashMap<String, Long>> times = new ArrayList<>();
 
     @Embedded("gender")
     private Gender gender = new Gender();
@@ -119,53 +121,54 @@ public class Outcome {
         this.lastData = lastData;
     }
 
-    public double getEmotion() {
+    public String[] getEmotion() {
         return emotion;
     }
 
-    public void setEmotion(double emotion) {
+    public void setEmotion(String[] emotion) {
         this.emotion = emotion;
     }
 
-    public List<Node> getNodes() {
+    public List<HashMap<String, Integer>> getNodes() {
         return nodes;
     }
 
-    public void setNodes(List<Node> nodes) {
+    public void setNodes(List<HashMap<String, Integer>> nodes) {
         this.nodes = nodes;
     }
 
-    public List<Location> getLocations() {
+    public List<HashMap<String, Integer>> getLocations() {
         return locations;
     }
 
-    public void setLocations(List<Location> locations) {
+    public void setLocations(List<HashMap<String, Integer>> locations) {
         this.locations = locations;
     }
 
-    public List<Link> getLinks() {
-        return links;
+    public List<HashMap<String, Long>> getTimes() {
+        return times;
     }
 
-    public void setLinks(List<Link> links) {
+    public void setLinks(List<HashMap<String, String>> links) {
         this.links = links;
     }
 
-    public String[] getTags() {
+    public List<HashMap<String, String>> getLinks() {
+        return links;
+    }
+
+    public List<String> getTags() {
         return tags;
     }
 
-    public void setTags(String[] tags) {
+    public void setTags(List<String> tags) {
         this.tags = tags;
     }
 
-    public List<Time> getTime() {
-        return time;
+    public void setTimes(List<HashMap<String, Long>> times) {
+        this.times = times;
     }
 
-    public void setTime(List<Time> time) {
-        this.time = time;
-    }
 
     public Gender getGender() {
         return gender;

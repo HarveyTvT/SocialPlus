@@ -19,12 +19,11 @@ public class SocialUser {
         location = "北京";
     }
     @Id
-    private String id;//"weibo-uid"
+    private String id;//"uid"
     private String name;//"少雨的夏天"
     private String gender;//"m" or "f"
-    private String weight;
+    private String weight;//percent
     private String location;//"北京”
-    private String[] friendList;//""
 
     public static void save(SocialUser user){
         Datastore datastore = DbUtil.getDataStore();
@@ -86,11 +85,4 @@ public class SocialUser {
         this.location = location;
     }
 
-    public String[] getFriendList() {
-        return friendList;
-    }
-
-    public void setFriendList(String[] friendList) {
-        this.friendList = friendList;
-    }
 }

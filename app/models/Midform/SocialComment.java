@@ -14,7 +14,7 @@ import java.util.List;
 public class SocialComment {
     public SocialComment(){
         id = "123412";
-        createTime = "11223344";
+        createTime = "Mon Oct 27 11:04:04 +0800 2014";
         content = "nothing";
     }
     @Id
