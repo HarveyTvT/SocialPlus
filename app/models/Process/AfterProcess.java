@@ -3,7 +3,6 @@ package models.Process;
 import models.Midform.SocialMessage;
 import models.Results.Gender;
 import models.Results.Outcome;
-import org.junit.Test;
 
 import java.math.BigDecimal;
 import java.text.ParseException;
@@ -52,14 +51,16 @@ public class AfterProcess {
     private void prologue(SocialMessage message, Outcome outcome) {
         outcome.setId(message.getId());
         outcome.setUrl(message.getUrl());
-        outcome.setAuthor(message.getAuthor());
+        outcome.setAuthor(
+                getSocialUser(message.getAuthor()).getName()
+        );
         outcome.setContent(message.getContent());
         //get all socialmessage
         for (String repost_id : message.getRepostList()) {
             reposts.add(getSocialMessage(repost_id));
         }
         //get all users
-        List<String> users_dump = new ArrayList<String>();
+        List<String> users_dump = new ArrayList<>();
         users_dump.add(message.getAuthor());
 
         for (SocialMessage repostMessage : reposts) {
@@ -210,16 +211,17 @@ public class AfterProcess {
     private void getNodes(SocialMessage message, Outcome outcome) {
         List<HashMap<String, String>> result = new ArrayList<>();
         HashMap<String, String> root = new HashMap<>();
-        root.put("name", users.get(0));
+        root.put("name", getSocialUser(users.get(0)).getName());
         root.put("group", "0");
 
         for (String user : users) {
             HashMap<String, String> temp = new HashMap<>();
-            temp.put("name", user);
+            temp.put("name", getSocialUser(user).getName());
             temp.put("group", "1");
             result.add(temp);
         }
-        result.set(0, )
+        result.set(0, root);
+
         outcome.setNodes(result);
     }
 
@@ -287,9 +289,11 @@ public class AfterProcess {
     }
 
     public static void main(String... args) {
-        SocialMessage message = getSocialMessage("message1");
-        AfterProcess afterProcess = new AfterProcess();
-        Outcome outcome = afterProcess.WorkFlow(message);
-        Outcome.save(outcome);
+        SocialMessage message = getSocialMessage("109090242989");
+        System.out.println(
+                String.valueOf(message.getAuthor()) + "\n" +
+                        message.getContent() +
+                        String.valueOf(message.getId())
+        );
     }
 }

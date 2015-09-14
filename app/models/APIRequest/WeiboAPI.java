@@ -104,7 +104,7 @@ public class WeiboAPI{
      * @return
      */
     public Promise<JsonNode> getSocialMessageList(String id){
-        String baseUrl = "https://api.weibo.com/2/statuses/repost_timeline.json";
+        String baseUrl = "https://api.weibo.com/2/statuses/repost_timeline/ids.json";
         String parameter = String.format("access_token=%s&id=%s&page=%s&count=%s",
                 weiboToken, id, 1, 200);//最后的参数为单页转发微博上限
 

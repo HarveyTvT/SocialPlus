@@ -12,11 +12,7 @@ import java.util.List;
  * Created by lizhuoli on 15/9/2.
  */
 public interface RawConverter {
-    public void convertUser(Promise<List<JsonNode>> promiseList);
-    public void convertMessage(Promise<List<JsonNode>> promiseList);
-    public void convertComment(Promise<List<JsonNode>> promiseList);
-
-    public SocialUser getUser(JsonNode userJson);
-    public SocialMessage getMessage(JsonNode messageJson,Boolean isOriginal);
-    public SocialComment getComment(JsonNode commentJson);
+    public void convertUser(Promise<JsonNode> jsonPromise);
+    public void convertMessage(Promise<JsonNode> jsonPromise);
+    public void convertComment(Promise<JsonNode> jsonPromise);
 }
