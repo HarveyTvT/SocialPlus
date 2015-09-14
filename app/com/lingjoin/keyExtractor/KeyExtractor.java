@@ -4,9 +4,9 @@ public class KeyExtractor {
 
     static {
         if (CLibraryKeyExtractor.instance.KeyExtract_Init("", 1, "")) {
-            System.out.println("KeyExtractor初始化成功");
+            play.Logger.info("KeyExtractor初始化成功");
         } else {
-            System.out.println("KeyExtractor初始化失败");
+            play.Logger.error("KeyExtractor初始化失败");
             System.exit(-1);
         }
     }
@@ -21,7 +21,7 @@ public class KeyExtractor {
 
     public static String[] getKeyWords(String content) {
         String KeyWordStr = CLibraryKeyExtractor.instance.KeyExtract_GetKeyWords(content, 100, false);
-        System.out.println(KeyWordStr);
+        play.Logger.info("getKeyWords" + KeyWordStr);
         CLibraryKeyExtractor.instance.KeyExtract_Exit();
         String[] KeyWords = KeyWordStr.split("#");
         return KeyWords;

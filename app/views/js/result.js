@@ -6,8 +6,9 @@
  */
 
 (function() {
-    // $('.ui.embed').embed();
+    //$('.ui.embed').embed();
     d3.json("data/test.json", function(data) {
+
         function drawEmotionChart(elementId) {
             var gauge = function(container, configuration) {
                 var that = {};
@@ -385,7 +386,6 @@
                 };
             }
         }
-
 
         function drawForceChart(elementId) {
             var containerEl = document.getElementById(elementId),

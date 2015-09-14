@@ -26,26 +26,28 @@ public class Outcome {
 
     private String author;
 
-    private String lastData;
-
-    private String[] emotion;
-
-    @Embedded("nodes")
-    private List<HashMap<String, Integer>> nodes = new ArrayList<>();
-
-    @Embedded("locations")
-    private List<HashMap<String, Integer>> locations = new ArrayList<>();
-
-    @Embedded("links")
-    private List<HashMap<String, String>> links = new ArrayList();
-
-    private List<String> tags = new ArrayList();
-
     @Embedded("time")
     private List<HashMap<String, Long>> times = new ArrayList<>();
 
     @Embedded("gender")
     private Gender gender = new Gender();
+
+    @Embedded("locations")
+    private List<HashMap<String, Integer>> locations = new ArrayList<>();
+
+    private List<String> tags = new ArrayList();
+
+    @Embedded("nodes")
+    private List<HashMap<String, String>> nodes = new ArrayList<>();
+
+    @Embedded("links")
+    private List<HashMap<String, Integer>> links = new ArrayList();
+
+    private double emotion;
+
+    private String lastData;
+
+
 
     /**
      * save a outcome instance to database
@@ -121,19 +123,19 @@ public class Outcome {
         this.lastData = lastData;
     }
 
-    public String[] getEmotion() {
+    public double getEmotion() {
         return emotion;
     }
 
-    public void setEmotion(String[] emotion) {
+    public void setEmotion(double emotion) {
         this.emotion = emotion;
     }
 
-    public List<HashMap<String, Integer>> getNodes() {
+    public List<HashMap<String, String>> getNodes() {
         return nodes;
     }
 
-    public void setNodes(List<HashMap<String, Integer>> nodes) {
+    public void setNodes(List<HashMap<String, String>> nodes) {
         this.nodes = nodes;
     }
 
@@ -149,11 +151,11 @@ public class Outcome {
         return times;
     }
 
-    public void setLinks(List<HashMap<String, String>> links) {
+    public void setLinks(List<HashMap<String, Integer>> links) {
         this.links = links;
     }
 
-    public List<HashMap<String, String>> getLinks() {
+    public List<HashMap<String, Integer>> getLinks() {
         return links;
     }
 

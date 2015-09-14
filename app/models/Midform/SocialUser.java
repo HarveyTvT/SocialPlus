@@ -23,7 +23,7 @@ public class SocialUser {
     private String name;//"少雨的夏天"
     private String gender;//"m" or "f"
     private String weight;//percent
-    private String location;//"北京”
+    private String location;//"12”
 
     public static void save(SocialUser user){
         Datastore datastore = DbUtil.getDataStore();

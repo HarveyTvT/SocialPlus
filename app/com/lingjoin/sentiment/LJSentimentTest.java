@@ -10,19 +10,19 @@ public class LJSentimentTest {
      */
     @Test
     public void testExportDict() {
-        System.out.println("初始化开始...");
+        play.Logger.info("sentiment初始化开始...");
         if (!CLibrarySentiment.Instance.ST_Init("", 1, "")) {
             System.out.println(CLibrarySentiment.Instance.ST_GetLastErrMsg());
-            System.out.println("初始化失败");
+            play.Logger.error("sentiment初始化失败");
             System.exit(1);
         } else {
-            System.out.println("初始化成功");
+            play.Logger.info("sentiment初始化成功");
         }
         //导出积极和消极情感词典
         if (CLibrarySentiment.Instance.ST_SentiDictIO("/test/pos.txt", "/test/neg.txt", false) == 1) {
-            System.out.println("词典导出成功，请到对应的目录查找");
+            play.Logger.info("词典导出成功，请到对应的目录查找");
         } else {
-            System.out.println("词典导出失败");
+            play.Logger.error("词典导出失败");
         }
 
         CLibrarySentiment.Instance.ST_Exit();

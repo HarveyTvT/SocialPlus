@@ -104,4 +104,13 @@ public class Application extends Controller {
 
         return ok("Database insert ok");
     }
+
+    public Result url(String url) {
+        String email = session("email");
+        User user = User.getUser(email);
+        String weiboToken = user.getToken().getWeibo().get("token");
+
+        WeiboAPI weiboAPI = new WeiboAPI(weiboToken);
+        return ok(weiboAPI.parseUrlToId(url));
+    }
 }
