@@ -2,7 +2,7 @@
  * @Author: gyl
  * @Date:   2015-09-08 11:04:28
  * @Last Modified by:   gyl
- * @Last Modified time: 2015-09-12 21:15:26
+ * @Last Modified time: 2015-09-15 17:07:49
  */
 
 (function() {
@@ -110,7 +110,7 @@
                         .select("svg")
                         .attr('class', 'gauge')
                         .attr('width', config.clipWidth)
-                        .attr('height', config.clipHeight / 2);
+                        .attr('height', config.clipHeight/2+20);
 
                     var centerTx = centerTranslation();
 
@@ -190,10 +190,10 @@
             var containerEl = document.getElementById(elementId),
                 padding = 20;
             var powerGauge = gauge(containerEl, {
-                // size: Math.min(containerEl.clientWidth,containerEl.clientHeight)-padding,
-                size: containerEl.clientWidth - padding,
+                size: Math.min(containerEl.clientWidth,containerEl.clientHeight)-padding,
+                // size: containerEl.clientWidth - padding,
                 clipWidth: containerEl.clientWidth - padding,
-                clipHeight: containerEl.clientHeight - padding,
+                clipHeight: containerEl.clientHeight -padding,
                 ringWidth: 30,
                 maxValue: 100,
                 transitionMs: 4000,
@@ -392,17 +392,19 @@
                 padding = 20,
                 width = containerEl.clientWidth - padding,
                 height = containerEl.clientHeight - padding,
-                force = d3.layout.force().charge(-120).linkDistance(30).size([width, height]);
+                force = d3.layout.force().charge(-80).linkDistance(50).size([width, height]);
             container = d3.select(containerEl);
             svg = container.append("svg").attr("width", width).attr("height", height);
             force.nodes(data.nodes).links(data.links).start();
             var link = svg.selectAll(".link").data(data.links).enter().append("line").attr("class", "link").style("stroke-width", 1);
             var node = svg.selectAll(".node").data(data.nodes).enter().append("circle").attr("class", "node").attr("r", function(d) {
-                return 5 + d.group;
+                return 7 - d.group;
             }).style("fill", "teal").call(force.drag);
+
             node.append("title").text(function(d) {
                 return d.name;
             });
+
             force.on("tick", function() {
                 link.attr("x1", function(d) {
                     return d.source.x;
@@ -419,6 +421,30 @@
                     return d.y;
                 });
             });
+        }
+
+        function drawForceList(elementId) {
+            var containerEl = document.getElementById(elementId),
+                container = d3.select(containerEl);
+            var groups = [];
+            var groupPers = [];
+            for (var i = 0; i < data.nodes.length; i++) {
+                groups[data.nodes[i].group] = 0;
+            }
+
+            for (var i = 0; i < data.nodes.length; i++) {
+                groups[data.nodes[i].group]++;
+            }
+            for (var n = 0; n < groups.length; n++) {
+                groupPers[n] = ((groups[n] / data.nodes.length) * 100).toFixed(2);
+            }
+            var items = container.selectAll(".item")
+                .data(groupPers)
+                .select("span")
+                .text(function(d) {
+                    return d;
+                });
+
         }
 
         function drawKeywordsChart(elementId) {
@@ -698,6 +724,10 @@
                     })
                     .attr("height", function(d) {
                         return barHeight - y(values.get(d.key));
+                    })
+                    .append("title")
+                    .text(function(d) {
+                        return values.get(d.key);
                     });
 
             });
@@ -708,8 +738,8 @@
             var containerEl = document.getElementById(elementId),
                 padding = 20,
                 width = containerEl.clientWidth - padding,
-                height = containerEl.clientHeight - padding ,
-                radius = Math.min(width*4/5, height*4/5) / 2,
+                height = containerEl.clientHeight - padding,
+                radius = Math.min(width * 4 / 5, height * 4 / 5) / 2,
                 DURATION = 1500,
                 DELAY = 500,
                 container = d3.select(containerEl),
@@ -753,18 +783,18 @@
                     infoWidth = width * 0.3,
                     anchor, infoContainer, position;
                 if (bBox.x + bBox.width / 2 > 0) {
-                    infoContainer = detailedInfo.append('g').attr('width', infoWidth).attr('transform', 'translate(' + (width - infoWidth) + ',' + (bBox.height + bBox.y+height/4) + ')');
+                    infoContainer = detailedInfo.append('g').attr('width', infoWidth).attr('transform', 'translate(' + (width - infoWidth) + ',' + (bBox.height + bBox.y + height / 4) + ')');
                     anchor = 'end';
                     position = 'right';
                 } else {
-                    infoContainer = detailedInfo.append('g').attr('width', infoWidth).attr('transform', 'translate(' + 0 + ',' + (bBox.height + bBox.y+height/4) + ')');
+                    infoContainer = detailedInfo.append('g').attr('width', infoWidth).attr('transform', 'translate(' + 0 + ',' + (bBox.height + bBox.y + height / 4) + ')');
                     anchor = 'start';
                     position = 'left';
                 }
                 infoContainer.data([data.value]).append('text').text('0 ').attr('class', 'pieChart--detail--percentage').attr('x', position === 'left' ? 0 : infoWidth).attr('y', -10).attr('text-anchor', anchor).transition().duration(DURATION).tween('text', function(d) {
                     var i = d3.interpolateRound(+this.textContent.replace(/\s%/gi, ''), d);
                     return function(t) {
-                        this.textContent = i(t) ;
+                        this.textContent = i(t);
                     };
                 });
                 infoContainer.append('line').attr('class', 'pieChart--detail--divider').attr('x1', 0).attr('x2', 0).attr('y1', 0).attr('y2', 0).transition().duration(DURATION).attr('x2', infoWidth);
@@ -777,6 +807,7 @@
             drawEmotionChart("emotionChart");
             drawTimeChart("timeChart");
             drawForceChart("forceChart");
+            drawForceList("forceList");
             drawKeywordsChart("keywordsChart");
             drawMapChart("mapChart");
             drawGenderChart("genderChart");

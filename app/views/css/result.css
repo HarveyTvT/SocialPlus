@@ -2,7 +2,7 @@
 * @Author: gyl
 * @Date:   2015-09-10 14:44:23
 * @Last Modified by:   gyl
-* @Last Modified time: 2015-09-12 11:38:44
+* @Last Modified time: 2015-09-15 17:40:18
 */
 
 body {
@@ -32,7 +32,7 @@ button.ui.icon.button {
 .weiboleft {
     width: 30%;
     height: 100%;
-    border-right: 1px solid rgba(201, 204, 204, 0.3);
+    border-right: 1px solid rgba(201, 204, 204, 0.5);
     position: relative;
     float: left;
 }
@@ -208,7 +208,7 @@ li span {
     margin-left: 10px;
     margin-top: 8px;
     width: 43%;
-    /*border-right: 1px solid #4c4c4c;*/
+    border-right: 1px solid rgba(201, 204, 204, 0.5);
     float: left;
     height: 90%;
     padding: 9px, 0px, 0px, 10px;
@@ -225,6 +225,7 @@ li span {
 }
 
 .bigUser-name {
+    margin-left: 8px;
     float: left;
     width: 172px;
     font-size: 15px;
@@ -233,15 +234,16 @@ li span {
 }
 
 .bigUser-fans {
+    margin-left: 8px;
     float: left;
     width: 139px;
     font-size: 13px;
 }
 
 .repost-time-box {
-    width: 120px;
+    width: 140px;
     text-align: center;
-    font-size: 12px;
+    font-size: 13px;
     height: 66px;
     float: left;
     margin-left: 5px;
@@ -254,8 +256,8 @@ li span {
 }
 
 .repost-number-box {
-    font-size: 12px;
-    width: 80px;
+    font-size: 13px;
+    width: 100px;
     height: 66px;
     float: left;
 }
@@ -266,15 +268,17 @@ li span {
 }
 
 .bigUser-right {
+    margin-top: 8px;
     width: 52%;
     float: left;
     height: 90%;
     font-size: 16px;
-    padding: 9px, 0px, 0px, 10px;
+    padding-left: 10px;
+    padding-right: 10px;
 }
 
 .bigUser-right span {
-    font-size: 14px;
+    font-size: 13px;
 }
 
 .repost-content {
@@ -284,8 +288,7 @@ li span {
 
 /*forceChart*/
 
-#forceChart,
-#forceList {
+#forceChart{
     height: 500px;
     margin-left: 0;
     margin-right: 0;
@@ -299,6 +302,15 @@ li span {
 #forceChart .link {
     stroke: #999;
     stroke-opacity: .6;
+}
+
+#forceList .item{
+    /*text-align: center;*/
+    color:  #3f94a7;
+}
+
+#forceList .item .label{
+    margin-right: 40%;
 }
 
 
@@ -349,7 +361,7 @@ li span {
 
 .mapBar {
     fill: steelblue;
-    fill-opacity: .6;
+    fill-opacity: .8;
 }
 
 .x.mapBarAxis path {
@@ -392,7 +404,7 @@ li span {
 }
 
 .pieChart--detail--textContainer {
-	width:100;
+    width: 100;
     background-color: transparent;
     padding: 10px 0 0 0;
     margin: 0;
@@ -447,12 +459,26 @@ li span {
 }
 
 #emotionText {
+    width:50%;
     font: 60px sans-serif;
     color: #666;
     text-align: left;
     padding-left: 10px;
+    padding-right: 20px;
+    margin-right: 0px;
+    float: left;
 }
-
+#colorExplain{
+    width:100px;
+    margin-left:30px;
+    float: left;
+}
+.bad.label{
+    background-color: #e75858;
+}
+.good.label{
+    background-color: #00BF00;
+}
 #keywordsChart {
     margin-left: 0;
     margin-top: 20px;
@@ -466,5 +492,5 @@ li span {
 }
 
 .hidden {
-        display: none;
-    }
+    display: none;
+}

@@ -42,15 +42,15 @@
   "nodes": [
     {
       "name": "user1",
-      "group": 0
+      "group": "0"
     },
     {
       "name": "user2",
-      "group": 1
+      "group": "1"
     },
     {
       "name": "user3",
-      "group": 1
+      "group": "1"
     }
   ],
   "links": [

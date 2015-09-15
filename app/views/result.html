@@ -121,12 +121,12 @@
             </div>
         </div>
         <div class="six wide column">
-            <div id="forceTable" class="draw">
+            <div id="forceList" class="draw">
                 <div class="ui small header chartHeader">
                     <i class="feed icon"></i>
                     <span class="content">层级分析</span>
                 </div>
-                <table class="ui center aligned selectable table">
+                <!-- <table class="ui center aligned selectable table">
                     <thead>
                         <tr>
                             <th>层级</th>
@@ -155,7 +155,29 @@
                             <td class="thirdCladdValue"></td>
                         </tr>
                     </tbody>
-                </table>
+                </table> -->
+                <div class="ui divided selection force list">
+                    <a class="item" id="firstItem">
+                        <div class="ui  horizontal label">第一层</div>
+                        <span>0</span> %
+                    </a>
+                    <a class="item" id="secondItem">
+                        <div class="ui  horizontal label">第二层</div>
+                        <span>0</span> %
+                    </a>
+                    <a class="item" id="thirdItem">
+                        <div class="ui  horizontal label">第三层</div>
+                        <span>0</span> %
+                    </a>
+                    <a class="item" id="fourthItem">
+                        <div class="ui horizontal label">第四层</div>
+                        <span>0</span> %
+                    </a>
+                    <a class="item" id="fifthItem">
+                        <div class="ui horizontal label">四层 +</div>
+                        <span>0</span> %
+                    </a>
+                </div>
             </div>
         </div>
         <!--～～～～～～参与者信息～～～～～～ -->
@@ -229,6 +251,11 @@
                 <svg id="emotionChartSVG">
                     <div id="emotionText">
                         <span id="valueText">00</span>
+                    </div>
+                    <div id="colorExplain">
+                        <div class="ui bad empty circular label"></div>负面
+                        <div class="ui good empty circular label"></div>
+                        正面
                     </div>
                 </svg>
             </div>
