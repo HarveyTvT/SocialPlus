@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <!-- Standard Meta -->
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <!-- Site Properities -->
+    <title>Homepage-Socailplus</title>
+    <link rel="stylesheet" type="text/css" href="css/semantic.min.css">
+    <link rel="stylesheet" type="text/css" href="css/login.css" />
+</head>
+
+<body class>
+    <div class="pusher">
+        <div class="ui inverted vertical masthead center aligned segment">
+            <div class="ui container">
+                <div class="ui large secondary inverted pointing menu">
+                    <div class="ui container">
+                        <a href="#" class="header item">
+                            Socialplus
+                        </a>
+                        <a href="#" class="active item">
+                            主页
+                        </a>
+                        <div class="right item">
+                            <a class="ui inverted button" id="chooselogin_btn">登录</a>
+                            <a class="ui inverted  button" id="choosesubmit_btn">注册</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="ui middle aligned center aligned grid container">
+                <div class="row account-box" id="login_box">
+                    <div class="column">
+                        <h2 class="ui teal header">
+                        <div class="content">
+                            登录
+                        </div>
+                        </h2>
+                        <form class="ui large form">
+                            <div class="ui raised segment">
+                                <div class="field">
+                                    <div class="ui left icon transparent input">
+                                        <i class="user icon"></i>
+                                        <input type="text" name="email" placeholder="邮箱">
+                                    </div>
+                                </div>
+                                <div class="field">
+                                    <div class="ui left icon transparent input">
+                                        <i class="lock icon"></i>
+                                        <input type="password" name="password" placeholder="密码">
+                                    </div>
+                                </div>
+                                <div class="ui fluid large teal submit button" id="login-btn">登录</div>
+                            </div>
+                        </form>
+                        <div class="ui inverted horizontal divider">
+                            Or
+                        </div>
+                        <div class="ui labeled icon button">
+                            微博授权
+                            <i class="weibo icon"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="row account-box" id="submit_box">
+                    <div class=" column">
+                        <h2 class="ui teal image header">
+                        <div class="content">
+                            注册
+                        </div>
+                        </h2>
+                        <form class="ui large form">
+                            <div class="ui raised segment">
+                                <div class="field">
+                                    <div class="ui left icon transparent input">
+                                        <i class="user icon"></i>
+                                        <input type="text" name="email" placeholder="邮箱">
+                                    </div>
+                                </div>
+                                <div class="field">
+                                    <div class="ui left icon   transparent input">
+                                        <i class="lock icon"></i>
+                                        <input type="password" name="password" placeholder="密码">
+                                    </div>
+                                </div>
+                                <div class="field">
+                                    <div class="ui left icon transparent input">
+                                        <i class="lock icon"></i>
+                                        <input type="confirmpswd" name="confirmpswd" placeholder="确认密码">
+                                    </div>
+                                </div>
+                                <div class="ui fluid large teal submit button" id="submit_btn">注册</div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- <div class="ui vertical center aligned footer segment">
+            <div class="ui container">
+                <span>Copyright&nbsp;&nbsp;©&nbsp;2015&nbsp;Socialplus&nbsp;&nbsp;</span>
+            </div>
+        </div>
+ -->
+    </div>
+    <script src="js/jquery.min.js"></script>
+    <script src="js/semantic.min.js"></script>
+    <script src="js/login.js"></script>
+</body>
+
+</html>

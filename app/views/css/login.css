@@ -1,0 +1,26 @@
+.masthead.segment {
+      min-height: 700px;
+      padding: 1em 0em;
+}
+
+.masthead .ui.menu .ui.button {
+    margin-left: 0.5em;
+}
+
+.column {
+    max-width: 420px;
+}
+
+.account-box{
+	margin-top: 150px;
+}
+.account-box .field{
+	margin-bottom: 20px;
+}
+#authorize-btn{
+	margin-top: 20px;
+}
+
+.footer .segment{
+	height:50px;
+}
