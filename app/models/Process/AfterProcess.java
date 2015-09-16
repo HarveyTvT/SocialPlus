@@ -11,8 +11,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-import static com.lingjoin.keyExtractor.KeyExtractor.getKeyWords;
-import static com.lingjoin.sentimentAnalysis.LJSentimentAnalysisMethod.LJST_GetParagraphSent;
 import static models.Midform.SocialMessage.getSocialMessage;
 import static models.Midform.SocialUser.getSocialUser;
 
@@ -86,13 +84,6 @@ public class AfterProcess {
      * @param outcome
      */
     private void getTags(SocialMessage message, Outcome outcome) {
-        String messageStr = new String();
-        messageStr = message.getContent();
-        for (SocialMessage socialMessage : reposts) {
-            messageStr += socialMessage.getContent();
-        }
-        String[] result = getKeyWords(messageStr);
-        outcome.setTags(Arrays.asList(result));
     }
 
     /**
@@ -100,29 +91,7 @@ public class AfterProcess {
      * @param outcome
      */
     private void getEmotion(SocialMessage message, Outcome outcome) {
-        String messageStr = new String();
-        messageStr = message.getContent();
-        for (SocialMessage socialMessage : reposts) {
-            messageStr += socialMessage.getContent();
-        }
-        play.Logger.info(messageStr);
-        String resultStr = LJST_GetParagraphSent(messageStr);
-        String[] result = resultStr.split("\n");
-        result[result.length - 1] = "";
-        List<Integer> scores = new ArrayList<>();
-        for (int i = 0; i < result.length - 1; i++) {
-            String e = result[i];
-            int score = Integer.valueOf(e.split("/")[1]);
-            scores.add(score);
-        }
-        double positive = scores.get(0) + scores.get(1) + scores.get(6);
-        double passive = scores.get(2) + scores.get(3) + scores.get(4) + scores.get(5);
 
-        double emotion = (positive) / (positive + passive);
-        BigDecimal db = new BigDecimal(emotion);
-        db = db.setScale(4, BigDecimal.ROUND_UP);
-        double val = db.doubleValue();
-        outcome.setEmotion(val);
     }
 
     /**

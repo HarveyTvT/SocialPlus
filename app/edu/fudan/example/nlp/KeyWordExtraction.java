@@ -4,6 +4,11 @@ import org.fnlp.app.keyword.WordExtract;
 
 import edu.fudan.nlp.cn.tag.CWSTagger;
 import edu.fudan.nlp.corpus.StopWords;
+import org.junit.Test;
+import play.Play;
+
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 /**
  * 关键词抽取使用示例
@@ -11,27 +16,28 @@ import edu.fudan.nlp.corpus.StopWords;
  *
  */
 public class KeyWordExtraction {
+
+	@Test
+	public void main(){
+		Path path = Paths.get("./");
+		play.Logger.debug(path.toAbsolutePath().toString());
+		//play.Logger.debug(Play.application().path().toString());
+	}
 	
-	public static void main(String[] args) throws Exception {
-		
-		
-		StopWords sw= new StopWords("models/stopwords");
-		CWSTagger seg = new CWSTagger("models/seg.m");
+	public static String[] getKeyExtract(String content) throws Exception {
+
+		StopWords sw= new StopWords("./resource/stopwords");
+		CWSTagger seg = new CWSTagger("./resource/seg.m");
 		AbstractExtractor key = new WordExtract(seg,sw);
 		
-		System.out.println(key.extract(
-				"甬温线特别重大铁路交通事故车辆经过近24小时的清理工作，26日深夜已经全部移出事故现场，之前埋下的D301次动车车头被挖出运走"
-				, 20, true));
+		String result = key.extract(content,15,false);
 		
 		//处理已经分好词的句子
 		sw=null;
 		key = new WordExtract(seg,sw);
-		System.out.println(key.extract("甬温线 特别 重大 铁路交通事故车辆经过近24小时的清理工作，26日深夜已经全部移出事故现场，之前埋下的D301次动车车头被挖出运走", 20));
-		System.out.println(key.extract("赵嘉亿 是 好人 还是 坏人", 5));
-		
 		key = new WordExtract();
-		System.out.println(key.extract("", 5));
-
-		
+		System.out.println(result);
+		String[] result_fuck = new String[];
+		return result_fuck;
 	}
 }
