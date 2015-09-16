@@ -1,8 +1,19 @@
 package controllers;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import models.APIRequest.WeiboUtils;
+import play.data.Form;
+import play.libs.Json;
 import play.mvc.Controller;
 import models.Results.Outcome;
 import play.mvc.Result;
+import play.mvc.Security;
+import views.html.result;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 
 /**
  * Created by harvey on 15-9-9.
@@ -10,56 +21,29 @@ import play.mvc.Result;
  * 返回分析后的页面
  */
 public class Service extends Controller {
-    public Result analysis(String url) {
-        /*
-         *  TODO 分析链接入口，进入对应的处理流程，处理接口返回一个Outcome,返回渲染后的页面
-         */
-
-        String platform = getPlatform(url);
-        switch (platform) {
-            case "weibo":
-                break;
-            case "renren":
-                break;
-            case "twitter":
-                break;
-        }
-        return TODO;
+    @Security.Authenticated(Secured.class)
+    public Result analysis() {
+        String url = Form.form().bindFromRequest().get("url");
+        return ok(result.render(url));
     }
 
-    /**
-     * Return the name of  target platform according to the url given
-     *
-     * @param url
-     * @return
-     */
-    public String getPlatform(String url) {
-        // TODO 对url平台的判断
-        return "weibo";
+    @Security.Authenticated(Secured.class)
+    public Result getResult(String url){
+        String id = WeiboUtils.parseUrlToId(url);
+        Outcome outcome = Outcome.getResult(id);
+        JsonNode result = Json.toJson(outcome);
+        response().setContentType("application/json;charset=utf-8");
+        session().remove("url");
+        play.Logger.debug("getResult used");
+        return ok(result);
     }
 
-    /**
-     * The workflow of weibo, return a Outcome for front side
-     *
-     * @param url
-     * @return
-     */
-    public Outcome weibo(String url) {
-        //TODO 微博处理流程
-        return new Outcome();
+    public Result getMap() throws FileNotFoundException {
+        response().setContentType("application/json;charset=utf-8");
+        File file = new File("/home/harvey/WorkSpace/IdeaProjects/SocialPlus/public/data/China.json");
+        InputStream is = new FileInputStream(file);
+        JsonNode json = Json.parse(is);
+        return ok(json);
     }
 
-    /**
-     * @param url
-     * @return
-     */
-    public Outcome twitter(String url) {
-        //TODO 推特处理流程
-        return new Outcome();
-    }
-
-    public Outcome renren(String url) {
-        //TODO 人人处理流程
-        return new Outcome();
-    }
 }

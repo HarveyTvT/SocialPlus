@@ -30,7 +30,7 @@ public class UserAction extends Controller{
         String email = session("email");
         User user = User.getUser(email);
         if(user!=null)
-            return ok(index.render(user));
+            return ok(query.render(user));
         else
         return badRequest("Internal Error");
     }

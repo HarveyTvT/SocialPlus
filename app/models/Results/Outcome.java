@@ -27,7 +27,7 @@ public class Outcome {
     private String author;
 
     @Embedded("time")
-    private List<HashMap<String, Long>> times = new ArrayList<>();
+    private List<HashMap<String, Long>> time = new ArrayList<>();
 
     @Embedded("gender")
     private Gender gender = new Gender();
@@ -147,8 +147,8 @@ public class Outcome {
         this.locations = locations;
     }
 
-    public List<HashMap<String, Long>> getTimes() {
-        return times;
+    public List<HashMap<String, Long>> getTime() {
+        return time;
     }
 
     public void setLinks(List<HashMap<String, Integer>> links) {
@@ -167,8 +167,8 @@ public class Outcome {
         this.tags = tags;
     }
 
-    public void setTimes(List<HashMap<String, Long>> times) {
-        this.times = times;
+    public void setTime(List<HashMap<String, Long>> time) {
+        this.time = time;
     }
 
 

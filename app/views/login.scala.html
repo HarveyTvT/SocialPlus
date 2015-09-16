@@ -1,27 +1,114 @@
-@()
+<!DOCTYPE html>
+<html>
 
-@main("登录"){
-    <body>
-        <div class="container">
-            <div class="row text-center">
-                <h2 class="form-signin-heading">登录</h2>
-                <div class="col-lg-6 col-lg-push-3">
-                    <form class="form-signin" method="POST" action=@routes.UserAction.authenticate()>
-                        <label for="email" class="sr-only">邮箱</label>
-                        <input type="text" class="form-control "  name="email" placeholder="邮箱" required autofocus>
-                        <label for="password" class="sr-only">密码</label>
-                        <input type="password" class="form-control" placeholder="密码" name = "password" required/>
-                        <div class="checkbox">
-                            <label>
-                                <a class="pull-left" href=@routes.UserAction.register()>还没有账号？</a>
-                                <a class="pull-right" href=@routes.UserAction.InputEmail()>忘记密码？</a>
-                            </label>
+<head>
+    <!-- Standard Meta -->
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <!-- Site Properities -->
+    <title>Homepage-Socailplus</title>
+    <link rel="stylesheet" type="text/css" href="@routes.Assets.versioned("stylesheets/semantic.min.css")">
+    <link rel="stylesheet" type="text/css" href="@routes.Assets.versioned("stylesheets/login.css")" />
+</head>
+
+<body class background="http://i3.tietuku.com/e2c76404844922eb.jpg">
+    <div class="pusher">
+        <div class="ui inverted vertical masthead center aligned segment">
+            <div class="ui container">
+                <div class="ui large secondary inverted pointing menu">
+                    <div class="ui container">
+                        <a href="#" class="header item">
+                            Socialplus
+                        </a>
+                        <a href="#" class="active item">
+                            主页
+                        </a>
+                        <div class="right item">
+                            <a class="ui inverted button" id="chooselogin_btn">登录</a>
+                            <a class="ui inverted  button" id="choosesubmit_btn">注册</a>
                         </div>
-                        <input type="submit" class="btn btn-lg btn-block btn-primary" value="登录">
-                    </form>
+                    </div>
+                </div>
+            </div>
+            <div class="ui middle aligned center aligned grid container">
+                <div class="row account-box" id="login_box">
+                    <div class="column">
+                        <h2 class="ui teal header">
+                        <div class="content">
+                            登录
+                        </div>
+                        </h2>
+                        <form class="ui large form" method="POST" action=@routes.UserAction.authenticate()>
+                            <div class="ui raised segment">
+                                <div class="field">
+                                    <div class="ui left icon transparent input">
+                                        <i class="user icon"></i>
+                                        <input type="text"  name="email" placeholder="邮箱" required autofocus>
+                                    </div>
+                                </div>
+                                <div class="field">
+                                    <div class="ui left icon transparent input">
+                                        <i class="lock icon"></i>
+                                        <input type="password" placeholder="密码" name = "password" required/>
+                                    </div>
+                                </div>
+                                <button class="ui fluid large teal submit button" type="submit"   id="login-btn">登录</button>
+                            </div>
+                        </form>
+                        <div class="ui inverted horizontal divider">
+                            Or
+                        </div>
+                        <div class="ui labeled icon button">
+                            微博授权
+                            <i class="weibo icon"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="row account-box" id="submit_box">
+                    <div class=" column">
+                        <h2 class="ui teal image header">
+                        <div class="content">
+                            注册
+                        </div>
+                        </h2>
+                        <form class="ui large form" method="post" action=@routes.UserAction.newUser()>
+                            <div class="ui raised segment">
+                                <div class="field">
+                                    <div class="ui left icon transparent input">
+                                        <i class="user icon"></i>
+                                        <input type="text" name="email" placeholder="邮箱">
+                                    </div>
+                                </div>
+                                <div class="field">
+                                    <div class="ui left icon   transparent input">
+                                        <i class="lock icon"></i>
+                                        <input type="password" name="password" placeholder="密码">
+                                    </div>
+                                </div>
+                                <div class="field">
+                                    <div class="ui left icon transparent input">
+                                        <i class="lock icon"></i>
+                                        <input type="confirmpswd" name="password2" placeholder="确认密码">
+                                    </div>
+                                </div>
+                                <button class="ui fluid large teal submit button" id="submit_btn" type="submit">注册</button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
-    </body>
+        <!-- <div class="ui vertical center aligned footer segment">
+            <div class="ui container">
+                <span>Copyright&nbsp;&nbsp;©&nbsp;2015&nbsp;Socialplus&nbsp;&nbsp;</span>
+            </div>
+        </div>
+ -->
+    </div>
+    <script src="@routes.Assets.versioned("javascripts/jquery.min.js")"></script>
+    <script src="@routes.Assets.versioned("javascripts/semantic.min.js")"></script>
+    <script src="@routes.Assets.versioned("javascripts/login.js")"></script>
+</body>
 
-}
+</html>

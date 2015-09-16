@@ -7,7 +7,15 @@ GET         /                             controllers.UserAction.login()
 
 #Entrance of analysis
 
-GET         /service                      controllers.Service.analysis(url)
+GET         /service                      controllers.UserAction.index()
+
+POST        /service                      controllers.Service.analysis()
+
+GET         /resultJson                   controllers.Service.getResult(uid:String)
+
+POST        /resultJson                   controllers.Service.getResult(uid:String)
+
+GET         /getMap                       controllers.Service.getMap()
 
 # Can use optional value(which means the either /get-optional?user=lizhuoli or /get-optional will do
 

@@ -205,7 +205,7 @@ public class AfterProcess {
             }
 
         }
-        outcome.setTimes(result);
+        outcome.setTime(result);
     }
 
     /**
