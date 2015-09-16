@@ -191,10 +191,41 @@ public abstract class WeiboUtils {
         return weiboId;
     }
 
+    public static String parseUrlToUid(String weiboUrl){
+        URL url;
+        try {
+            url = new URL(weiboUrl);
+        }
+        catch (MalformedURLException e){
+            Logger.error("Unsupported weibo url");
+            return null;
+        }
+        String weiboPath = url.getPath();
+        String weiboUid = weiboPath.substring(1, 11);
+
+        return weiboUid;
+    }
+
     public static String parseIdToUrl(String uid,String id){
         String weiboMid = WeiboUtils.id2mid(id);
         String weiboUrl = String.format("http://www.weibo.com/%s/%s", uid, weiboMid);
 
         return weiboUrl;
+    }
+
+    public static String delHTMLTag(String htmlStr) {
+        Pattern p_script = Pattern.compile(ConstUtil.regEx_script, Pattern.CASE_INSENSITIVE);
+        Matcher m_script = p_script.matcher(htmlStr);
+        htmlStr = m_script.replaceAll(""); // 过滤script标签
+
+        Pattern p_style = Pattern.compile(ConstUtil.regEx_style, Pattern.CASE_INSENSITIVE);
+        Matcher m_style = p_style.matcher(htmlStr);
+        htmlStr = m_style.replaceAll(""); // 过滤style标签
+
+        Pattern p_html = Pattern.compile(ConstUtil.regEx_html, Pattern.CASE_INSENSITIVE);
+        Matcher m_html = p_html.matcher(htmlStr);
+        htmlStr = m_html.replaceAll(""); // 过滤html标签
+
+        return htmlStr.trim(); // 返回文本字符串
     }
 }

@@ -35,6 +35,8 @@ GET         /api/weibo/testId             controllers.Application.weiboEntryIdTe
 GET         /api/weibo/id                 controllers.Application.urlToId(url)
 
 GET         /api/weibo/url                controllers.Application.idToUrl(uid,ud)
+
+GET         /api/weibo/get                controllers.Application.getWeibo(url)
 # Twitter
 GET         /api/twitter/auth             controllers.AuthAction.twitterAuth()
 # Account management

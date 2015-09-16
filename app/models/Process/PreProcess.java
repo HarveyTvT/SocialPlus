@@ -26,7 +26,8 @@ public class PreProcess {
         weiboAPI = new WeiboAPI(weiboToken);
     }
 
-    public void workFlow(String id){
+    public void workFlow(SocialMessage message){
+        String id = message.getId();
         getMessageRecursion(id);
     }
 

@@ -5,9 +5,6 @@ import controllers.AsyncRequest;
 import play.Logger;
 import play.libs.F.Promise;
 
-import java.net.MalformedURLException;
-import java.net.URL;
-
 /**
  * Created by lizhuoli on 15/9/2.
  */
