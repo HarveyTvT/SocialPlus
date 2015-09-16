@@ -1,4 +1,4 @@
-@(url:String)
+@(url:String)(time:String)
 <!DOCTYPE html>
 <html lang="en">
 
@@ -23,7 +23,7 @@
                 <div class="weiboleft">
                     <!-- 微博头像 -->
                     <a href="" target="_blank">
-                        <img src="" height="63px" width="63px">
+                        <img id="avatar" src="" height="63px" width="63px">
                     </a>
                     <!-- 微博姓名 -->
                     <div class="source-name">
@@ -35,15 +35,15 @@
                     </div>
                     <ul>
                         <li style="padding-left:0px;">
-                            <span></span>
+                            <span id="followCount"></span>
                             <span>关注</span>
                         </li>
                         <li style="border-left: 1px solid #555 ;border-right: 1px solid #555 ;">
-                            <span></span>
+                            <span id="fanCount"></span>
                             <span>粉丝</span>
                         </li>
                         <li>
-                            <span></span>
+                            <span id="weiboCount"></span>
                             <span>微博</span>
                         </li>
                     </ul>
@@ -53,9 +53,9 @@
                     </div>
                     <div class="weibobottom">
                         <span class="time"><a href = "" target = "_blank"></a></span> | <span class="client">iPad客户端</span> 转发(
-                        <span class="zf"></span>) | 评论(<span class="pl"></span>)
+                        <span class="repostCount"></span>) | 评论(<span class="commentCount"></span>)
                     </div>
-                    <span class="bottomtj">提交时间：<span class = "time"></span></span>
+                    <span class="bottomtj">提交时间：<span class = "time">@time</span></span>
                 </div>
             </div>
         </div>
@@ -90,7 +90,6 @@
                         <div class="bigUser-name"><a style="float:left;" href="" target="_blank"><span></span></a>
                             <div class="ico"></div>
                         </div>
-                        <div class="bigUser-fans">粉丝数：<span></span></div>
                     </div>
                     <div class="repost-time-box">
                         <div style="text-align: center;">转发时间</div>
@@ -234,14 +233,6 @@
                     <div class="ui small header chartHeader">
                         <i class="bullseye icon"></i>
                         <span class="content">微博来源</span>
-                    </div>
-                </div>
-            </div>
-            <div class="column">
-                <div class="draw" id="identifyChart">
-                    <div class="ui small header chartHeader">
-                        <i class="sun icon"></i>
-                        <span class="content">认证比例</span>
                     </div>
                 </div>
             </div>

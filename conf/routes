@@ -11,9 +11,9 @@ GET         /service                      controllers.UserAction.index()
 
 POST        /service                      controllers.Service.analysis()
 
-GET         /resultJson                   controllers.Service.getResult(uid:String)
+GET         /resultJson                   controllers.Service.getResult(url:String)
 
-POST        /resultJson                   controllers.Service.getResult(uid:String)
+GET         /userJson                     controllers.Service.getUserInfo(url:String)
 
 GET         /getMap                       controllers.Service.getMap()
 
@@ -44,7 +44,6 @@ GET         /api/weibo/id                 controllers.Application.urlToId(url)
 
 GET         /api/weibo/url                controllers.Application.idToUrl(uid,ud)
 
-GET         /api/weibo/get                controllers.Application.getWeibo(url)
 # Twitter
 GET         /api/twitter/auth             controllers.AuthAction.twitterAuth()
 # Account management

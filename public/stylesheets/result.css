@@ -372,8 +372,7 @@ li span {
 /*genderChart*/
 
 #genderChart,
-#resourceChart,
-#identifyChart {
+#resourceChart {
     margin-left: 0;
     margin-right: 0;
     height: 300px;

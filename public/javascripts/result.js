@@ -6,10 +6,22 @@
  */
 
 $(document).ready(function(){
-    var uid = $("#uid").innerHTML;
+    var url = $(".url a").attr("href");
 
     $.ajax({
-        url: "/resultJson?uid="+uid,
+        url: "/userJson?url=" + url,
+        method: "get",
+        dataType: "json"
+    })
+    .done(function(data){
+        renderUserInfo(data);
+    })
+    .fail(function(err){
+        alert("get user info err" + err);
+    });
+
+    $.ajax({
+        url: "/resultJson?url=" + url,
         method: "get",
         dataType:"json"})
         .done(function(data) {
@@ -798,3 +810,21 @@ $(document).ready(function(){
             console.log(err);
         });
 });
+
+
+
+function renderUserInfo(json){
+    console.log(json);
+    var user = json['user'];
+    $(".source-name a").text(user['name']);
+    $("#avatar").attr("src",user['avatar']);
+    $("#followCount").text(user['followCount']);
+    $("#fanCount").text(user['fanCount']);
+    $("#weiboCount").text(user['weiboCount']);
+
+    $(".text").text(json['content']);
+    $(".client").text(json['client']);
+    $(".repostCount").text(json['repostCount']);
+    $(".commentCount").text(json['commentCount']);
+
+}

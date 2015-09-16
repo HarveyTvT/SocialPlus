@@ -2,7 +2,6 @@ package controllers;
 
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import models.APIRequest.WeiboAPI;
 import models.APIRequest.WeiboUtils;
 import models.Account.User;
@@ -10,10 +9,6 @@ import models.Midform.SocialMessage;
 import models.Process.AfterProcess;
 import models.Process.PreProcess;
 import models.Results.Outcome;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
 import play.libs.F.Promise;
 import play.libs.Json;
 import play.mvc.Controller;
@@ -162,42 +157,4 @@ public class Application extends Controller {
         return ok(WeiboUtils.parseIdToUrl(uid, id));
     }
 
-    @Security.Authenticated(Secured.class)
-    public Result getWeibo(String url){
-        String baseUrl = "http://sinacn.weibodangan.com/user/%s/?status=%s";
-        String uid = WeiboUtils.parseUrlToUid(url);
-        String id = WeiboUtils.parseUrlToId(url);
-        String thirdPartUrl = String.format(baseUrl, uid, id);
-
-        Document document;
-        try {
-            document = Jsoup.connect(thirdPartUrl).get();
-        }
-        catch (Exception e){
-            e.printStackTrace();
-            return internalServerError("");
-        }
-        String weiboDivId = String.format("weibo%s", id);
-        Element div = document.getElementById(weiboDivId);
-        String weiboContent = div.getElementsByTag("span").first().text();
-        weiboContent = WeiboUtils.delHTMLTag(weiboContent);
-
-        Elements span = div.getElementsByTag("div").get(0)
-                .getElementsByTag("small").get(0)
-                .getElementsByTag("span");
-
-        String postWay = span.get(0).text();
-        String datetime = span.get(1).text();
-        String repostCount = span.get(3).text();
-        String commentCount = span.get(5).text();
-
-        ObjectNode json = Json.newObject();
-        json.put("content",weiboContent);
-        json.put("postWay",postWay);
-        json.put("datetime",datetime);
-        json.put("repostCount",repostCount);
-        json.put("commentCount", commentCount);
-
-        return ok(json);
-    }
 }
