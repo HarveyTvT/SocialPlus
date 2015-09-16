@@ -7,14 +7,29 @@
 
 $(document).ready(function(){
     var url = $(".url a").attr("href");
+    var uid = new URL(url).pathname.substring(1,11);
 
+    //user info
     $.ajax({
-        url: "/userJson?url=" + url,
+        url: "/userJson?uid=" + uid,
         method: "get",
         dataType: "json"
     })
     .done(function(data){
         renderUserInfo(data);
+    })
+    .fail(function(err){
+        alert("get user info err" + err);
+    });
+
+    //weibo info
+    $.ajax({
+        url: "/weiboJson?url=" + url,
+        method: "get",
+        dataType: "json"
+    })
+    .done(function(data){
+        renderWeiboInfo(data);
     })
     .fail(function(err){
         alert("get user info err" + err);
@@ -409,7 +424,7 @@ $(document).ready(function(){
                     padding = 20,
                     width = containerEl.clientWidth - padding,
                     height = containerEl.clientHeight - padding,
-                    force = d3.layout.force().charge(-120).linkDistance(30).size([width, height]);
+                    force = d3.layout.force().charge(-120).linkDistance(1).size([1, 1]);
                 container = d3.select(containerEl);
                 svg = container.append("svg").attr("width", width).attr("height", height);
                 force.nodes(data.nodes).links(data.links).start();
@@ -815,16 +830,17 @@ $(document).ready(function(){
 
 function renderUserInfo(json){
     console.log(json);
-    var user = json['user'];
-    $(".source-name a").text(user['name']);
-    $("#avatar").attr("src",user['avatar']);
-    $("#followCount").text(user['followCount']);
-    $("#fanCount").text(user['fanCount']);
-    $("#weiboCount").text(user['weiboCount']);
+    $(".source-name a").text(json['name']);
+    $("#avatar").attr("src",json['avatar']);
+    $("#followCount").text(json['followCount']);
+    $("#fanCount").text(json['fanCount']);
+    $("#weiboCount").text(json['weiboCount']);
+}
 
+function renderWeiboInfo(json){
+    console.log(json);
     $(".text").text(json['content']);
     $(".client").text(json['client']);
     $(".repostCount").text(json['repostCount']);
     $(".commentCount").text(json['commentCount']);
-
 }

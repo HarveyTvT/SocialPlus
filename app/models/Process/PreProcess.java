@@ -50,7 +50,7 @@ public class PreProcess {
 
     public void getMessageOnce(String id,Callback<List<String>> callback){
         SocialMessage message = SocialMessage.getSocialMessage(id);
-        if (message == null){
+        if (message == null || message.getRepostList().length != 0){
             return;
         }
 

@@ -11,13 +11,13 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import play.Logger;
 import play.data.Form;
 import play.libs.Json;
 import play.mvc.Controller;
 import models.Results.Outcome;
 import play.mvc.Result;
 import play.mvc.Security;
-import views.html.query;
 import views.html.result;
 
 import java.io.File;
@@ -52,12 +52,10 @@ public class Service extends Controller {
             return notFound("Not found this message");
         }
         Outcome outcome = Outcome.getResult(id);
-        if (outcome == null){
             AfterProcess afterProcess = new AfterProcess();
             PreProcess preProcess = new PreProcess(weiboToken);
             preProcess.workFlow(message);
             outcome = afterProcess.workFlow(message);
-        }
 
         return ok(result.render(url,time));
     }
@@ -66,50 +64,38 @@ public class Service extends Controller {
     public Result getResult(String url){
         String id = WeiboUtils.parseUrlToId(url);
         Outcome outcome = Outcome.getResult(id);
+        outcome.setUrl(session("url"));
         JsonNode result = Json.toJson(outcome);
         response().setContentType("application/json;charset=utf-8");
         session().remove("url");
-        play.Logger.debug("getResult used");
         return ok(result);
     }
 
+    @Security.Authenticated(Secured.class)
     public Result getMap() throws FileNotFoundException {
         response().setContentType("application/json;charset=utf-8");
-        File file = new File("/home/harvey/WorkSpace/IdeaProjects/SocialPlus/public/data/China.json");
+        File file = new File("./public/data/China.json");
         InputStream is = new FileInputStream(file);
         JsonNode json = Json.parse(is);
         return ok(json);
     }
 
     @Security.Authenticated(Secured.class)
-    public Result getUserInfo(String url){
+    public Result getWeiboInfo(String url){
         String baseUrl = "http://sinacn.weibodangan.com/user/%s/?status=%s";
-        String baseUserUrl = "http://sinacn.weibodangan.com/user/%s";
         String uid = WeiboUtils.parseUrlToUid(url);
         String id = WeiboUtils.parseUrlToId(url);
         String thirdPartUrl = String.format(baseUrl, uid, id);
-        String thirdPartUserUrl = String.format(baseUserUrl,uid);
-
+        Logger.error(thirdPartUrl);
         Document document;
-        Document userDoc;
+
         try {
-            document = Jsoup.connect(thirdPartUrl).get();
-            userDoc = Jsoup.connect(thirdPartUserUrl).get();
+            document = Jsoup.connect(thirdPartUrl).post();
         }
         catch (Exception e){
             e.printStackTrace();
             return internalServerError("");
         }
-        Element userElem = userDoc.select(".avatar").get(0);
-        String name = userElem.attr("title");
-        String avatar = userElem.attr("src");
-
-        Element userCountElem = userDoc.select(".table.table-bordered").get(0);
-
-        String followCount = userCountElem.select("tr:eq(0) td").get(0).text();
-        String fanCount = userCountElem.select("tr:eq(1) td").get(0).text();
-        String weiboCount = userCountElem.select("tr:eq(2) td").get(0).text();
-
 
         String weiboDivId = String.format("weibo%s", id);
         Element div = document.getElementById(weiboDivId);
@@ -126,19 +112,48 @@ public class Service extends Controller {
         String commentCount = span.get(5).text();
 
         ObjectNode json = Json.newObject();
-        ObjectNode user = Json.newObject();
-        user.put("name",name);
-        user.put("avatar",avatar);
-        user.put("followCount",followCount);
-        user.put("fanCount",fanCount);
-        user.put("weiboCount",weiboCount);
 
-        json.put("user",user);
         json.put("content",weiboContent);
         json.put("client",client);
         json.put("datetime",datetime);
         json.put("repostCount",repostCount);
         json.put("commentCount", commentCount);
+
+        return ok(json);
+    }
+
+    @Security.Authenticated(Secured.class)
+    public Result getUserInfo(String uid){
+        String baseUrl = "http://sinacn.weibodangan.com/user/%s";
+        String thirdPartUrl = String.format(baseUrl, uid);
+        Logger.error(thirdPartUrl);
+        Document document;
+
+        try {
+            document = Jsoup.connect(thirdPartUrl).post();
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            return internalServerError("");
+        }
+
+        Element userElem = document.select(".avatar").get(0);
+        String name = userElem.attr("title");
+        String avatar = userElem.attr("src");
+
+        Element userCountElem = document.select(".table.table-bordered").get(0);
+
+        String followCount = userCountElem.select("tr:eq(0) td").get(0).text();
+        String fanCount = userCountElem.select("tr:eq(1) td").get(0).text();
+        String weiboCount = userCountElem.select("tr:eq(2) td").get(0).text();
+
+        ObjectNode json = Json.newObject();
+
+        json.put("name",name);
+        json.put("avatar",avatar);
+        json.put("followCount", followCount);
+        json.put("fanCount",fanCount);
+        json.put("weiboCount",weiboCount);
 
         return ok(json);
     }

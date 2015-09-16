@@ -1,4 +1,5 @@
 package edu.fudan.example.nlp;
+import models.APIRequest.WeiboUtils;
 import org.fnlp.app.keyword.AbstractExtractor;
 import org.fnlp.app.keyword.WordExtract;
 
@@ -19,12 +20,9 @@ public class KeyWordExtraction {
 
 	@Test
 	public void main(){
-		Path path = Paths.get("./");
-		play.Logger.debug(path.toAbsolutePath().toString());
-		//play.Logger.debug(Play.application().path().toString());
 	}
 	
-	public static String[] getKeyExtract(String content) throws Exception {
+	public static void getKeyExtract(String content) throws Exception {
 
 		StopWords sw= new StopWords("./resource/stopwords");
 		CWSTagger seg = new CWSTagger("./resource/seg.m");
@@ -37,7 +35,6 @@ public class KeyWordExtraction {
 		key = new WordExtract(seg,sw);
 		key = new WordExtract();
 		System.out.println(result);
-		String[] result_fuck = new String[];
-		return result_fuck;
+
 	}
 }

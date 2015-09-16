@@ -14,19 +14,10 @@ import java.util.List;
  */
 @Entity("socialmessage")
 public class SocialMessage {
-    public SocialMessage(){
-        createTime = "Mon Oct 27 11:04:04 +0800 2014";
-        url = "http://weibo.com/2691199564/CzhEbku3Z?from=page_1005052691199564_profile&wvr=6&mod=weibotime";
-        content = "nothing";
-        tags =new String[]{"tag1","tag2" } ;
-        location = "beijing";
-        repostCount = "123";
-        commentCount = "321";
-    }
+
     @Id
     private String id;//"weibo-uid"
     private String createTime;//"Mon Oct 27 11:04:04 +0800 2014"
-    private String url;//"http://weibo.com/2691199564/CzhEbku3Z?from=page_1005052691199564_profile&wvr=6&mod=weibotime"
     private String content;//"content"
     private String[] tags;
     private String[] repostList;
@@ -80,14 +71,6 @@ public class SocialMessage {
 
     public void setCreateTime(String createTime) {
         this.createTime = createTime;
-    }
-
-    public String getUrl() {
-        return url;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
     }
 
     public String getContent() {

@@ -14,10 +14,8 @@ import java.util.List;
  */
 public class WeiboConverter implements RawConverter{
     private final String weiboToken;
-    private final String weiboUrl;
-    public WeiboConverter(String token,String url){
+    public WeiboConverter(String token){
         weiboToken = token;
-        weiboUrl = url;
     }
 
     @Override
@@ -33,14 +31,14 @@ public class WeiboConverter implements RawConverter{
 
             //First get the original message json
             JsonNode originalJson = messageList.get(0).get("retweeted_status");
-            SocialMessage originalMessage = ConverterUtil.getMessage(originalJson,true,weiboUrl);
+            SocialMessage originalMessage = ConverterUtil.getMessage(originalJson,true);
             List<String> repostList = new ArrayList<String>();
             //Next get the repost message json array, process each message with its author
             for (JsonNode messageJson : messageList) {
                 //add each repost messageId to original message repostList
                 repostList.add(messageJson.get("id").asText());
 
-                SocialMessage repostMessage = ConverterUtil.getMessage(messageJson,false,weiboUrl);
+                SocialMessage repostMessage = ConverterUtil.getMessage(messageJson,false);
                 SocialUser author = ConverterUtil.getUser(messageJson.get("user"));
 
                 SocialUser.save(author);

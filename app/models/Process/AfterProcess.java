@@ -5,8 +5,8 @@ import models.Midform.SocialUser;
 import models.Results.Gender;
 import models.Results.Outcome;
 import play.Logger;
+import utils.ValueComparator;
 
-import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -18,23 +18,21 @@ import static models.Midform.SocialUser.getSocialUser;
  * Created by lizhuoli on 15/8/31.
  */
 public class AfterProcess {
-    private List<SocialMessage> reposts = new ArrayList<SocialMessage>();
+    private List<SocialMessage> reposts = new ArrayList<>();
     private List<String> users = new ArrayList<>();
+    private List<HashMap<String,String>> nodeResult = new ArrayList<>();
+    private List<HashMap<String,Integer>> linkResult = new ArrayList<>();
+    private HashMap<String,Integer> messageMap = new HashMap<>();
 
-    /**
-     * WorkFlow of PreProcess
-     *
-     * @param message
-     * @return
-     */
     public Outcome workFlow(SocialMessage message) {
         Outcome outcome = new Outcome();
         prologue(message, outcome);
         getGender(message, outcome);
         getTags(message, outcome);
         getTimeline(message, outcome);
-        getNodes(message, outcome);
-        getLinks(message, outcome);
+        getNodesAndLinks(message, outcome);
+        getKeyUser(message, outcome);
+        getKeyRepost(message, outcome);
         getLocations(message, outcome);
         getEmotion(message, outcome);
         Outcome.save(outcome);
@@ -43,14 +41,13 @@ public class AfterProcess {
 
     /**
      * The prologue of workflow, pass some basic info like
-     * id, url, content, author, tags to
+     * id, content, author, tags to
      *
      * @param message
      * @param outcome
      */
     private void prologue(SocialMessage message, Outcome outcome) {
         outcome.setId(message.getId());
-        outcome.setUrl(message.getUrl());
         outcome.setAuthor(
                 getSocialUser(message.getAuthor()).getName()
         );
@@ -64,7 +61,6 @@ public class AfterProcess {
         }
         //get all users
         List<String> users_dump = new ArrayList<>();
-        users_dump.add(message.getAuthor());
 
         for (SocialMessage repostMessage : reposts) {
             users_dump.add(
@@ -101,7 +97,7 @@ public class AfterProcess {
      * @param outcome
      */
     private void getGender(SocialMessage message, Outcome outcome) {
-        List<String> genders = new ArrayList<String>();
+        List<String> genders = new ArrayList<>();
 
         for (String user : users) {
             SocialUser temp = getSocialUser(user);
@@ -142,8 +138,8 @@ public class AfterProcess {
      * @param outcome
      */
     private void getTimeline(SocialMessage message, Outcome outcome) {
-        List<Long> times = new ArrayList<Long>();
-        List<HashMap<String, Long>> result = new ArrayList<HashMap<String, Long>>();
+        List<Long> times = new ArrayList<>();
+        List<HashMap<String, Long>> result = new ArrayList<>();
         for (SocialMessage repost : reposts) {
             times.add(convertTime(repost.getCreateTime()));
         }
@@ -179,39 +175,100 @@ public class AfterProcess {
 
     /**
      * Get all node in re-post
-     *
-     * @param message
+     * @param originMessage
      * @param outcome
      */
-    private void getNodes(SocialMessage message, Outcome outcome) {
-        List<HashMap<String, String>> result = new ArrayList<>();
-        HashMap<String, String> root = new HashMap<>();
-        root.put("name", getSocialUser(users.get(0)).getName());
-        root.put("group", "0");
 
-        for (String user : users) {
-            HashMap<String, String> temp = new HashMap<>();
-            temp.put("name", getSocialUser(user).getName());
-            temp.put("group", "1");
-            result.add(temp);
+    private void getNodesAndLinks(SocialMessage originMessage, Outcome outcome) {
+
+        String[] originRepost = new String[1];
+        originRepost[0] = originMessage.getId();
+        getNodesAndLinkRecursion(originRepost, -1);
+        outcome.setNodes(nodeResult);
+        outcome.setLinks(linkResult);
+    }
+
+    private void getNodesAndLinkRecursion(String[] repostLists,int layer){
+        if (repostLists == null || repostLists.length == 0 && layer > 4){
+            return;
         }
-        result.set(0, root);
+        layer++;
+        for(int i = 0;i < repostLists.length;i++){
+            String repostId = repostLists[i];
+            if (repostId.equals("")) return;
+            SocialMessage temp = SocialMessage.getSocialMessage(repostId);
+            String authorId = temp != null ? temp.getAuthor() : null;
+            SocialUser author = SocialUser.getSocialUser(authorId);
+            String authorName = author != null ? author.getName() : "未知";
 
-        outcome.setNodes(result);
+            HashMap<String,String> group = new HashMap<>();
+            group.put("name", authorName);
+            group.put("group", String.valueOf(layer));
+            nodeResult.add(group);
+
+            String[] repostList = null;
+            if (!(temp == null || temp.getRepostList().length == 0 && layer > 4)){
+                repostList = temp.getRepostList();
+                HashMap<String,Integer> link = new HashMap<>();
+                link.put("source",nodeResult.size()-i-1);
+                link.put("target",nodeResult.size()-1);
+                linkResult.add(link);
+            }
+
+            /*
+            用于关键用户，添加到所有转发微博集合，除过作者自身
+             */
+            if(layer != 0){
+                String repostValue = temp != null ? temp.getRepostCount() : "0";
+                Integer repostCount = Integer.valueOf(repostValue);
+                messageMap.put(repostId, repostCount);
+            }
+
+            getNodesAndLinkRecursion(repostList, layer);
+        }
+    }
+
+
+    private void getKeyUser(SocialMessage message, Outcome outcome){
+        ValueComparator valueComparator = new ValueComparator(messageMap);
+        SortedMap<String,Integer> sortedMessageMap = new TreeMap(valueComparator);
+        sortedMessageMap.putAll(messageMap);
+        String keyMessageId = sortedMessageMap.lastKey();
+        String keyUserId = SocialMessage.getSocialMessage(keyMessageId).getAuthor();
+        outcome.setKeyUser(keyUserId);
+    }
+
+    private void getKeyRepost(SocialMessage message, Outcome outcome){
+        ValueComparator valueComparator = new ValueComparator(messageMap);
+        List<String> sortedList = new ArrayList<>(messageMap.keySet());
+        Collections.sort(sortedList,valueComparator);
+
+        List<HashMap<String,String>> keyRepostList = new ArrayList<>();
+        for (int i = 0;i < (sortedList.size() < 5 ? sortedList.size() : 5);i++){
+            HashMap<String,String> userMap = new HashMap<>();
+            SocialMessage tempMessage = SocialMessage.getSocialMessage(
+                    sortedList.get(sortedList.size()-i-1));
+            String userId = tempMessage.getAuthor();
+            String name = SocialUser.getSocialUser(userId).getName();
+            userMap.put("name",name != null ? name : "未知");
+            userMap.put("repost",tempMessage.getRepostCount());
+            keyRepostList.add(userMap);
+        }
+        outcome.setKeyRepost(keyRepostList);
     }
 
     private void getLocations(SocialMessage message, Outcome outcome) {
         List<HashMap<String, Integer>> result = new ArrayList<>();
         int[] provinces = new int[101];
         for (String user : users) {
+            SocialUser temp = getSocialUser(user);
             int province = Integer.valueOf(
-                    getSocialUser(user).getLocation()
+                    temp != null ? temp.getLocation() : "0"
             );
-            play.Logger.debug("current province is :" + String.valueOf(province));
-            if (province <= 100) {
+            if (province < 100) {
                 provinces[province]++;
             } else {
-                provinces[101]++;
+                provinces[100]++;
             }
         }
         for (int i = 0; i < provinces.length; ++i) {
@@ -234,7 +291,7 @@ public class AfterProcess {
     private Long convertTime(String UtcTime) {
         long time;
         String[] times = UtcTime.split(" ");
-        SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd HH:mm:ss '+0800' yyyy", Locale.ENGLISH);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss'.000'");
         try {
             Date date = sdf.parse(UtcTime);
             time = date.getTime();
@@ -245,30 +302,4 @@ public class AfterProcess {
         return time;
     }
 
-    /**
-     * Get all links in repost
-     *
-     * @param message
-     * @param outcome
-     */
-    private void getLinks(SocialMessage message, Outcome outcome) {
-        int i = 0;
-        List<HashMap<String, Integer>> result = new ArrayList<>();
-        for (String user : users) {
-            HashMap<String, Integer> temp = new HashMap<>();
-            temp.put("source", 0);
-            temp.put("target", ++i);
-            result.add(temp);
-        }
-        outcome.setLinks(result);
-    }
-
-    public static void main(String... args) {
-        SocialMessage message = getSocialMessage("109090242989");
-        System.out.println(
-                String.valueOf(message.getAuthor()) + "\n" +
-                        message.getContent() +
-                        String.valueOf(message.getId())
-        );
-    }
 }

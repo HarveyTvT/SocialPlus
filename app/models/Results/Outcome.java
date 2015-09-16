@@ -26,6 +26,11 @@ public class Outcome {
 
     private String author;
 
+    private String keyUser;
+
+    @Embedded("keyRepost")
+    private List<HashMap<String,String>> keyRepost = new ArrayList<>();
+
     @Embedded("time")
     private List<HashMap<String, Long>> time = new ArrayList<>();
 
@@ -113,6 +118,22 @@ public class Outcome {
 
     public void setAuthor(String author) {
         this.author = author;
+    }
+
+    public String getKeyUser() {
+        return keyUser;
+    }
+
+    public void setKeyUser(String keyUser) {
+        this.keyUser = keyUser;
+    }
+
+    public List<HashMap<String, String>> getKeyRepost() {
+        return keyRepost;
+    }
+
+    public void setKeyRepost(List<HashMap<String, String>> keyRepost) {
+        this.keyRepost = keyRepost;
     }
 
     public String getLastData() {

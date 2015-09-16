@@ -42,7 +42,7 @@ public class ConverterUtil {
         return socialUser;
     }
 
-    static public SocialMessage getMessage(JsonNode messageJson,Boolean isOriginal,String url) {
+    static public SocialMessage getMessage(JsonNode messageJson,Boolean isOriginal) {
         SocialMessage socialMessage = new SocialMessage();
 
         String id = messageJson.get("id").asText();
@@ -66,7 +66,6 @@ public class ConverterUtil {
 
         socialMessage.setId(id);
         socialMessage.setCreateTime(createTime);
-        socialMessage.setUrl(url);
         socialMessage.setContent(content);
         socialMessage.setTags(tags);
         socialMessage.setLocation(location);

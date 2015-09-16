@@ -13,7 +13,9 @@ POST        /service                      controllers.Service.analysis()
 
 GET         /resultJson                   controllers.Service.getResult(url:String)
 
-GET         /userJson                     controllers.Service.getUserInfo(url:String)
+GET         /userJson                     controllers.Service.getUserInfo(uid:String)
+
+GET         /weiboJson                    controllers.Service.getWeiboInfo(url:String)
 
 GET         /getMap                       controllers.Service.getMap()
 
@@ -42,7 +44,7 @@ GET         /api/weibo/testId             controllers.Application.weiboEntryIdTe
 
 GET         /api/weibo/id                 controllers.Application.urlToId(url)
 
-GET         /api/weibo/url                controllers.Application.idToUrl(uid,ud)
+GET         /api/weibo/url                controllers.Application.idToUrl(uid,id)
 
 # Twitter
 GET         /api/twitter/auth             controllers.AuthAction.twitterAuth()

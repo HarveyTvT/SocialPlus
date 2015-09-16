@@ -371,8 +371,7 @@ li span {
 
 /*genderChart*/
 
-#genderChart,
-#resourceChart {
+#genderChart {
     margin-left: 0;
     margin-right: 0;
     height: 300px;
@@ -482,12 +481,6 @@ li span {
     margin-left: 0;
     margin-top: 20px;
     height: 400px;
-}
-
-#keywordChart {
-    margin-left: 0;
-    margin-right: 0;
-    height: 300px;
 }
 
 .hidden {
