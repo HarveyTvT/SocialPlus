@@ -3,6 +3,8 @@ package models.Midform;
 import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Id;
+import org.mongodb.morphia.query.Query;
+import org.mongodb.morphia.query.UpdateOperations;
 import utils.DbUtil;
 
 import java.util.List;
@@ -40,10 +42,18 @@ public class SocialMessage {
         datastore.save(socialMessage);
     }
 
+    public static void update(SocialMessage socialMessage){
+        Datastore datastore = DbUtil.getDataStore();
+        Query<SocialMessage> query = datastore.createQuery(SocialMessage.class).field("_id").equal(Long.parseLong(socialMessage.getId()));
+        UpdateOperations<SocialMessage> ops = datastore.createUpdateOperations(SocialMessage.class)
+                .set("repostList",socialMessage.getRepostList());
+        datastore.update(query,ops);
+    }
+
     public static SocialMessage getSocialMessage(String id){
         Datastore datastore = DbUtil.getDataStore();
         List<SocialMessage> socialMessages = datastore.createQuery(SocialMessage.class)
-                .filter("_id",id).asList();
+                .filter("_id", Long.parseLong(id)).asList();
         if(!socialMessages.isEmpty()){
             return socialMessages.get(0);
         }else{

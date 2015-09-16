@@ -1,7 +1,10 @@
 package models.APIRequest;
 
+import play.Logger;
 import utils.ConstUtil;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -166,5 +169,32 @@ public abstract class WeiboUtils {
         }
         String[] tags = tagList.toArray(new String[0]);
         return tags;
+    }
+
+    /**
+     * 直接从微博URL转换为内部id
+     * @return
+     */
+    public static String parseUrlToId(String weiboUrl){
+        URL url;
+        try {
+            url = new URL(weiboUrl);
+        }
+        catch (MalformedURLException e){
+            Logger.error("Unsupported weibo url");
+            return null;
+        }
+        String weiboPath = url.getPath();
+        String weiboMid = weiboPath.substring(weiboPath.length() - 9, weiboPath.length());
+        String weiboId = WeiboUtils.mid2id(weiboMid);
+
+        return weiboId;
+    }
+
+    public static String parseIdToUrl(String uid,String id){
+        String weiboMid = WeiboUtils.id2mid(id);
+        String weiboUrl = String.format("http://www.weibo.com/%s/%s", uid, weiboMid);
+
+        return weiboUrl;
     }
 }

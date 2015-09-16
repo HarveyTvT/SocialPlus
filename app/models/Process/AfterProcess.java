@@ -1,8 +1,10 @@
 package models.Process;
 
 import models.Midform.SocialMessage;
+import models.Midform.SocialUser;
 import models.Results.Gender;
 import models.Results.Outcome;
+import play.Logger;
 
 import java.math.BigDecimal;
 import java.text.ParseException;
@@ -27,7 +29,7 @@ public class AfterProcess {
      * @param message
      * @return
      */
-    public Outcome WorkFlow(SocialMessage message) {
+    public Outcome workFlow(SocialMessage message) {
         Outcome outcome = new Outcome();
         prologue(message, outcome);
         getGender(message, outcome);
@@ -57,7 +59,10 @@ public class AfterProcess {
         outcome.setContent(message.getContent());
         //get all socialmessage
         for (String repost_id : message.getRepostList()) {
-            reposts.add(getSocialMessage(repost_id));
+            SocialMessage temp = getSocialMessage(repost_id);
+            if (temp != null){
+                reposts.add(temp);
+            }
         }
         //get all users
         List<String> users_dump = new ArrayList<>();
@@ -130,9 +135,10 @@ public class AfterProcess {
         List<String> genders = new ArrayList<String>();
 
         for (String user : users) {
-            genders.add(
-                    getSocialUser(user).getGender()
-            );
+            SocialUser temp = getSocialUser(user);
+            if (temp != null){
+                genders.add(temp.getGender());
+            }
         }
 
         int male = 0;

@@ -28,14 +28,18 @@ GET         /api/weibo/userList           controllers.Application.getWeiboUserLi
 
 GET         /api/weibo/commentList        controllers.Application.getWeiboCommentList(cids)
 
-GET        /api/weibo/test        controllers.Application.weiboEntryTest(url)
+GET         /api/weibo/test               controllers.Application.weiboEntryTest(url)
 
-GET        /api/messageId         controllers.Application.url(url)
+GET         /api/weibo/testId             controllers.Application.weiboEntryIdTest(uid,id)
+
+GET         /api/weibo/id                 controllers.Application.urlToId(url)
+
+GET         /api/weibo/url                controllers.Application.idToUrl(uid,ud)
 # Twitter
 GET         /api/twitter/auth             controllers.AuthAction.twitterAuth()
 # Account management
 
-GET        /user                  controllers.UserAction.index()
+GET         /user                         controllers.UserAction.index()
 
 POST        /auth                         controllers.UserAction.authenticate()
 

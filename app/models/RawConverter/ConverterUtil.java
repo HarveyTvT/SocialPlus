@@ -86,6 +86,7 @@ public class ConverterUtil {
         if (repostListJson.size() == 0){
             return new ArrayList<>();
         }
+        repostListJson = repostListJson.get("statuses");
         ObjectMapper mapper = new ObjectMapper();
         List<String> repostList = mapper.convertValue(repostListJson, new ArrayList<String>().getClass());
         return repostList;
