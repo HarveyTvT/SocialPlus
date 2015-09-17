@@ -2,12 +2,12 @@
  * @Author: gyl
  * @Date:   2015-09-08 11:04:28
  * @Last Modified by:   gyl
- * @Last Modified time: 2015-09-15 17:07:49
+ * @Last Modified time: 2015-09-17 11:27:23
  */
 
 (function() {
     //$('.ui.embed').embed();
-    d3.json("data/test.json", function(data) {
+    d3.json("data/result.json", function(data) {
 
         function drawEmotionChart(elementId) {
             var gauge = function(container, configuration) {
@@ -203,11 +203,11 @@
         }
 
         function drawTimeChart(elementId) {
-            // var showTime = [];
-            // var format = d3.time.format("%Y-%m-%d");
+            var showTime = [];
+            var format = d3.time.format("%Y-%m-%d %H:%M");
             data.time.forEach(function(d) {
                 d.date = new Date(d.date);
-                // showTime.push(format(d.date));
+                showTime.push(format(d.date));
             });
             var containerEl = document.getElementById(elementId),
                 container = d3.select(containerEl),
@@ -325,23 +325,23 @@
                     return x(d.date) + detailWidth / 2;
                 }).attr('cy', function(d) {
                     return y(d.number);
-                }).on('mouseenter', function(d, i) {
-                    d3.select(this).attr('class', 'lineChart--circle lineChart--circle__highlighted').attr('r', 7);
+                }).on('mouseenter', function(d) {
+                    d3.select(this).attr('class', 'lineChart--circle lineChart--circle__highlighted').attr('r', 5);
                     d.active = true;
-                    showCircleDetail(d, i);
+                    showCircleDetail(d, index);
                 }).on('mouseout', function(d) {
-                    d3.select(this).attr('class', 'lineChart--circle').attr('r', 6);
+                    d3.select(this).attr('class', 'lineChart--circle').attr('r', 4);
                     if (d.active) {
                         hideCircleDetails();
                         d.active = false;
                     }
-                }).on('click touch', function(d, i) {
+                }).on('click touch', function(d) {
                     if (d.active) {
-                        showCircleDetail(d, i);
+                        showCircleDetail(d, index);
                     } else {
                         hideCircleDetails();
                     }
-                }).transition().delay(DURATION / 10 * index).attr('r', 6);
+                }).transition().delay(DURATION / 10 * index).attr('r', 4);
             }
 
             function drawCircles(data) {
@@ -372,8 +372,8 @@
                     .attr('class', 'lineChart--bubble--label')
                     .attr('x', detailWidth / 2)
                     .attr('y', detailHeight / 3)
-                    // .attr('text-anchor', 'middle').text( +
-                    //     showTime[index]);
+                    .attr('text-anchor', 'middle').text(
+                        showTime[index]);
                 text.append('tspan').attr('class', 'lineChart--bubble--value').attr('x', detailWidth / 2).attr('y', detailHeight / 4 * 3).attr('text-anchor', 'middle').text(data.number);
             }
 
@@ -391,14 +391,14 @@
             var containerEl = document.getElementById(elementId),
                 padding = 20,
                 width = containerEl.clientWidth - padding,
-                height = containerEl.clientHeight - padding,
-                force = d3.layout.force().charge(-80).linkDistance(50).size([width, height]);
+                height = containerEl.clientHeight - padding*2,
+                force = d3.layout.force().charge(-120).linkDistance(20).size([width, height]);
             container = d3.select(containerEl);
             svg = container.append("svg").attr("width", width).attr("height", height);
             force.nodes(data.nodes).links(data.links).start();
             var link = svg.selectAll(".link").data(data.links).enter().append("line").attr("class", "link").style("stroke-width", 1);
             var node = svg.selectAll(".node").data(data.nodes).enter().append("circle").attr("class", "node").attr("r", function(d) {
-                return 7 - d.group;
+                return 5.5 - d.group;
             }).style("fill", "teal").call(force.drag);
 
             node.append("title").text(function(d) {
@@ -739,7 +739,7 @@
                 padding = 20,
                 width = containerEl.clientWidth - padding,
                 height = containerEl.clientHeight - padding,
-                radius = Math.min(width * 4 / 5, height * 4 / 5) / 2,
+                radius = Math.min(width*4/5, height*4/5) / 2,
                 DURATION = 1500,
                 DELAY = 500,
                 container = d3.select(containerEl),
@@ -768,7 +768,8 @@
                     return arc(interpolate(t));
                 };
             }).each('end', function handleAnimationEnd(d) {
-                drawDetailedInformation(d.data, this);
+                if(d.data.value!=0)
+                    drawDetailedInformation(d.data, this);
             });
             drawChartCenter();
 
@@ -783,11 +784,11 @@
                     infoWidth = width * 0.3,
                     anchor, infoContainer, position;
                 if (bBox.x + bBox.width / 2 > 0) {
-                    infoContainer = detailedInfo.append('g').attr('width', infoWidth).attr('transform', 'translate(' + (width - infoWidth) + ',' + (bBox.height + bBox.y + height / 4) + ')');
+                    infoContainer = detailedInfo.append('g').attr('width', infoWidth).attr('transform', 'translate(' + (width - infoWidth) + ',' + (bBox.height + bBox.y +height/3) + ')');
                     anchor = 'end';
                     position = 'right';
                 } else {
-                    infoContainer = detailedInfo.append('g').attr('width', infoWidth).attr('transform', 'translate(' + 0 + ',' + (bBox.height + bBox.y + height / 4) + ')');
+                    infoContainer = detailedInfo.append('g').attr('width', infoWidth).attr('transform', 'translate(' + 0 + ',' + (bBox.height + bBox.y+height/3 ) + ')');
                     anchor = 'start';
                     position = 'left';
                 }
@@ -798,19 +799,20 @@
                     };
                 });
                 infoContainer.append('line').attr('class', 'pieChart--detail--divider').attr('x1', 0).attr('x2', 0).attr('y1', 0).attr('y2', 0).transition().duration(DURATION).attr('x2', infoWidth);
-                infoContainer.data([data.key]).append("text").attr('width', infoWidth).attr('height', 100).attr('class', 'pieChart--detail--textContainer ' + 'pieChart--detail__' + position).text(data.key);
+                infoContainer.data([data.key]).append('foreignObject').attr('width', infoWidth).attr('height', 100).append('xhtml:body').attr('class', 'pieChart--detail--textContainer ' + 'pieChart--detail__' + position).html(data.key);
             }
 
         }
 
+
         function drawAllChart() {
-            drawEmotionChart("emotionChart");
             drawTimeChart("timeChart");
             drawForceChart("forceChart");
             drawForceList("forceList");
-            drawKeywordsChart("keywordsChart");
             drawMapChart("mapChart");
             drawGenderChart("genderChart");
+            drawEmotionChart("emotionChart");
+            drawKeywordsChart("keywordsChart");
 
         }
         drawAllChart();
