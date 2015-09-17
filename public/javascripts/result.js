@@ -41,7 +41,7 @@ $(document).ready(function(){
         dataType:"json"})
         .done(function(data) {
             renderKeyUser(data);
-            renderKeyRepost(data);
+            renderRepostPath(data);
             function drawEmotionChart(elementId) {
                 var gauge = function(container, configuration) {
                     var that = {};
@@ -239,9 +239,7 @@ $(document).ready(function(){
                 var showTime = [];
                 var format = d3.time.format("%Y-%m-%d %H:%M");
                 data.time.forEach(function(d) {
-                    console.log(d.date);
                     d.date = new Date(d.date);
-                    console.log(d.date);
                     showTime.push(format(d.date));
                 });
                 var containerEl = document.getElementById(elementId),
@@ -872,7 +870,6 @@ $(document).ready(function(){
 
 
 function renderUserInfo(json){
-    console.log(json);
     $(".source-name a").text(json['name']);
     $("#avatar").attr("src",json['avatar']);
     $("#followCount").text(json['followCount']);
@@ -881,22 +878,26 @@ function renderUserInfo(json){
 }
 
 function renderWeiboInfo(json){
-    console.log(json);
     $(".text").text(json['content']);
     $(".client").text(json['client']);
     $(".repostCount").text(json['repostCount']);
     $(".commentCount").text(json['commentCount']);
 }
 
-function renderKeyRepost(json){
-    var keyRepost = json['keyRepost'];
-    for(var i=0;i<4;i++){
-        if(keyRepost[i]!=undefined){
-            var r=keyRepost[i];
-
-            $("#key_repost").append($("<li>").html(r.name+","+r.repost));
-        }
-    }
+function renderRepostPath(json){
+    var keyRepost = json['repostPath'];
+    var fuck = keyRepost[0]['avatar'];
+    for (var i = 0; i < keyRepost.length - 1; i++) {
+        var name = keyRepost[i]['name'];
+        var avatar = keyRepost[i]['avatar'];
+        var url = keyRepost[i]['url'];
+        $("#repostPath #repostAvatar").append('<span><img src="'+avatar+'" width="50px" height="50px"/><a href="'+url +'" target="_blank">'+name+'</a></span>'
+         + '<img src="/assets/images/right_arrow.png" width="50px" height="50px"/>');
+    };
+    var name = keyRepost[i]['name'];
+    var avatar = keyRepost[i]['avatar'];
+    var url = keyRepost[i]['url'];
+    $("#repostPath #repostAvatar").append('<span><img src="'+avatar+'" width="50px" height="50px"/><a href="'+url+'" target="_blank">'+name+'</a></span>');
 }
 
 function renderKeyUser(json){

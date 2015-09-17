@@ -44,6 +44,8 @@ public class AfterProcess {
     private List<HashMap<String,Integer>> linkResult = new ArrayList<>();
     private HashMap<String,Integer> messageMap = new HashMap<>();
     private int[] layerResult = new int[6];
+    private int maxRepostPath= 0;
+    private List<String> maxRepostPathList = new ArrayList<>();
 
     public Outcome workFlow(SocialMessage message) {
         Outcome outcome = new Outcome();
@@ -52,8 +54,9 @@ public class AfterProcess {
         getTimeline(message, outcome);
         getNodesAndLinks(message, outcome);
         getLayerPercent(message, outcome);
+        getRepostPath(message, outcome);
         getKeyUser(message, outcome);
-        getKeyRepost(message, outcome);
+//        getKeyRepost(message, outcome);
         getTags(message, outcome);
         getLocations(message, outcome);
         getEmotion(message, outcome);
@@ -245,13 +248,13 @@ public class AfterProcess {
         nodeResult.add(group);
 
         String[] originRepost = originMessage.getRepostList();
-        getNodesAndLinkRecursion(originRepost, 0, 0);
+        getNodesAndLinkRecursion(originRepost, 0, 0, new ArrayList<>());
 
         outcome.setNodes(nodeResult);
         outcome.setLinks(linkResult);
     }
 
-    private int getNodesAndLinkRecursion(String[] repostLists,int layer,int offset){
+    private int getNodesAndLinkRecursion(String[] repostLists,int layer,int offset,List<String> repostPathList){
         offset++;
         if (layer < 6 && layer > -1){
             layerResult[layer]++;//层级数量比例分析
@@ -276,7 +279,12 @@ public class AfterProcess {
 
             int thisNodePointer = nodeResult.size();
             if (!(temp == null || temp.getRepostList().length == 0 && layer > 5) || author == null) {
-                offset += getNodesAndLinkRecursion(repostList, layer, 0);
+                if (layer > maxRepostPath){
+                    repostPathList.add(repostId);
+                    maxRepostPathList = repostPathList;
+                    maxRepostPath = layer;
+                }
+                offset += getNodesAndLinkRecursion(repostList, layer, 0, repostPathList);
                 HashMap<String, Integer> link = new HashMap<>();
                 link.put("source", nodeResult.size() - offset);
                 link.put("target", thisNodePointer - 1);
@@ -299,16 +307,14 @@ public class AfterProcess {
         for(double layer : layerResult){
             total += layer;
         }
-        Logger.debug(String.valueOf(total));
         List<Double> layerList = new ArrayList<>();
         double last = 100;//保留整数，为了确保和为100
-        for (int i = 0;i < layerResult.length-1;i++){
-            Logger.debug(String.format("This is " + i + "%d",layerResult[i]));
+        for (int i = 1;i < layerResult.length;i++){
             double percent = layerResult[i] * 100 / total;
             last -= percent;
-            layerList.add(i,percent);
+            layerList.add(percent);
         }
-        layerList.add(layerResult.length-1,last);
+        layerList.add(layerResult.length - 1, last);
 
         outcome.setLayer(layerList);
     }
@@ -328,10 +334,10 @@ public class AfterProcess {
 
         HashMap<String,String> tempMap = new HashMap<>();
         tempMap.put("content",content);
-        tempMap.put("repostCount",repostCount);
+        tempMap.put("repostCount", repostCount);
         tempMap.put("datetime",datetime);
         tempMap.put("name",name);
-        tempMap.put("avatar",avatar);
+        tempMap.put("avatar", avatar);
         outcome.setKeyUser(tempMap);
     }
 
@@ -352,6 +358,30 @@ public class AfterProcess {
             keyRepostList.add(userMap);
         }
         outcome.setKeyRepost(keyRepostList);
+    }
+
+    /**
+     * 最长单条转发链
+     * @param message
+     * @param outcome
+     */
+    private void getRepostPath(SocialMessage message, Outcome outcome){
+        List<HashMap<String,String>> repostPathMap = new ArrayList<>();
+        for (String repostPath : maxRepostPathList){
+            HashMap<String,String> tempMap = new HashMap();
+            SocialMessage tempMessage = SocialMessage.getSocialMessage(repostPath);
+            String uid = tempMessage != null ? tempMessage.getAuthor() : null;
+            SocialUser tempUser = SocialUser.getSocialUser(uid);
+            String name = tempUser != null ? tempUser.getName() : "未知用户";
+            String avatar = tempUser != null ? String.format(ConstUtil.weiboAvatarUrl, uid) :
+                    "/assets/images/unknown_user.png";
+            String url = String.format("http://www.weibo.com/%s",uid != null ? uid : "");
+            tempMap.put("name",name);
+            tempMap.put("url",url);
+            tempMap.put("avatar",avatar);
+            repostPathMap.add(tempMap);
+        }
+        outcome.setRepostPath(repostPathMap);
     }
 
     private void getLocations(SocialMessage message, Outcome outcome) {

@@ -115,8 +115,6 @@ li span {
 }
 
 .draw {
-    margin-left: 1rem;
-    margin-right: 1rem;
     padding-left: 10px;
     padding-right: 10px;
     padding-top: 10px;
@@ -208,6 +206,7 @@ li span {
 }
 
 #bigUser,
+#repostPath,
 #keyPath {
     height: 220px;
     margin-left: 0;
@@ -499,7 +498,7 @@ li span {
     margin-right: 0;
     margin-top: 0;
     height: 300px;
-
+}
 
 .hidden {
     display: none;

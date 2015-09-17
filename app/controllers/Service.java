@@ -57,6 +57,7 @@ public class Service extends Controller {
             PreProcess preProcess = new PreProcess(weiboToken);
             preProcess.workFlow(message);
             outcome = afterProcess.workFlow(message);
+            Outcome.save(outcome);
 //        }
         return ok(result.render(url,time));
     }

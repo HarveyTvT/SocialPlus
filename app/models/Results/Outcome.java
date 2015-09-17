@@ -32,6 +32,9 @@ public class Outcome {
     @Embedded("keyRepost")
     private List<HashMap<String,String>> keyRepost = new ArrayList<>();
 
+    @Embedded("repostPath")
+    private List<HashMap<String,String>> repostPath = new ArrayList<>();
+
     @Embedded("time")
     private List<HashMap<String, Long>> time = new ArrayList<>();
 
@@ -125,6 +128,14 @@ public class Outcome {
 
     public HashMap<String,String> getKeyUser() {
         return keyUser;
+    }
+
+    public List<HashMap<String,String>> getRepostPath() {
+        return repostPath;
+    }
+
+    public void setRepostPath(List<HashMap<String,String>> repostPath) {
+        this.repostPath = repostPath;
     }
 
     public void setKeyUser(HashMap<String,String> keyUser) {
