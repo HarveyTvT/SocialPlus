@@ -424,13 +424,13 @@ $(document).ready(function(){
                     padding = 20,
                     width = containerEl.clientWidth - padding,
                     height = containerEl.clientHeight - padding,
-                    force = d3.layout.force().charge(-120).linkDistance(1).size([1, 1]);
+                    force = d3.layout.force().charge(-80).linkDistance(50).size([width, height]);
                 container = d3.select(containerEl);
                 svg = container.append("svg").attr("width", width).attr("height", height);
                 force.nodes(data.nodes).links(data.links).start();
                 var link = svg.selectAll(".link").data(data.links).enter().append("line").attr("class", "link").style("stroke-width", 1);
                 var node = svg.selectAll(".node").data(data.nodes).enter().append("circle").attr("class", "node").attr("r", function(d) {
-                    return 5 + d.group;
+                    return 8 - d.group;
                 }).style("fill", "teal").call(force.drag);
                 node.append("title").text(function(d) {
                     return d.name;
@@ -843,4 +843,8 @@ function renderWeiboInfo(json){
     $(".client").text(json['client']);
     $(".repostCount").text(json['repostCount']);
     $(".commentCount").text(json['commentCount']);
+}
+
+function renderLayerPercentChart(percentList){
+    
 }

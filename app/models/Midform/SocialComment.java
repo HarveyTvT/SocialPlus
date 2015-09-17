@@ -12,11 +12,7 @@ import java.util.List;
  */
 @Entity("socialcomment")
 public class SocialComment {
-    public SocialComment(){
-        id = "123412";
-        createTime = "Mon Oct 27 11:04:04 +0800 2014";
-        content = "nothing";
-    }
+    public SocialComment(){}
     @Id
     private String id;//"weibo-uid"
     private String createTime;//"Mon Oct 27 11:04:04 +0800 2014"

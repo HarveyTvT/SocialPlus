@@ -40,6 +40,8 @@ public class Outcome {
     @Embedded("locations")
     private List<HashMap<String, Integer>> locations = new ArrayList<>();
 
+    private List<Integer> layer = new ArrayList<>();
+
     private List<String> tags = new ArrayList();
 
     @Embedded("nodes")
@@ -178,6 +180,14 @@ public class Outcome {
 
     public List<HashMap<String, Integer>> getLinks() {
         return links;
+    }
+
+    public List<Integer> getLayer() {
+        return layer;
+    }
+
+    public void setLayer(List<Integer> layer) {
+        this.layer = layer;
     }
 
     public List<String> getTags() {

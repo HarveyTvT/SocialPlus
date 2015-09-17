@@ -1,5 +1,6 @@
 package models.Process;
 
+import edu.fudan.example.nlp.KeyWordExtraction;
 import models.Midform.SocialMessage;
 import models.Midform.SocialUser;
 import models.Results.Gender;
@@ -23,16 +24,18 @@ public class AfterProcess {
     private List<HashMap<String,String>> nodeResult = new ArrayList<>();
     private List<HashMap<String,Integer>> linkResult = new ArrayList<>();
     private HashMap<String,Integer> messageMap = new HashMap<>();
+    private int[] layerResult = new int[6];
 
     public Outcome workFlow(SocialMessage message) {
         Outcome outcome = new Outcome();
         prologue(message, outcome);
         getGender(message, outcome);
-        getTags(message, outcome);
         getTimeline(message, outcome);
         getNodesAndLinks(message, outcome);
+        getLayerPercent(message, outcome);
         getKeyUser(message, outcome);
         getKeyRepost(message, outcome);
+        getTags(message, outcome);
         getLocations(message, outcome);
         getEmotion(message, outcome);
         Outcome.save(outcome);
@@ -80,7 +83,19 @@ public class AfterProcess {
      * @param outcome
      */
     private void getTags(SocialMessage message, Outcome outcome) {
+        String content = message.getContent();
+        Set<String> messageSet = messageMap.keySet();
+        for (String set : messageSet){
+            SocialMessage tempMessage = SocialMessage.getSocialMessage(set);
+            String tempContent = tempMessage != null ? tempMessage.getContent() : null;
+            if (tempContent != null){
+                content += tempContent;
+            }
+        }
+        List<String> keyWords = KeyWordExtraction.getKeyExtract(content);
+        outcome.setTags(keyWords);
     }
+
 
     /**
      * @param message
@@ -180,54 +195,79 @@ public class AfterProcess {
      */
 
     private void getNodesAndLinks(SocialMessage originMessage, Outcome outcome) {
+        HashMap<String, String> group = new HashMap<>();
+        group.put("name", SocialUser.getSocialUser(originMessage.getAuthor()).getName());
+        group.put("group", "0");
+        nodeResult.add(group);
 
-        String[] originRepost = new String[1];
-        originRepost[0] = originMessage.getId();
-        getNodesAndLinkRecursion(originRepost, -1);
+        String[] originRepost = originMessage.getRepostList();
+        getNodesAndLinkRecursion(originRepost, 0, 0);
+
         outcome.setNodes(nodeResult);
         outcome.setLinks(linkResult);
     }
 
-    private void getNodesAndLinkRecursion(String[] repostLists,int layer){
-        if (repostLists == null || repostLists.length == 0 && layer > 4){
-            return;
+    private int getNodesAndLinkRecursion(String[] repostLists,int layer,int offset){
+        offset++;
+        if (layer < 6 && layer > -1){
+            layerResult[layer]++;//层级数量比例分析
+        }
+        if (repostLists == null || repostLists.length == 0 && layer > 5){
+            return offset;
         }
         layer++;
-        for(int i = 0;i < repostLists.length;i++){
+        for(int i = 0;i < repostLists.length;i++) {
             String repostId = repostLists[i];
-            if (repostId.equals("")) return;
+            if (repostId.equals("")) return offset;
             SocialMessage temp = SocialMessage.getSocialMessage(repostId);
             String authorId = temp != null ? temp.getAuthor() : null;
             SocialUser author = SocialUser.getSocialUser(authorId);
-            String authorName = author != null ? author.getName() : "未知";
+            String authorName = author != null ? author.getName() : "未知用户";
+            String[] repostList = temp != null ? temp.getRepostList() : null;
+            HashMap<String, String> group = new HashMap<>();
 
-            HashMap<String,String> group = new HashMap<>();
             group.put("name", authorName);
             group.put("group", String.valueOf(layer));
             nodeResult.add(group);
 
-            String[] repostList = null;
-            if (!(temp == null || temp.getRepostList().length == 0 && layer > 4)){
-                repostList = temp.getRepostList();
-                HashMap<String,Integer> link = new HashMap<>();
-                link.put("source",nodeResult.size()-i-1);
-                link.put("target",nodeResult.size()-1);
+            int thisNodePointer = nodeResult.size();
+            if (!(temp == null || temp.getRepostList().length == 0 && layer > 5) || author == null) {
+                offset += getNodesAndLinkRecursion(repostList, layer, 0);
+                HashMap<String, Integer> link = new HashMap<>();
+                link.put("source", nodeResult.size() - offset);
+                link.put("target", thisNodePointer - 1);
                 linkResult.add(link);
             }
 
             /*
             用于关键用户，添加到所有转发微博集合，除过作者自身
              */
-            if(layer != 0){
-                String repostValue = temp != null ? temp.getRepostCount() : "0";
-                Integer repostCount = Integer.valueOf(repostValue);
-                messageMap.put(repostId, repostCount);
-            }
-
-            getNodesAndLinkRecursion(repostList, layer);
+            String repostValue = temp != null ? temp.getRepostCount() : "0";
+            Integer repostCount = Integer.valueOf(repostValue);
+            messageMap.put(repostId, repostCount);
         }
+        return offset;
     }
 
+    private void getLayerPercent(SocialMessage message, Outcome outcome){
+        int total = 0;
+        //messageMap除去作者
+        for(int layer : layerResult){
+            total += layer;
+        }
+        Logger.debug(String.valueOf(total));
+        List<Integer> layerList = new ArrayList<>();
+        int last = 100;//保留整数，为了确保和为100
+        for (int i = 0;i < layerResult.length-1;i++){
+            Logger.debug(String.format("This is " + i + "%d",layerResult[i]));
+            int percent = layerResult[i] * 100 / total;
+            last -= percent;
+            layerList.add(i,percent);
+        }
+        layerList.add(layerResult.length-1,last);
+
+        outcome.setLayer(layerList);
+    }
 
     private void getKeyUser(SocialMessage message, Outcome outcome){
         ValueComparator valueComparator = new ValueComparator(messageMap);
@@ -250,7 +290,7 @@ public class AfterProcess {
                     sortedList.get(sortedList.size()-i-1));
             String userId = tempMessage.getAuthor();
             String name = SocialUser.getSocialUser(userId).getName();
-            userMap.put("name",name != null ? name : "未知");
+            userMap.put("name",name != null ? name : "未知用户");
             userMap.put("repost",tempMessage.getRepostCount());
             keyRepostList.add(userMap);
         }
