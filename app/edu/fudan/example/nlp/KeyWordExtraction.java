@@ -14,6 +14,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * 关键词抽取使用示例
@@ -37,20 +39,9 @@ public class KeyWordExtraction {
 			e.printStackTrace();
 		}
 		AbstractExtractor key = new WordExtract(seg,sw);
-		String result = key.extract(content, 15, false);
-		String middle;
-		play.Logger.debug("The raw word extract result is:"+result);
-		if(result.length()>3) {
-			middle = result.substring(1, result.length() - 2);
-		}else{
-			return new ArrayList<>();
-		}
-		String[] keyWords_raw = middle.split(" ");
-		List<String> keyWords_pro = new ArrayList<>();
-		for (String keyWord : keyWords_raw) {
-			keyWords_pro.add(keyWord.split("=")[0]);
-		}
-
-		return keyWords_pro;
+		Map<String,Integer> result = key.extract(content, 20);
+		Set<String> keys = result.keySet();
+		List<String> keyWords = new ArrayList<>(keys);
+		return keyWords;
 	}
 }

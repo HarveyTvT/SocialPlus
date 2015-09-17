@@ -1,15 +1,32 @@
 package models.Process;
 
+import javax.inject.Inject;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import controllers.AsyncRequest;
 import edu.fudan.example.nlp.KeyWordExtraction;
-import models.APIRequest.WeiboUtils;
 import models.Midform.SocialMessage;
 import models.Midform.SocialUser;
 import models.Results.Gender;
 import models.Results.Outcome;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.junit.Test;
 import play.Logger;
+import play.libs.Json;
+import play.libs.ws.WS;
+import play.libs.ws.WSResponse;
+import play.libs.F.Promise;
+import play.libs.ws.WSClient;
+import play.libs.ws.WSRequest;
 import utils.ConstUtil;
 import utils.ValueComparator;
 
+import java.io.IOException;
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -59,9 +76,11 @@ public class AfterProcess {
         outcome.setContent(message.getContent());
         //get all socialmessage
         for (String repost_id : message.getRepostList()) {
-            SocialMessage temp = getSocialMessage(repost_id);
-            if (temp != null){
-                reposts.add(temp);
+            if(!repost_id.equals("")) {
+                SocialMessage temp = getSocialMessage(repost_id);
+                if (temp != null) {
+                    reposts.add(temp);
+                }
             }
         }
         //get all users
@@ -103,9 +122,31 @@ public class AfterProcess {
      * @param message
      * @param outcome
      */
+
     private void getEmotion(SocialMessage message, Outcome outcome) {
-        outcome.setEmotion(76.2);
+        //get content
+        String content = message.getContent();
+        List<String> contents = new ArrayList<>();
+        contents.add(content);
+        JsonNode json = Json.toJson(contents);
+        //web request
+        String url = "http://api.bosonnlp.com/sentiment/analysis?weibo";
+        String token = "JI1cZUGm.3765.PHr4LP7cYiO4";
+        JsonNode node;
+        try {
+            String result = Jsoup.connect(url).header("Accept","application/json").header("X-token",token)
+                    .data(json.toString()).post().toString();
+            node = Json.parse(result);
+            JsonNode emotionJson = node.get(0);
+            ObjectMapper om = new ObjectMapper();
+            List<Double> repostList = om.convertValue(emotionJson, new ArrayList<Double>().getClass());
+            Double emotion = repostList.get(0);
+            outcome.setEmotion(emotion);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
+
 
     /**
      * Calculate the gender of all users
@@ -113,6 +154,7 @@ public class AfterProcess {
      * @param message
      * @param outcome
      */
+
     private void getGender(SocialMessage message, Outcome outcome) {
         List<String> genders = new ArrayList<>();
 
@@ -165,7 +207,7 @@ public class AfterProcess {
         int dot = 0;
         HashMap<String, Long> temp = new HashMap<>();
         temp.put("date", times.get(dot));
-        temp.put("number", Long.valueOf(1));
+        temp.put("number", 1L);
         result.add(temp);
         times.set(dot, times.get(dot) + 1800000);
         for (int i = 0; i < times.size(); i++) {
