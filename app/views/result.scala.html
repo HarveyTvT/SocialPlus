@@ -85,7 +85,7 @@
                 <div class="bigUser-left item">
                     <div class="bigUser-info">
                         <a href="" target="_blank">
-                            <img src="" width="40px" height="40px">
+                            <img src="" class="bigUser-avatar" width="40px" height="40px">
                         </a>
                         <div class="bigUser-name"><a style="float:left;" href="" target="_blank"><span></span></a>
                             <div class="ico"></div>
@@ -112,11 +112,12 @@
                 <div class="ui small header chartHeader">
                     <i class=" ellipsis horizontal icon"></i>
                     <span class="content">关键用户传播路径</span>
+                    <ul id="key_repost"></ul>
                 </div>
             </div>
         </div>
         <!-- ～～～～～～～～～传播路径～～～～～～～-->
-        <div class="ten wide column" id="path">
+        <div class="twelve wide column" id="path">
             <div id="forceChart" class="draw">
                 <div class="ui small header chartHeader">
                     <i class="world icon"></i>
@@ -124,42 +125,12 @@
                 </div>
             </div>
         </div>
-        <div class="six wide column">
+        <div class="four wide column">
             <div id="forceList" class="draw">
                 <div class="ui small header chartHeader">
                     <i class="feed icon"></i>
                     <span class="content">层级分析</span>
                 </div>
-                <!-- <table class="ui center aligned selectable table">
-                    <thead>
-                        <tr>
-                            <th>层级</th>
-                            <th>比例</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>第一层</td>
-                            <td id="firstClassValue"></td>
-                        </tr>
-                        <tr>
-                            <td>第二层</td>
-                            <td id="sencondClassValue"></td>
-                        </tr>
-                        <tr>
-                            <td>第三层</td>
-                            <td class="thirdCladdValue"></td>
-                        </tr>
-                        <tr>
-                            <td>第四层</td>
-                            <td class="thirdCladdValue"></td>
-                        </tr>
-                        <tr>
-                            <td>四层＋</td>
-                            <td class="thirdCladdValue"></td>
-                        </tr>
-                    </tbody>
-                </table> -->
                 <div class="ui divided selection force list">
                     <a class="item" id="firstItem">
                         <div class="ui  horizontal label">第一层</div>
@@ -184,6 +155,7 @@
                 </div>
             </div>
         </div>
+
         <!--～～～～～～参与者信息～～～～～～ -->
         <div class="sixteen wide column" id="participant">
             <div class="draw" id="mapChart">
@@ -199,39 +171,39 @@
                 </svg>
             </div>
         </div>
-        <div class="three column row">
-            <div class="column">
-                <div class="draw" id="genderChart">
-                    <div class="ui small header chartHeader">
-                        <i class="child icon"></i>
-                        <span class="content">性别比例</span>
-                    </div>
-                    <svg id="pieChartSVG">
-                        <defs>
-                            <filter id='pieChartInsetShadow'>
-                                <feOffset dx='0' dy='0' />
-                                <feGaussianBlur stdDeviation='3' result='offset-blur' />
-                                <feComposite operator='out' in='SourceGraphic' in2='offset-blur' result='inverse' />
-                                <feFlood flood-color='black' flood-opacity='1' result='color' />
-                                <feComposite operator='in' in='color' in2='inverse' result='shadow' />
-                                <feComposite operator='over' in='shadow' in2='SourceGraphic' />
-                            </filter>
-                            <filter id="pieChartDropShadow">
-                                <feGaussianBlur in="SourceAlpha" stdDeviation="3" result="blur" />
-                                <feOffset in="blur" dx="0" dy="3" result="offsetBlur" />
-                                <feMerge>
-                                    <feMergeNode />
-                                    <feMergeNode in="SourceGraphic" />
-                                </feMerge>
-                            </filter>
-                        </defs>
-                    </svg>
+        <!-- 性别比例 -->
+        <div class="five wide column">
+            <div class="draw" id="genderChart">
+                <div class="ui small header chartHeader">
+                    <i class="child icon"></i>
+                    <span class="content">性别比例</span>
                 </div>
+                <svg id="pieChartSVG">
+                    <defs>
+                        <filter id='pieChartInsetShadow'>
+                            <feOffset dx='0' dy='0' />
+                            <feGaussianBlur stdDeviation='3' result='offset-blur' />
+                            <feComposite operator='out' in='SourceGraphic' in2='offset-blur' result='inverse' />
+                            <feFlood flood-color='black' flood-opacity='1' result='color' />
+                            <feComposite operator='in' in='color' in2='inverse' result='shadow' />
+                            <feComposite operator='over' in='shadow' in2='SourceGraphic' />
+                        </filter>
+                        <filter id="pieChartDropShadow">
+                            <feGaussianBlur in="SourceAlpha" stdDeviation="3" result="blur" />
+                            <feOffset in="blur" dx="0" dy="3" result="offsetBlur" />
+                            <feMerge>
+                                <feMergeNode />
+                                <feMergeNode in="SourceGraphic" />
+                            </feMerge>
+                        </filter>
+                    </defs>
+                </svg>
             </div>
         </div>
+
         <!-- 内容分析 -->
-        <div class="six wide column" id="content">
-            <div class="draw row" id="emotionChart">
+        <div class="five wide column">
+            <div class="draw" id="emotionChart">
                 <div class="ui small header chartHeader">
                     <i class="heart icon"></i>
                     <span class="content">情感值</span>
@@ -247,7 +219,9 @@
                     </div>
                 </svg>
             </div>
-            <div class="draw row" id="keywordsChart">
+        </div>
+        <div class="six wide column">
+            <div class="draw" id="keywordsChart">
                 <div class="ui small header chartHeader">
                     <i class="comments outline icon"></i>
                     <span class="content">关键词</span>

@@ -2,7 +2,7 @@
 * @Author: gyl
 * @Date:   2015-09-10 14:44:23
 * @Last Modified by:   gyl
-* @Last Modified time: 2015-09-15 17:40:18
+* @Last Modified time: 2015-09-17 12:45:06
 */
 
 body {
@@ -47,15 +47,15 @@ button.ui.icon.button {
 
 .source-name {
     float: left;
-    color: #000000;
     font-size: 1.5em;
     width: 127px;
-    margin-top: 10px;
-    margin-bottom: 5px;
+    margin-top: 17px;
+    margin-bottom: 0px;
     margin-left: 2px;
 }
 
 ul {
+    margin-top: 10px;
     padding-left: 5px;
     float: left;
     text-align: center;
@@ -64,7 +64,7 @@ ul {
 li {
     list-style-type: none;
     width: 46px;
-    color: #333;
+    color: #444;
     font-size: 14px;
     float: left;
     padding: 0px 3px 0px 3px;
@@ -78,11 +78,12 @@ li span {
 .weiboright {
     float: left;
     width: 65%;
-    color: #333;
+    color: #444;
     font-size: 13px;
     margin-left: 16px;
-    margin-top: 11px
+    margin-top: 13px
 }
+
 
 .text {
     height: 70px;
@@ -90,6 +91,16 @@ li span {
 
 .weibobottom {
     float: left;
+}
+.time,.client,.repostCount,.commentCount,.time a,.source-name a{
+    color:#6bb7c7;
+}
+.bottomtj{
+    float: right;
+    margin-right: 5px;
+}
+.client{
+    margin-right:151px;
 }
 
 .grid.container {
@@ -120,7 +131,7 @@ li span {
 
 #timeChart {
     font: 12px sans-serif;
-    height: 380px;
+    height: 420px;
     padding-top: 0px;
 }
 
@@ -131,18 +142,18 @@ li span {
 .lineChart--areaLine {
     fill: none;
     stroke: #6bb7c7;
-    stroke-width: 3;
+    stroke-width: 2;
 }
 
 
-/*.lineChart--bubble--label {
+.lineChart--bubble--label {
     fill: none;
     stroke: #6bb7c7;
     font-size: 12px;
     font-style: italic;
     font-weight: 100;
 }
-*/
+
 
 .lineChart--bubble--value {
     fill: #fff;
@@ -154,7 +165,7 @@ li span {
 .lineChart--circle {
     fill: #6bb7c7;
     stroke: #fff;
-    stroke-width: 3;
+    stroke-width: 2;
 }
 
 .lineChart--circle__highlighted {
@@ -198,7 +209,7 @@ li span {
 
 #bigUser,
 #keyPath {
-    height: 280px;
+    height: 220px;
     margin-left: 0;
     margin-right: 0;
     padding: 10px;
@@ -227,21 +238,21 @@ li span {
 .bigUser-name {
     margin-left: 8px;
     float: left;
-    width: 172px;
-    font-size: 15px;
-    margin-top: 12px;
+    width: 60%;
+    font-size: 17px;
+    margin-top: 0px;
     margin-bottom: 5px;
 }
 
 .bigUser-fans {
     margin-left: 8px;
     float: left;
-    width: 139px;
+    width: 60%;
     font-size: 13px;
 }
 
 .repost-time-box {
-    width: 140px;
+    width: 55%;
     text-align: center;
     font-size: 13px;
     height: 66px;
@@ -257,14 +268,15 @@ li span {
 
 .repost-number-box {
     font-size: 13px;
-    width: 100px;
+    width: 40%;
     height: 66px;
     float: left;
 }
 
 .repost-number {
-    font-size: 27px;
+    font-size: 25px;
     margin-top: 10px;
+    text-align: center;
 }
 
 .bigUser-right {
@@ -289,7 +301,7 @@ li span {
 /*forceChart*/
 
 #forceChart{
-    height: 500px;
+    height: 700px;
     margin-left: 0;
     margin-right: 0;
 }
@@ -303,14 +315,16 @@ li span {
     stroke: #999;
     stroke-opacity: .6;
 }
-
+#forceList{
+    margin-right: 0px;
+}
 #forceList .item{
     /*text-align: center;*/
     color:  #3f94a7;
 }
 
 #forceList .item .label{
-    margin-right: 40%;
+    margin-right: 20%;
 }
 
 
@@ -401,9 +415,12 @@ li span {
     stroke-width: 1px;
 }
 
+
 .pieChart--detail--textContainer {
-    width: 100;
+    max-width:100%;
+    min-width: 0px;  
     background-color: transparent;
+    background-image:none;
     padding: 10px 0 0 0;
     margin: 0;
     color: #666;
@@ -479,9 +496,10 @@ li span {
 }
 #keywordsChart {
     margin-left: 0;
-    margin-top: 20px;
-    height: 400px;
-}
+    margin-right: 0;
+    margin-top: 0;
+    height: 300px;
+
 
 .hidden {
     display: none;

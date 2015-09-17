@@ -26,7 +26,8 @@ public class Outcome {
 
     private String author;
 
-    private String keyUser;
+    @Embedded("keyUser")
+    private HashMap<String,String> keyUser;
 
     @Embedded("keyRepost")
     private List<HashMap<String,String>> keyRepost = new ArrayList<>();
@@ -40,7 +41,7 @@ public class Outcome {
     @Embedded("locations")
     private List<HashMap<String, Integer>> locations = new ArrayList<>();
 
-    private List<Integer> layer = new ArrayList<>();
+    private List<Double> layer = new ArrayList<>();
 
     private List<String> tags = new ArrayList();
 
@@ -122,11 +123,11 @@ public class Outcome {
         this.author = author;
     }
 
-    public String getKeyUser() {
+    public HashMap<String,String> getKeyUser() {
         return keyUser;
     }
 
-    public void setKeyUser(String keyUser) {
+    public void setKeyUser(HashMap<String,String> keyUser) {
         this.keyUser = keyUser;
     }
 
@@ -182,11 +183,11 @@ public class Outcome {
         return links;
     }
 
-    public List<Integer> getLayer() {
+    public List<Double> getLayer() {
         return layer;
     }
 
-    public void setLayer(List<Integer> layer) {
+    public void setLayer(List<Double> layer) {
         this.layer = layer;
     }
 

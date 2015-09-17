@@ -53,6 +53,7 @@ public class ConstUtil {
 
     public static final String weiboRedirectUrl;
 
+    public static final String weiboAvatarUrl = "http://tp3.sinaimg.cn/%s/180/0/0";
 
     public static final String renrenAuthUrl = "https://renren.com";
     /**

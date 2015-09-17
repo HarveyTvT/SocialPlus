@@ -2,7 +2,7 @@
  * @Author: gyl
  * @Date:   2015-09-08 11:04:28
  * @Last Modified by:   gyl
- * @Last Modified time: 2015-09-12 21:15:26
+ * @Last Modified time: 2015-09-17 13:04:41
  */
 
 $(document).ready(function(){
@@ -19,7 +19,7 @@ $(document).ready(function(){
         renderUserInfo(data);
     })
     .fail(function(err){
-        alert("get user info err" + err);
+        console.log("get user info err" + err);
     });
 
     //weibo info
@@ -32,7 +32,7 @@ $(document).ready(function(){
         renderWeiboInfo(data);
     })
     .fail(function(err){
-        alert("get user info err" + err);
+        console.log("get weibo info err" + err);
     });
 
     $.ajax({
@@ -40,7 +40,8 @@ $(document).ready(function(){
         method: "get",
         dataType:"json"})
         .done(function(data) {
-
+            renderKeyUser(data);
+            renderKeyRepost(data);
             function drawEmotionChart(elementId) {
                 var gauge = function(container, configuration) {
                     var that = {};
@@ -235,11 +236,13 @@ $(document).ready(function(){
             }
 
             function drawTimeChart(elementId) {
-                // var showTime = [];
-                // var format = d3.time.format("%Y-%m-%d");
+                var showTime = [];
+                var format = d3.time.format("%Y-%m-%d %H:%M");
                 data.time.forEach(function(d) {
+                    console.log(d.date);
                     d.date = new Date(d.date);
-                    // showTime.push(format(d.date));
+                    console.log(d.date);
+                    showTime.push(format(d.date));
                 });
                 var containerEl = document.getElementById(elementId),
                     container = d3.select(containerEl),
@@ -252,7 +255,6 @@ $(document).ready(function(){
                     padding = 20,
                     width = containerEl.clientWidth - margin.left - margin.right - padding,
                     height = containerEl.clientHeight - margin.top - margin.bottom - padding,
-                ///////////////
                     detailWidth = 98,
                     detailHeight = 55,
                     detailMargin = 10,
@@ -357,23 +359,25 @@ $(document).ready(function(){
                         return x(d.date) + detailWidth / 2;
                     }).attr('cy', function(d) {
                         return y(d.number);
-                    }).on('mouseenter', function(d, i) {
-                        d3.select(this).attr('class', 'lineChart--circle lineChart--circle__highlighted').attr('r', 7);
+                    }).on('mouseenter', function(d) {
+                        d3.select(this).attr('class', 'lineChart--circle lineChart--circle__highlighted').attr('r', 5);
                         d.active = true;
-                        showCircleDetail(d, i);
+                        showCircleDetail(d, index);
                     }).on('mouseout', function(d) {
-                        d3.select(this).attr('class', 'lineChart--circle').attr('r', 6);
+                        d3.select(this).attr('class', 'lineChart--circle').attr('r', 4);
+
                         if (d.active) {
                             hideCircleDetails();
                             d.active = false;
                         }
-                    }).on('click touch', function(d, i) {
+                    }).on('click touch', function(d) {
                         if (d.active) {
-                            showCircleDetail(d, i);
+                            showCircleDetail(d, index);
                         } else {
                             hideCircleDetails();
                         }
-                    }).transition().delay(DURATION / 10 * index).attr('r', 6);
+                    }).transition().delay(DURATION / 10 * index).attr('r', 4);
+
                 }
 
                 function drawCircles(data) {
@@ -404,8 +408,7 @@ $(document).ready(function(){
                         .attr('class', 'lineChart--bubble--label')
                         .attr('x', detailWidth / 2)
                         .attr('y', detailHeight / 3)
-                    // .attr('text-anchor', 'middle').text( +
-                    //     showTime[index]);
+                        .attr('text-anchor', 'middle').text(showTime[index]);
                     text.append('tspan').attr('class', 'lineChart--bubble--value').attr('x', detailWidth / 2).attr('y', detailHeight / 4 * 3).attr('text-anchor', 'middle').text(data.number);
                 }
 
@@ -421,10 +424,10 @@ $(document).ready(function(){
 
             function drawForceChart(elementId) {
                 var containerEl = document.getElementById(elementId),
-                    padding = 20,
-                    width = containerEl.clientWidth - padding,
-                    height = containerEl.clientHeight - padding,
-                    force = d3.layout.force().charge(-80).linkDistance(50).size([width, height]);
+                padding = 20,
+                width = containerEl.clientWidth - padding,
+                height = containerEl.clientHeight - padding,
+                force = d3.layout.force().charge(-80).linkDistance(50).size([width, height]);
                 container = d3.select(containerEl);
                 svg = container.append("svg").attr("width", width).attr("height", height);
                 force.nodes(data.nodes).links(data.links).start();
@@ -451,6 +454,35 @@ $(document).ready(function(){
                         return d.y;
                     });
                 });
+            }
+
+            function drawForceList(elementId) {
+                var containerEl = document.getElementById(elementId),
+                    container = d3.select(containerEl);
+                var layerList = data['layer'];
+                var layer = [];
+                if (layerList.length < 4){
+                    for (var i = 0; i < layerList.length; i++) {
+                        layer[i] = layerList[i].toFixed(2);
+                    };
+                }
+                else{
+                    var sum = 0;
+                    for (var i = 0; i < 4; i++) {
+                        layer[i] = layerList[i].toFixed(2);
+                    };
+                    for (var i = 4; i < layerList.length ; i++){
+                        sum += layerList[i];
+                    }
+                    layer[4] = sum.toFixed(2);
+                }
+                var items = container.selectAll(".item")
+                    .data(layer)
+                    .select("span")
+                    .text(function(d) {
+                        return d;
+                    });
+
             }
 
             function drawKeywordsChart(elementId) {
@@ -519,6 +551,7 @@ $(document).ready(function(){
                         .attr("width", width)
                         .attr("height", height);
 
+
                 var projection = d3.geo.mercator()
                     .center([105, 36])
                     ////////////////////////to fix
@@ -551,10 +584,12 @@ $(document).ready(function(){
                     .scale(y)
                     .orient("left");
                 $.ajax({
+
                     url: "/getMap",
                     method: "get",
                     dataType:"json"})
                     .done( function(map) {
+
 
                         //if (error)
                         //    return console.error(error);
@@ -629,6 +664,7 @@ $(document).ready(function(){
                         provinces.style("fill", function(d) {
                             return colorScale(values.get(d.properties.id));
                         })
+
                             .on("mouseover", function(d, i) {
                                 var xPosition = d3.mouse(this)[0];
                                 var yPosition = d3.mouse(this)[1];
@@ -754,6 +790,7 @@ $(document).ready(function(){
                         .attr("width", width)
                         .attr("height", height);
 
+
                 var pie = svg.append('g').attr('transform', 'translate(' + width / 2 + ',' + height / 2 + ')');
                 var detailedInfo = svg.append('g').attr('class', 'pieChart--detailedInformation');
                 var twoPi = 2 * Math.PI;
@@ -775,7 +812,10 @@ $(document).ready(function(){
                         return arc(interpolate(t));
                     };
                 }).each('end', function handleAnimationEnd(d) {
-                    drawDetailedInformation(d.data, this);
+
+                    if (d.data.value != 0)
+                        drawDetailedInformation(d.data, this);
+
                 });
                 drawChartCenter();
 
@@ -790,41 +830,44 @@ $(document).ready(function(){
                         infoWidth = width * 0.3,
                         anchor, infoContainer, position;
                     if (bBox.x + bBox.width / 2 > 0) {
-                        infoContainer = detailedInfo.append('g').attr('width', infoWidth).attr('transform', 'translate(' + (width - infoWidth) + ',' + (bBox.height + bBox.y+height/4) + ')');
+
+                        infoContainer = detailedInfo.append('g').attr('width', infoWidth).attr('transform', 'translate(' + (width - infoWidth) + ',' + (bBox.height + bBox.y + height / 3) + ')');
                         anchor = 'end';
                         position = 'right';
                     } else {
-                        infoContainer = detailedInfo.append('g').attr('width', infoWidth).attr('transform', 'translate(' + 0 + ',' + (bBox.height + bBox.y+height/4) + ')');
+                        infoContainer = detailedInfo.append('g').attr('width', infoWidth).attr('transform', 'translate(' + 0 + ',' + (bBox.height + bBox.y + height / 3) + ')');
+
                         anchor = 'start';
                         position = 'left';
                     }
                     infoContainer.data([data.value]).append('text').text('0 ').attr('class', 'pieChart--detail--percentage').attr('x', position === 'left' ? 0 : infoWidth).attr('y', -10).attr('text-anchor', anchor).transition().duration(DURATION).tween('text', function(d) {
                         var i = d3.interpolateRound(+this.textContent.replace(/\s%/gi, ''), d);
                         return function(t) {
-                            this.textContent = i(t) ;
+                            this.textContent = i(t);
                         };
                     });
                     infoContainer.append('line').attr('class', 'pieChart--detail--divider').attr('x1', 0).attr('x2', 0).attr('y1', 0).attr('y2', 0).transition().duration(DURATION).attr('x2', infoWidth);
-                    infoContainer.data([data.key]).append("text").attr('width', infoWidth).attr('height', 100).attr('class', 'pieChart--detail--textContainer ' + 'pieChart--detail__' + position).text(data.key);
+                    infoContainer.data([data.key]).append('foreignObject').attr('width', infoWidth).attr('height', 100).append('xhtml:body').attr('class', 'pieChart--detail--textContainer ' + 'pieChart--detail__' + position).html(data.key);
                 }
 
             }
 
             function drawAllChart() {
-                drawEmotionChart("emotionChart");
                 drawTimeChart("timeChart");
                 drawForceChart("forceChart");
-                drawKeywordsChart("keywordsChart");
+                drawForceList("forceList");
                 drawMapChart("mapChart");
                 drawGenderChart("genderChart");
-
+                drawEmotionChart("emotionChart");
+                drawKeywordsChart("keywordsChart");
             }
             drawAllChart();
         })
-        .fail(function(err){
+        .fail(function(err) {
             console.log(err);
         });
 });
+
 
 
 
@@ -845,6 +888,28 @@ function renderWeiboInfo(json){
     $(".commentCount").text(json['commentCount']);
 }
 
-function renderLayerPercentChart(percentList){
-    
+function renderKeyRepost(json){
+    var keyRepost = json['keyRepost'];
+    for(var i=0;i<4;i++){
+        if(keyRepost[i]!=undefined){
+            var r=keyRepost[i];
+
+            $("#key_repost").append($("<li>").html(r.name+","+r.repost));
+        }
+    }
+}
+
+function renderKeyUser(json){
+    var keyUser = json['keyUser'];
+    var name = keyUser['name'];
+    var avatar = keyUser['avatar'];
+    var content = keyUser['content'];
+    var datetime = Number(keyUser['datetime']);
+    var repostCount = keyUser['repostCount'];
+    var format = d3.time.format("%Y-%m-%d %H:%M");
+    $(".bigUser-name").text(name);
+    $(".bigUser-avatar").attr("src",avatar);
+    $(".repost-number").text(repostCount);
+    $(".repost-time").text(format(new Date(datetime)));
+    $(".repost-content").text(content);
 }

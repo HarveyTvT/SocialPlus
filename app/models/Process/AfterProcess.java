@@ -1,11 +1,13 @@
 package models.Process;
 
 import edu.fudan.example.nlp.KeyWordExtraction;
+import models.APIRequest.WeiboUtils;
 import models.Midform.SocialMessage;
 import models.Midform.SocialUser;
 import models.Results.Gender;
 import models.Results.Outcome;
 import play.Logger;
+import utils.ConstUtil;
 import utils.ValueComparator;
 
 import java.text.ParseException;
@@ -102,7 +104,7 @@ public class AfterProcess {
      * @param outcome
      */
     private void getEmotion(SocialMessage message, Outcome outcome) {
-
+        outcome.setEmotion(76.2);
     }
 
     /**
@@ -250,17 +252,17 @@ public class AfterProcess {
     }
 
     private void getLayerPercent(SocialMessage message, Outcome outcome){
-        int total = 0;
+        double total = 0;
         //messageMap除去作者
-        for(int layer : layerResult){
+        for(double layer : layerResult){
             total += layer;
         }
         Logger.debug(String.valueOf(total));
-        List<Integer> layerList = new ArrayList<>();
-        int last = 100;//保留整数，为了确保和为100
+        List<Double> layerList = new ArrayList<>();
+        double last = 100;//保留整数，为了确保和为100
         for (int i = 0;i < layerResult.length-1;i++){
             Logger.debug(String.format("This is " + i + "%d",layerResult[i]));
-            int percent = layerResult[i] * 100 / total;
+            double percent = layerResult[i] * 100 / total;
             last -= percent;
             layerList.add(i,percent);
         }
@@ -274,8 +276,21 @@ public class AfterProcess {
         SortedMap<String,Integer> sortedMessageMap = new TreeMap(valueComparator);
         sortedMessageMap.putAll(messageMap);
         String keyMessageId = sortedMessageMap.lastKey();
-        String keyUserId = SocialMessage.getSocialMessage(keyMessageId).getAuthor();
-        outcome.setKeyUser(keyUserId);
+        SocialMessage temp = SocialMessage.getSocialMessage(keyMessageId);
+        String content = temp.getContent();
+        String repostCount = temp.getRepostCount();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss'.000'");
+        String datetime = String.valueOf(convertTime(temp.getCreateTime()));
+        String name = SocialUser.getSocialUser(temp.getAuthor()).getName();
+        String avatar = String.format(ConstUtil.weiboAvatarUrl, temp.getAuthor());
+
+        HashMap<String,String> tempMap = new HashMap<>();
+        tempMap.put("content",content);
+        tempMap.put("repostCount",repostCount);
+        tempMap.put("datetime",datetime);
+        tempMap.put("name",name);
+        tempMap.put("avatar",avatar);
+        outcome.setKeyUser(tempMap);
     }
 
     private void getKeyRepost(SocialMessage message, Outcome outcome){
@@ -331,7 +346,7 @@ public class AfterProcess {
     private Long convertTime(String UtcTime) {
         long time;
         String[] times = UtcTime.split(" ");
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss'.000'");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.SSS");
         try {
             Date date = sdf.parse(UtcTime);
             time = date.getTime();

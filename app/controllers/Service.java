@@ -52,11 +52,12 @@ public class Service extends Controller {
             return notFound("Not found this message");
         }
         Outcome outcome = Outcome.getResult(id);
+//        if(outcome == null) {
             AfterProcess afterProcess = new AfterProcess();
             PreProcess preProcess = new PreProcess(weiboToken);
             preProcess.workFlow(message);
             outcome = afterProcess.workFlow(message);
-
+//        }
         return ok(result.render(url,time));
     }
 

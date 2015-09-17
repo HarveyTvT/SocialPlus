@@ -27,3 +27,5 @@ server.pid
 /.project
 /.settings
 /RUNNING_PID
+
+app/views/js/result.js
