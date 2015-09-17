@@ -1,0 +1,506 @@
+/* 
+* @Author: gyl
+* @Date:   2015-09-10 14:44:23
+* @Last Modified by:   gyl
+* @Last Modified time: 2015-09-17 11:39:05
+*/
+
+body {
+    font-size: 14px;
+    font-family: sans-serif;
+    font-weight: 100;
+    background-color: #ccc;
+    background-image: linear-gradient(transparent 50%, rgba(255, 255, 255, 0.5) 25%);
+    background-size: 4px 4px;
+}
+
+button.ui.icon.button {
+    margin-top: 30px;
+}
+
+.ui.grid {
+    margin-top: 1.5em;
+}
+
+.weiboInfo {
+    float: left;
+    background-color: #fff;
+    width: 100%;
+    height: 120px;
+}
+
+.weiboleft {
+    width: 30%;
+    height: 100%;
+    border-right: 1px solid rgba(201, 204, 204, 0.5);
+    position: relative;
+    float: left;
+}
+
+.weiboleft img {
+    margin-left: 20px;
+    margin-top: 17px;
+    margin-bottom: 15px;
+    margin-right: 5px;
+    float: left;
+}
+
+.source-name {
+    float: left;
+    font-size: 1.5em;
+    width: 127px;
+    margin-top: 17px;
+    margin-bottom: 0px;
+    margin-left: 2px;
+}
+
+ul {
+    margin-top: 10px;
+    padding-left: 5px;
+    float: left;
+    text-align: center;
+}
+
+li {
+    list-style-type: none;
+    width: 46px;
+    color: #444;
+    font-size: 14px;
+    float: left;
+    padding: 0px 3px 0px 3px;
+}
+
+li span {
+    width: 100%;
+    float: left;
+}
+
+.weiboright {
+    float: left;
+    width: 65%;
+    color: #444;
+    font-size: 13px;
+    margin-left: 16px;
+    margin-top: 13px
+}
+
+
+.text {
+    height: 70px;
+}
+
+.weibobottom {
+    float: left;
+}
+.time,.client,.zf,.pl,.time a,.source-name a{
+    color:#6bb7c7;
+}
+.bottomtj{
+    float: right;
+    margin-right: 5px;
+}
+.client{
+    margin-right:151px;
+}
+
+.grid.container {
+    padding-left: 100px;
+}
+
+.ui.header.chartHeader {
+    margin-bottom: 0em;
+    margin-top: 0em;
+    margin-left: 10px;
+    color: #666;
+}
+
+.draw {
+    margin-left: 1rem;
+    margin-right: 1rem;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    background-color: #fff;
+    border-radius: 5px;
+    box-shadow: 1px 0px 1px rgba(0, 0, 0, 0.25);
+}
+
+
+/*timeChart*/
+
+#timeChart {
+    font: 12px sans-serif;
+    height: 420px;
+    padding-top: 0px;
+}
+
+.lineChart--area {
+    fill: url(#lineChart--gradientBackgroundArea);
+}
+
+.lineChart--areaLine {
+    fill: none;
+    stroke: #6bb7c7;
+    stroke-width: 2;
+}
+
+
+.lineChart--bubble--label {
+    fill: none;
+    stroke: #6bb7c7;
+    font-size: 12px;
+    font-style: italic;
+    font-weight: 100;
+}
+
+
+.lineChart--bubble--value {
+    fill: #fff;
+    stroke: #fff;
+    font-size: 16px;
+    font-weight: 100;
+}
+
+.lineChart--circle {
+    fill: #6bb7c7;
+    stroke: #fff;
+    stroke-width: 2;
+}
+
+.lineChart--circle__highlighted {
+    fill: #fff;
+    stroke: #3f94a7;
+}
+
+.lineChart--gradientBackgroundArea--top {
+    stop-color: #6bb7c7;
+    stop-opacity: 0.1;
+}
+
+.lineChart--gradientBackgroundArea--bottom {
+    stop-color: #6bb7c7;
+    stop-opacity: 0.6;
+}
+
+.lineChart--svg {
+    border: 1px solid #eee;
+}
+
+.lineChart--xAxisTicks .domain,
+.lineChart--xAxis .domain,
+.lineChart--yAxis .domain,
+.lineChart--yAxisTicks .domain {
+    display: none;
+}
+
+.lineChart--xAxis .tick line,
+.lineChart--yAxis .tick line {
+    display: none;
+}
+
+.lineChart--xAxisTicks .tick line,
+.lineChart--yAxisTicks .tick line {
+    fill: none;
+    stroke: #b3b3b3;
+    stroke-width: 1;
+    stroke-dasharray: 2, 2;
+}
+
+#bigUser,
+#keyPath {
+    height: 220px;
+    margin-left: 0;
+    margin-right: 0;
+    padding: 10px;
+}
+
+.bigUser-left {
+    margin-left: 10px;
+    margin-top: 8px;
+    width: 43%;
+    border-right: 1px solid rgba(201, 204, 204, 0.5);
+    float: left;
+    height: 90%;
+    padding: 9px, 0px, 0px, 10px;
+}
+
+.bigUser-info {
+    width: 100%;
+    height: 80px;
+}
+
+.bigUser-info img {
+    margin: 17px, 8px, 0px, 18px;
+    float: left;
+}
+
+.bigUser-name {
+    margin-left: 8px;
+    float: left;
+    width: 60%;
+    font-size: 17px;
+    margin-top: 0px;
+    margin-bottom: 5px;
+}
+
+.bigUser-fans {
+    margin-left: 8px;
+    float: left;
+    width: 60%;
+    font-size: 13px;
+}
+
+.repost-time-box {
+    width: 55%;
+    text-align: center;
+    font-size: 13px;
+    height: 66px;
+    float: left;
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+.repost-date,
+.repost-time {
+    font-size: 18px;
+}
+
+.repost-number-box {
+    font-size: 13px;
+    width: 40%;
+    height: 66px;
+    float: left;
+}
+
+.repost-number {
+    font-size: 25px;
+    margin-top: 10px;
+    text-align: center;
+}
+
+.bigUser-right {
+    margin-top: 8px;
+    width: 52%;
+    float: left;
+    height: 90%;
+    font-size: 16px;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.bigUser-right span {
+    font-size: 13px;
+}
+
+.repost-content {
+    font-size: 12px;
+}
+
+
+/*forceChart*/
+
+#forceChart{
+    height: 700px;
+    margin-left: 0;
+    margin-right: 0;
+}
+
+#forceChart .node {
+    stroke: #fff;
+    stroke-width: 1.5px;
+}
+
+#forceChart .link {
+    stroke: #999;
+    stroke-opacity: .6;
+}
+#forceList{
+    margin-right: 0px;
+}
+#forceList .item{
+    /*text-align: center;*/
+    color:  #3f94a7;
+}
+
+#forceList .item .label{
+    margin-right: 20%;
+}
+
+
+/*mapChart*/
+
+#mapChart {
+    height: 400px;
+    margin-left: 0;
+    margin-right: 0;
+}
+
+#tooltip {
+    position: absolute;
+    width: 100px;
+    height: auto;
+    padding: 5px;
+    background-color: white;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    border-radius: 10px;
+    -webkit-box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+    -moz-box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+    box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+    pointer-events: none;
+}
+
+#tooltip.hidden {
+    display: none;
+}
+
+#tooltip p {
+    margin: 0;
+    font-family: sans-serif;
+    font-size: 14px;
+    line-height: 20px;
+}
+
+.mapBarAxis text {
+    font: 10px sans-serif;
+}
+
+.mapBarAxis path,
+.mapBarAxis line {
+    fill: none;
+    stroke: #000;
+    shape-rendering: crispEdges;
+}
+
+.mapBar {
+    fill: steelblue;
+    fill-opacity: .8;
+}
+
+.x.mapBarAxis path {
+    display: none;
+}
+
+
+/*genderChart*/
+
+#genderChart {
+    margin-left: 0;
+    margin-right: 0;
+    height: 300px;
+}
+
+.pieChart--center--innerCircle {
+    fill: #fff;
+}
+
+.pieChart--center--text {
+    font-size: 18px;
+}
+
+.pieChart--center--outerCircle {
+    fill: rgba(255, 255, 255, 0.75);
+}
+
+.pieChart--detail--divider {
+    stroke: gray;
+    stroke-width: 1;
+}
+
+.pieChart--detail--percentage {
+    font-size: 24px;
+    font-weight: 60;
+    fill: #333;
+    stroke-width: 1px;
+}
+
+
+.pieChart--detail--textContainer {
+    max-width:100%;
+    min-width: 0px;  
+    background-color: transparent;
+    background-image:none;
+    padding: 10px 0 0 0;
+    margin: 0;
+    color: #666;
+    font-style: italic;
+}
+
+.pieChart--detail__left {
+    text-align: left;
+}
+
+.pieChart--detail__right {
+    text-align: right;
+}
+
+.pieChart__male {
+    fill: #6bb7c7;
+}
+
+.pieChart__female {
+    fill: #d79d91;
+}
+
+.pieChart__other {
+    fill: #ccc;
+}
+
+
+/*emotionChart*/
+
+#emotionChart {
+    font-family: Helvetica, Arial, sans-serif;
+    height: 300px;
+    margin-left: 0;
+    /*background-color:  #f1f1f1;*/
+}
+
+#emotionChart g.arc {
+    fill: "steel";
+}
+
+#emotionChart g.pointer {
+    fill: #e85116;
+    stroke: #b64011;
+}
+
+#emotionChart g.label text {
+    text-anchor: middle;
+    font-size: 14px;
+    font-weight: bold;
+    fill: #777;
+}
+
+#emotionText {
+    width:50%;
+    font: 60px sans-serif;
+    color: #666;
+    text-align: left;
+    padding-left: 10px;
+    padding-right: 20px;
+    margin-right: 0px;
+    float: left;
+}
+#colorExplain{
+    width:100px;
+    margin-left:30px;
+    float: left;
+}
+.bad.label{
+    background-color: #e75858;
+}
+.good.label{
+    background-color: #00BF00;
+}
+#keywordsChart {
+    margin-left: 0;
+    margin-right: 0;
+    margin-top: 0;
+    height: 300px;
+}
+
+.hidden {
+    display: none;
+}

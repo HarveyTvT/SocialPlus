@@ -9,21 +9,31 @@ import com.typesafe.config.ConfigFactory;
 public class ConstUtil {
     static {
         Config config = ConfigFactory.load();
-        weiboAppKey = config.getString("max.weibo.appkey");
-        weiboSecret = config.getString("max.weibo.secret");
-        weiboRedirectUrl = config.getString("max.weibo.redirectURL");
+        weiboAppKey = config.getString("app.weibo.appkey");
+        weiboSecret = config.getString("app.weibo.secret");
+        weiboRedirectUrl = config.getString("app.weibo.redirectURL");
         twitterAppKey = config.getString("app.twitter.appkey");
         twitterSecret = config.getString("app.twitter.secret");
         twitterRedirectUrl = config.getString("app.twitter.redirectURL");
     }
 
-
+    /*****************************************************************
+     　　　　　　　　　Regex　　　　　　　　　　
+     *****************************************************************/
     public static final String UrlRegex =
             "^((http[s]?|ftp):\\/)?\\/?([^:\\/\\s]+)((\\/\\w+)*\\/)([\\w\\-\\.]+[^#?\\s]+)(.*)?(#[\\w\\-]+)?$";
 
     public static final String HashtagRegex =
             "#(.+?)#";
 
+    public static final String regEx_script = "<script[^>]*?>[\\s\\S]*?<\\/script>"; // 定义script的正则表达式
+    public static final String regEx_style = "<style[^>]*?>[\\s\\S]*?<\\/style>"; // 定义style的正则表达式
+    public static final String regEx_html = "<[^>]+>"; // 定义HTML标签的正则表达式
+    public static final String regEx_space = "\\s*|\t|\r|\n";//定义空格回车换行符
+
+    /*****************************************************************
+     　　　　　　　　　Other　　　　　　　　　　　
+     *****************************************************************/
     public static final String SHA1_SALT=
              "3faf0c40f18ecd2455671a4aaa88855ea4f85ad7";
 

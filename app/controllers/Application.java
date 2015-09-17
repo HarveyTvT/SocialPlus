@@ -3,16 +3,17 @@ package controllers;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import models.APIRequest.WeiboAPI;
+import models.APIRequest.WeiboUtils;
 import models.Account.User;
-import models.RawConverter.RawConverter;
-import models.RawConverter.WeiboConverter;
+import models.Midform.SocialMessage;
+import models.Process.AfterProcess;
+import models.Process.PreProcess;
+import models.Results.Outcome;
 import play.libs.F.Promise;
+import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Result;
 import play.mvc.Security;
-
-import java.util.List;
-
 
 public class Application extends Controller {
 
@@ -35,7 +36,7 @@ public class Application extends Controller {
         String weiboToken = user.getToken().getWeibo().get("token");
 
         WeiboAPI weiboAPI = new WeiboAPI(weiboToken);
-        Promise<JsonNode> jsonNodePromise = weiboAPI.getSocialMessage(weiboAPI.parseUrlToId(url));
+        Promise<JsonNode> jsonNodePromise = weiboAPI.getSocialMessage(WeiboUtils.parseUrlToId(url));
 
         return jsonNodePromise.map(json -> ok(json));
     }
@@ -71,7 +72,7 @@ public class Application extends Controller {
         String weiboToken = user.getToken().getWeibo().get("token");
 
         WeiboAPI weiboAPI = new WeiboAPI(weiboToken);
-        Promise<JsonNode> jsonNodePromise = weiboAPI.getSocialMessageList(weiboAPI.parseUrlToId(url));
+        Promise<JsonNode> jsonNodePromise = weiboAPI.getSocialMessageList(WeiboUtils.parseUrlToId(url));
 
         return jsonNodePromise.map(json -> ok(json));
     }
@@ -93,24 +94,67 @@ public class Application extends Controller {
         String email = session("email");
         User user = User.getUser(email);
         String weiboToken = user.getToken().getWeibo().get("token");
+        String id = WeiboUtils.parseUrlToId(url);
+        SocialMessage message = SocialMessage.getSocialMessage(id);
 
-        WeiboAPI weiboAPI = new WeiboAPI(weiboToken);
-        RawConverter converter = new WeiboConverter(weiboToken,url);
-
-        String id = weiboAPI.parseUrlToId(url);
-        Promise<List<JsonNode>> promiseList = Promise.sequence(weiboAPI.getSocialMessageList(id));
-
-        converter.convertMessage(promiseList);
-
-        return ok("Database insert ok");
+        if (message == null){
+            return notFound("Not this message");
+        }
+        Outcome outcome = Outcome.getResult(id);
+        if (outcome == null){
+            AfterProcess afterProcess = new AfterProcess();
+            PreProcess preProcess = new PreProcess(weiboToken);
+            preProcess.workFlow(message);
+            outcome = afterProcess.workFlow(message);
+            return ok(Json.toJson(outcome));
+        }
+        else{
+            return ok(Json.toJson(outcome));
+        }
     }
 
-    public Result url(String url) {
+    @Security.Authenticated(Secured.class)
+    public Result weiboEntryIdTest(String uid,String id){
+        String email = session("email");
+        User user = User.getUser(email);
+        String weiboToken = user.getToken().getWeibo().get("token");
+        String weiboUrl = WeiboUtils.parseIdToUrl(uid, id);
+        SocialMessage message = SocialMessage.getSocialMessage(id);
+
+        if (message == null){
+            return notFound("Not this message");
+        }
+        Outcome outcome = Outcome.getResult(id);
+        if (outcome == null){
+            PreProcess preProcess = new PreProcess(weiboToken);
+            preProcess.workFlow(message);
+            AfterProcess afterProcess = new AfterProcess();
+            outcome = afterProcess.workFlow(message);
+            return ok(Json.toJson(outcome));
+        }
+        else{
+            return ok(Json.toJson(outcome));
+        }
+    }
+
+    @Security.Authenticated(Secured.class)
+    public Result urlToId(String url) {
+        String email = session("email");
+        User user = User.getUser(email);
+        String weiboToken = user.getToken().getWeibo().get("token");
+        String weiboId = WeiboUtils.parseUrlToId(url);
+        String weiboUid = WeiboUtils.parseUrlToUid(url);
+
+        return ok(String.format("id:%s\nuid:%s",weiboId,weiboUid));
+    }
+
+    @Security.Authenticated(Secured.class)
+    public Result idToUrl(String uid,String id){
         String email = session("email");
         User user = User.getUser(email);
         String weiboToken = user.getToken().getWeibo().get("token");
 
-        WeiboAPI weiboAPI = new WeiboAPI(weiboToken);
-        return ok(weiboAPI.parseUrlToId(url));
+        return ok(WeiboUtils.parseIdToUrl(uid, id));
     }
+
 }

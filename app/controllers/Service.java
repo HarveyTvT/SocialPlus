@@ -1,8 +1,31 @@
 package controllers;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import models.APIRequest.WeiboUtils;
+import models.Account.User;
+import models.Midform.SocialMessage;
+import models.Process.AfterProcess;
+import models.Process.PreProcess;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+import play.Logger;
+import play.data.Form;
+import play.libs.Json;
 import play.mvc.Controller;
 import models.Results.Outcome;
 import play.mvc.Result;
+import play.mvc.Security;
+import views.html.result;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * Created by harvey on 15-9-9.
@@ -10,56 +33,129 @@ import play.mvc.Result;
  * 返回分析后的页面
  */
 public class Service extends Controller {
-    public Result analysis(String url) {
-        /*
-         *  TODO 分析链接入口，进入对应的处理流程，处理接口返回一个Outcome,返回渲染后的页面
-         */
+    @Security.Authenticated(Secured.class)
+    public Result analysis() {
+        String url = Form.form().bindFromRequest().get("url");
+        session("url",url);
+        String email = session("email");
+        User user = User.getUser(email);
+        String weiboToken = user.getToken().getWeibo().get("token");
+        String id = WeiboUtils.parseUrlToId(url);
 
-        String platform = getPlatform(url);
-        switch (platform) {
-            case "weibo":
-                break;
-            case "renren":
-                break;
-            case "twitter":
-                break;
+        Date date = new Date();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        String time = dateFormat.format(date);
+
+        SocialMessage message = SocialMessage.getSocialMessage(id);
+
+        if (message == null){
+            return notFound("Not found this message");
         }
-        return TODO;
+        Outcome outcome = Outcome.getResult(id);
+            AfterProcess afterProcess = new AfterProcess();
+            PreProcess preProcess = new PreProcess(weiboToken);
+            preProcess.workFlow(message);
+            outcome = afterProcess.workFlow(message);
+
+        return ok(result.render(url,time));
     }
 
-    /**
-     * Return the name of  target platform according to the url given
-     *
-     * @param url
-     * @return
-     */
-    public String getPlatform(String url) {
-        // TODO 对url平台的判断
-        return "weibo";
+    @Security.Authenticated(Secured.class)
+    public Result getResult(String url){
+        String id = WeiboUtils.parseUrlToId(url);
+        Outcome outcome = Outcome.getResult(id);
+        outcome.setUrl(session("url"));
+        JsonNode result = Json.toJson(outcome);
+        response().setContentType("application/json;charset=utf-8");
+        session().remove("url");
+        return ok(result);
     }
 
-    /**
-     * The workflow of weibo, return a Outcome for front side
-     *
-     * @param url
-     * @return
-     */
-    public Outcome weibo(String url) {
-        //TODO 微博处理流程
-        return new Outcome();
+    @Security.Authenticated(Secured.class)
+    public Result getMap() throws FileNotFoundException {
+        response().setContentType("application/json;charset=utf-8");
+        File file = new File("./public/data/China.json");
+        InputStream is = new FileInputStream(file);
+        JsonNode json = Json.parse(is);
+        return ok(json);
     }
 
-    /**
-     * @param url
-     * @return
-     */
-    public Outcome twitter(String url) {
-        //TODO 推特处理流程
-        return new Outcome();
+    @Security.Authenticated(Secured.class)
+    public Result getWeiboInfo(String url){
+        String baseUrl = "http://sinacn.weibodangan.com/user/%s/?status=%s";
+        String uid = WeiboUtils.parseUrlToUid(url);
+        String id = WeiboUtils.parseUrlToId(url);
+        String thirdPartUrl = String.format(baseUrl, uid, id);
+        Logger.error(thirdPartUrl);
+        Document document;
+
+        try {
+            document = Jsoup.connect(thirdPartUrl).post();
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            return internalServerError("");
+        }
+
+        String weiboDivId = String.format("weibo%s", id);
+        Element div = document.getElementById(weiboDivId);
+        String weiboContent = div.getElementsByTag("span").first().text();
+        weiboContent = WeiboUtils.delHTMLTag(weiboContent);
+
+        Elements span = div.getElementsByTag("div").get(0)
+                .getElementsByTag("small").get(0)
+                .getElementsByTag("span");
+
+        String client = span.get(0).text();
+        String datetime = span.get(1).text();
+        String repostCount = span.get(3).text();
+        String commentCount = span.get(5).text();
+
+        ObjectNode json = Json.newObject();
+
+        json.put("content",weiboContent);
+        json.put("client",client);
+        json.put("datetime",datetime);
+        json.put("repostCount",repostCount);
+        json.put("commentCount", commentCount);
+
+        return ok(json);
     }
 
-    public Outcome renren(String url) {
-        //TODO 人人处理流程
-        return new Outcome();
+    @Security.Authenticated(Secured.class)
+    public Result getUserInfo(String uid){
+        String baseUrl = "http://sinacn.weibodangan.com/user/%s";
+        String thirdPartUrl = String.format(baseUrl, uid);
+        Logger.error(thirdPartUrl);
+        Document document;
+
+        try {
+            document = Jsoup.connect(thirdPartUrl).post();
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            return internalServerError("");
+        }
+
+        Element userElem = document.select(".avatar").get(0);
+        String name = userElem.attr("title");
+        String avatar = userElem.attr("src");
+
+        Element userCountElem = document.select(".table.table-bordered").get(0);
+
+        String followCount = userCountElem.select("tr:eq(0) td").get(0).text();
+        String fanCount = userCountElem.select("tr:eq(1) td").get(0).text();
+        String weiboCount = userCountElem.select("tr:eq(2) td").get(0).text();
+
+        ObjectNode json = Json.newObject();
+
+        json.put("name",name);
+        json.put("avatar",avatar);
+        json.put("followCount", followCount);
+        json.put("fanCount",fanCount);
+        json.put("weiboCount",weiboCount);
+
+        return ok(json);
     }
+
 }

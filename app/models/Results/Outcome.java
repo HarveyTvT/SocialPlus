@@ -26,8 +26,13 @@ public class Outcome {
 
     private String author;
 
+    private String keyUser;
+
+    @Embedded("keyRepost")
+    private List<HashMap<String,String>> keyRepost = new ArrayList<>();
+
     @Embedded("time")
-    private List<HashMap<String, Long>> times = new ArrayList<>();
+    private List<HashMap<String, Long>> time = new ArrayList<>();
 
     @Embedded("gender")
     private Gender gender = new Gender();
@@ -115,6 +120,22 @@ public class Outcome {
         this.author = author;
     }
 
+    public String getKeyUser() {
+        return keyUser;
+    }
+
+    public void setKeyUser(String keyUser) {
+        this.keyUser = keyUser;
+    }
+
+    public List<HashMap<String, String>> getKeyRepost() {
+        return keyRepost;
+    }
+
+    public void setKeyRepost(List<HashMap<String, String>> keyRepost) {
+        this.keyRepost = keyRepost;
+    }
+
     public String getLastData() {
         return lastData;
     }
@@ -147,8 +168,8 @@ public class Outcome {
         this.locations = locations;
     }
 
-    public List<HashMap<String, Long>> getTimes() {
-        return times;
+    public List<HashMap<String, Long>> getTime() {
+        return time;
     }
 
     public void setLinks(List<HashMap<String, Integer>> links) {
@@ -167,8 +188,8 @@ public class Outcome {
         this.tags = tags;
     }
 
-    public void setTimes(List<HashMap<String, Long>> times) {
-        this.times = times;
+    public void setTime(List<HashMap<String, Long>> time) {
+        this.time = time;
     }
 
 

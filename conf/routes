@@ -7,7 +7,17 @@ GET         /                             controllers.UserAction.login()
 
 #Entrance of analysis
 
-GET         /service                      controllers.Service.analysis(url)
+GET         /service                      controllers.UserAction.index()
+
+POST        /service                      controllers.Service.analysis()
+
+GET         /resultJson                   controllers.Service.getResult(url:String)
+
+GET         /userJson                     controllers.Service.getUserInfo(uid:String)
+
+GET         /weiboJson                    controllers.Service.getWeiboInfo(url:String)
+
+GET         /getMap                       controllers.Service.getMap()
 
 # Can use optional value(which means the either /get-optional?user=lizhuoli or /get-optional will do
 
@@ -28,14 +38,19 @@ GET         /api/weibo/userList           controllers.Application.getWeiboUserLi
 
 GET         /api/weibo/commentList        controllers.Application.getWeiboCommentList(cids)
 
-GET        /api/weibo/test        controllers.Application.weiboEntryTest(url)
+GET         /api/weibo/test               controllers.Application.weiboEntryTest(url)
 
-GET        /api/messageId         controllers.Application.url(url)
+GET         /api/weibo/testId             controllers.Application.weiboEntryIdTest(uid,id)
+
+GET         /api/weibo/id                 controllers.Application.urlToId(url)
+
+GET         /api/weibo/url                controllers.Application.idToUrl(uid,id)
+
 # Twitter
 GET         /api/twitter/auth             controllers.AuthAction.twitterAuth()
 # Account management
 
-GET        /user                  controllers.UserAction.index()
+GET         /user                         controllers.UserAction.index()
 
 POST        /auth                         controllers.UserAction.authenticate()
 

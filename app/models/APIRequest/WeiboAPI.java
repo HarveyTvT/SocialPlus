@@ -5,9 +5,6 @@ import controllers.AsyncRequest;
 import play.Logger;
 import play.libs.F.Promise;
 
-import java.net.MalformedURLException;
-import java.net.URL;
-
 /**
  * Created by lizhuoli on 15/9/2.
  */
@@ -86,7 +83,6 @@ public class WeiboAPI{
      */
     public Promise<JsonNode> getSocialUserList(String uids){
         String baseUrl = "https://api.weibo.com/2/users/counts.json";
-        Logger.error(uids);
         String parameter = String.format("access_token=%s&uids=%s", weiboToken, uids);
 
         AsyncRequest request = new AsyncRequest(baseUrl,parameter);
@@ -110,9 +106,6 @@ public class WeiboAPI{
 
         AsyncRequest request = new AsyncRequest(baseUrl,parameter);
         Promise<JsonNode> jsonNodePromise = request.get();
-        jsonNodePromise.onRedeem(value -> {
-            Logger.info(value.toString());
-        });
         jsonNodePromise.onFailure(err -> {
             Logger.error("Error at getting Weibo message list: " + err);
         });
@@ -156,26 +149,6 @@ public class WeiboAPI{
         });
 
         return jsonNodePromise;
-    }
-
-    /**
-     * 直接从微博URL转换为内部id
-     * @return
-     */
-    public String parseUrlToId(String weiboUrl){
-        URL url;
-        try {
-            url = new URL(weiboUrl);
-        }
-        catch (MalformedURLException e){
-            Logger.error("Unsupported weibo url");
-            return null;
-        }
-        String weiboPath = url.getPath();
-        String weiboMid = weiboPath.substring(weiboPath.length() - 9, weiboPath.length());
-        String weiboId = WeiboUtils.mid2id(weiboMid);
-
-        return weiboId;
     }
 
 }

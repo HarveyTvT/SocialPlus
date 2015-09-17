@@ -2,7 +2,7 @@
  * @Author: gyl
  * @Date:   2015-09-08 11:04:28
  * @Last Modified by:   gyl
- * @Last Modified time: 2015-09-17 11:27:23
+ * @Last Modified time: 2015-09-17 12:29:17
  */
 
 (function() {
@@ -110,7 +110,7 @@
                         .select("svg")
                         .attr('class', 'gauge')
                         .attr('width', config.clipWidth)
-                        .attr('height', config.clipHeight/2+20);
+                        .attr('height', config.clipHeight / 2 + 20);
 
                     var centerTx = centerTranslation();
 
@@ -190,10 +190,10 @@
             var containerEl = document.getElementById(elementId),
                 padding = 20;
             var powerGauge = gauge(containerEl, {
-                size: Math.min(containerEl.clientWidth,containerEl.clientHeight)-padding,
+                size: Math.min(containerEl.clientWidth, containerEl.clientHeight) - padding,
                 // size: containerEl.clientWidth - padding,
                 clipWidth: containerEl.clientWidth - padding,
-                clipHeight: containerEl.clientHeight -padding,
+                clipHeight: containerEl.clientHeight - padding,
                 ringWidth: 30,
                 maxValue: 100,
                 transitionMs: 4000,
@@ -391,10 +391,11 @@
             var containerEl = document.getElementById(elementId),
                 padding = 20,
                 width = containerEl.clientWidth - padding,
-                height = containerEl.clientHeight - padding*2,
+                height = containerEl.clientHeight - padding * 2,
                 force = d3.layout.force().charge(-120).linkDistance(20).size([width, height]);
             container = d3.select(containerEl);
-            svg = container.append("svg").attr("width", width).attr("height", height);
+            svg = container.append("svg").attr("width", width).attr("height", height).call(d3.behavior.zoom().scaleExtent([0.3, 8]).on("zoom", zoom)).append("g");
+
             force.nodes(data.nodes).links(data.links).start();
             var link = svg.selectAll(".link").data(data.links).enter().append("line").attr("class", "link").style("stroke-width", 1);
             var node = svg.selectAll(".node").data(data.nodes).enter().append("circle").attr("class", "node").attr("r", function(d) {
@@ -421,6 +422,10 @@
                     return d.y;
                 });
             });
+
+            function zoom() {
+                svg.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
+            }
         }
 
         function drawForceList(elementId) {
@@ -739,7 +744,7 @@
                 padding = 20,
                 width = containerEl.clientWidth - padding,
                 height = containerEl.clientHeight - padding,
-                radius = Math.min(width*4/5, height*4/5) / 2,
+                radius = Math.min(width * 4 / 5, height * 4 / 5) / 2,
                 DURATION = 1500,
                 DELAY = 500,
                 container = d3.select(containerEl),
@@ -768,7 +773,7 @@
                     return arc(interpolate(t));
                 };
             }).each('end', function handleAnimationEnd(d) {
-                if(d.data.value!=0)
+                if (d.data.value != 0)
                     drawDetailedInformation(d.data, this);
             });
             drawChartCenter();
@@ -784,11 +789,11 @@
                     infoWidth = width * 0.3,
                     anchor, infoContainer, position;
                 if (bBox.x + bBox.width / 2 > 0) {
-                    infoContainer = detailedInfo.append('g').attr('width', infoWidth).attr('transform', 'translate(' + (width - infoWidth) + ',' + (bBox.height + bBox.y +height/3) + ')');
+                    infoContainer = detailedInfo.append('g').attr('width', infoWidth).attr('transform', 'translate(' + (width - infoWidth) + ',' + (bBox.height + bBox.y + height / 3) + ')');
                     anchor = 'end';
                     position = 'right';
                 } else {
-                    infoContainer = detailedInfo.append('g').attr('width', infoWidth).attr('transform', 'translate(' + 0 + ',' + (bBox.height + bBox.y+height/3 ) + ')');
+                    infoContainer = detailedInfo.append('g').attr('width', infoWidth).attr('transform', 'translate(' + 0 + ',' + (bBox.height + bBox.y + height / 3) + ')');
                     anchor = 'start';
                     position = 'left';
                 }

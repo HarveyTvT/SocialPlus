@@ -1,0 +1,58 @@
+@import models.Account.User
+@(user:User)
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>query</title>
+    <link rel="stylesheet" type="text/css" href=@routes.Assets.versioned("stylesheets/semantic.min.css")>
+</head>
+<style>
+	.ui.input{
+		margin-top: 300px;
+		width:500px;
+		height:50px;
+	}
+</style>
+
+<body>
+    <!--  <div class="ui inverted menu">
+        <a class="active item">Home </a>
+        <a class="item"> 更新授权 </a>
+        <a class="item"> 历史纪录 </a>
+        </div>
+
+ -->
+    <div class="ui container">
+        <div class="ui inverted fixed menu">
+            <div class="ui container">
+                <a href="#" class="header item">
+                            Socialplus
+                        </a>
+                <a href="#" class="active item">
+                            开始分析
+                        </a>
+                <a href="#" class="item">
+                            历史纪录
+                        </a>
+                <a href="/user/admin" class="item">
+                            更新授权
+                        </a>
+                <div class="right item">
+                    <a class="ui inverted button" id="chooselogin_btn" href="@routes.UserAction.exit()">登出</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="ui middle aligned center aligned query container">
+        <form action="/service" method="post">
+            <div class="ui action input">
+                <input type="text" name="url" placeholder="请输入微博地址">
+                <button class="ui teal button" type="submit">开始分析</button>
+            </div>
+        </form>
+    </div>
+   </body>
+</html>

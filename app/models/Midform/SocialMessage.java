@@ -3,6 +3,8 @@ package models.Midform;
 import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Id;
+import org.mongodb.morphia.query.Query;
+import org.mongodb.morphia.query.UpdateOperations;
 import utils.DbUtil;
 
 import java.util.List;
@@ -12,19 +14,10 @@ import java.util.List;
  */
 @Entity("socialmessage")
 public class SocialMessage {
-    public SocialMessage(){
-        createTime = "Mon Oct 27 11:04:04 +0800 2014";
-        url = "http://weibo.com/2691199564/CzhEbku3Z?from=page_1005052691199564_profile&wvr=6&mod=weibotime";
-        content = "nothing";
-        tags =new String[]{"tag1","tag2" } ;
-        location = "beijing";
-        repostCount = "123";
-        commentCount = "321";
-    }
+
     @Id
     private String id;//"weibo-uid"
     private String createTime;//"Mon Oct 27 11:04:04 +0800 2014"
-    private String url;//"http://weibo.com/2691199564/CzhEbku3Z?from=page_1005052691199564_profile&wvr=6&mod=weibotime"
     private String content;//"content"
     private String[] tags;
     private String[] repostList;
@@ -40,10 +33,18 @@ public class SocialMessage {
         datastore.save(socialMessage);
     }
 
+    public static void update(SocialMessage socialMessage){
+        Datastore datastore = DbUtil.getDataStore();
+        Query<SocialMessage> query = datastore.createQuery(SocialMessage.class).field("_id").equal(Long.parseLong(socialMessage.getId()));
+        UpdateOperations<SocialMessage> ops = datastore.createUpdateOperations(SocialMessage.class)
+                .set("repostList",socialMessage.getRepostList());
+        datastore.update(query,ops);
+    }
+
     public static SocialMessage getSocialMessage(String id){
         Datastore datastore = DbUtil.getDataStore();
         List<SocialMessage> socialMessages = datastore.createQuery(SocialMessage.class)
-                .filter("_id",id).asList();
+                .filter("_id", Long.parseLong(id)).asList();
         if(!socialMessages.isEmpty()){
             return socialMessages.get(0);
         }else{
@@ -70,14 +71,6 @@ public class SocialMessage {
 
     public void setCreateTime(String createTime) {
         this.createTime = createTime;
-    }
-
-    public String getUrl() {
-        return url;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
     }
 
     public String getContent() {

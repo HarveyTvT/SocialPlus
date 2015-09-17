@@ -42,7 +42,7 @@ public class ConverterUtil {
         return socialUser;
     }
 
-    static public SocialMessage getMessage(JsonNode messageJson,Boolean isOriginal,String url) {
+    static public SocialMessage getMessage(JsonNode messageJson,Boolean isOriginal) {
         SocialMessage socialMessage = new SocialMessage();
 
         String id = messageJson.get("id").asText();
@@ -66,7 +66,6 @@ public class ConverterUtil {
 
         socialMessage.setId(id);
         socialMessage.setCreateTime(createTime);
-        socialMessage.setUrl(url);
         socialMessage.setContent(content);
         socialMessage.setTags(tags);
         socialMessage.setLocation(location);
@@ -86,6 +85,7 @@ public class ConverterUtil {
         if (repostListJson.size() == 0){
             return new ArrayList<>();
         }
+        repostListJson = repostListJson.get("statuses");
         ObjectMapper mapper = new ObjectMapper();
         List<String> repostList = mapper.convertValue(repostListJson, new ArrayList<String>().getClass());
         return repostList;
