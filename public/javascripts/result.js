@@ -2,44 +2,43 @@
  * @Author: gyl
  * @Date:   2015-09-08 11:04:28
  * @Last Modified by:   gyl
- * @Last Modified time: 2015-09-17 11:59:16
+ * @Last Modified time: 2015-09-17 13:04:41
  */
 
-$(document).ready(function() {
+$(document).ready(function(){
     var url = $(".url a").attr("href");
-    var uid = new URL(url).pathname.substring(1, 11);
+    var uid = new URL(url).pathname.substring(1,11);
 
     //user info
     $.ajax({
-            url: "/userJson?uid=" + uid,
-            method: "get",
-            dataType: "json"
-        })
-        .done(function(data) {
-            renderUserInfo(data);
-        })
-        .fail(function(err) {
-            alert("get user info err" + err);
-        });
+        url: "/userJson?uid=" + uid,
+        method: "get",
+        dataType: "json"
+    })
+    .done(function(data){
+        renderUserInfo(data);
+    })
+    .fail(function(err){
+        alert("get user info err" + err);
+    });
 
     //weibo info
     $.ajax({
-            url: "/weiboJson?url=" + url,
-            method: "get",
-            dataType: "json"
-        })
-        .done(function(data) {
-            renderWeiboInfo(data);
-        })
-        .fail(function(err) {
-            alert("get user info err" + err);
-        });
+        url: "/weiboJson?url=" + url,
+        method: "get",
+        dataType: "json"
+    })
+    .done(function(data){
+        renderWeiboInfo(data);
+    })
+    .fail(function(err){
+        alert("get user info err" + err);
+    });
 
     $.ajax({
-            url: "/resultJson?url=" + url,
-            method: "get",
-            dataType: "json"
-        })
+        url: "/resultJson?url=" + url,
+        method: "get",
+        dataType:"json"})
         .done(function(data) {
 
             function drawEmotionChart(elementId) {
@@ -253,7 +252,6 @@ $(document).ready(function() {
                     padding = 20,
                     width = containerEl.clientWidth - margin.left - margin.right - padding,
                     height = containerEl.clientHeight - margin.top - margin.bottom - padding,
-                    ///////////////
                     detailWidth = 98,
                     detailHeight = 55,
                     detailMargin = 10,
@@ -261,39 +259,39 @@ $(document).ready(function() {
                     DELAY = 500,
 
                     svg = container.select("svg")
-                    .attr("width", width + margin.left + margin.right)
-                    .attr("height", height + margin.top + margin.bottom)
-                    .append("g")
-                    .attr("transform", "translate(" + margin.left + "," + margin.top + ")"),
+                        .attr("width", width + margin.left + margin.right)
+                        .attr("height", height + margin.top + margin.bottom)
+                        .append("g")
+                        .attr("transform", "translate(" + margin.left + "," + margin.top + ")"),
                     x = d3.time.scale().range([0, width - detailWidth]),
-                    ////////
+                ////////
                     xAxisTicks = d3.svg.axis().scale(x).ticks(16).tickSize(-height).tickFormat(''),
                     y = d3.scale.linear().range([height, 0]),
-                    //////////
+                //////////
                     yAxisTicks = d3.svg.axis()
-                    .scale(y).ticks(12)
-                    .tickSize(width)
-                    .tickFormat('').orient('right'),
+                        .scale(y).ticks(12)
+                        .tickSize(width)
+                        .tickFormat('').orient('right'),
 
                     xAxis = d3.svg.axis().scale(x).orient("bottom"),
                     yAxis = d3.svg.axis().scale(y).orient("left"),
-                    /////////////
+                /////////////
                     line = d3.svg.line()
-                    .interpolate('linear')
-                    .x(function(d) {
-                        return x(d.date) + detailWidth / 2;
-                    })
-                    .y(function(d) {
-                        return y(d.number);
-                    }),
-                    ////////////
+                        .interpolate('linear')
+                        .x(function(d) {
+                            return x(d.date) + detailWidth / 2;
+                        })
+                        .y(function(d) {
+                            return y(d.number);
+                        }),
+                ////////////
                     area = d3.svg.area()
-                    .interpolate('linear')
-                    .x(function(d) {
-                        return x(d.date) + detailWidth / 2;
-                    }).y0(height).y1(function(d) {
-                        return y(d.number);
-                    }),
+                        .interpolate('linear')
+                        .x(function(d) {
+                            return x(d.date) + detailWidth / 2;
+                        }).y0(height).y1(function(d) {
+                            return y(d.number);
+                        }),
                     startData = data.time.map(function(datum) {
                         return {
                             date: datum.date,
@@ -364,6 +362,7 @@ $(document).ready(function() {
                         showCircleDetail(d, index);
                     }).on('mouseout', function(d) {
                         d3.select(this).attr('class', 'lineChart--circle').attr('r', 4);
+
                         if (d.active) {
                             hideCircleDetails();
                             d.active = false;
@@ -375,6 +374,7 @@ $(document).ready(function() {
                             hideCircleDetails();
                         }
                     }).transition().delay(DURATION / 10 * index).attr('r', 4);
+
                 }
 
                 function drawCircles(data) {
@@ -426,12 +426,14 @@ $(document).ready(function() {
                     width = containerEl.clientWidth - padding,
                     height = containerEl.clientHeight - padding,
                     force = d3.layout.force().charge(-120).linkDistance(20).size([width, height]);
+
                 container = d3.select(containerEl);
                 svg = container.append("svg").attr("width", width).attr("height", height);
                 force.nodes(data.nodes).links(data.links).start();
                 var link = svg.selectAll(".link").data(data.links).enter().append("line").attr("class", "link").style("stroke-width", 1);
                 var node = svg.selectAll(".node").data(data.nodes).enter().append("circle").attr("class", "node").attr("r", function(d) {
                     return 5.5 - d.group;
+
                 }).style("fill", "teal").call(force.drag);
                 node.append("title").text(function(d) {
                     return d.name;
@@ -486,23 +488,23 @@ $(document).ready(function() {
                     container = d3.select(containerEl),
                     fill = d3.scale.category20(),
                     layout = d3.layout.cloud()
-                    .size([width, height])
-                    .words(data.tags.map(function(d) {
-                        return {
-                            text: d,
-                            size: 10 + Math.random() * 90,
-                            test: "haha"
-                        };
-                    }))
-                    .padding(5)
-                    .rotate(function() {
-                        return ~~(Math.random() * 2) * 90;
-                    })
-                    .font("Impact")
-                    .fontSize(function(d) {
-                        return d.size;
-                    })
-                    .on("end", draw);
+                        .size([width, height])
+                        .words(data.tags.map(function(d) {
+                            return {
+                                text: d,
+                                size: 10 + Math.random() * 90,
+                                test: "haha"
+                            };
+                        }))
+                        .padding(5)
+                        .rotate(function() {
+                            return ~~(Math.random() * 2) * 90;
+                        })
+                        .font("Impact")
+                        .fontSize(function(d) {
+                            return d.size;
+                        })
+                        .on("end", draw);
 
                 function draw(words) {
                     container.append("svg")
@@ -540,9 +542,10 @@ $(document).ready(function() {
                     width = containerEl.clientWidth - padding,
                     height = containerEl.clientHeight - padding,
                     svg = d3.select(containerEl).select("svg")
-                    .attr('class', "svg")
-                    .attr("width", width)
-                    .attr("height", height);
+                        .attr('class', "svg")
+                        .attr("width", width)
+                        .attr("height", height);
+
 
                 var projection = d3.geo.mercator()
                     .center([105, 36])
@@ -576,11 +579,12 @@ $(document).ready(function() {
                     .scale(y)
                     .orient("left");
                 $.ajax({
-                        url: "/getMap",
-                        method: "get",
-                        dataType: "json"
-                    })
-                    .done(function(map) {
+
+                    url: "/getMap",
+                    method: "get",
+                    dataType:"json"})
+                    .done( function(map) {
+
 
                         //if (error)
                         //    return console.error(error);
@@ -653,8 +657,9 @@ $(document).ready(function() {
 
 
                         provinces.style("fill", function(d) {
-                                return colorScale(values.get(d.properties.id));
-                            })
+                            return colorScale(values.get(d.properties.id));
+                        })
+
                             .on("mouseover", function(d, i) {
                                 var xPosition = d3.mouse(this)[0];
                                 var yPosition = d3.mouse(this)[1];
@@ -771,14 +776,15 @@ $(document).ready(function() {
                 var containerEl = document.getElementById(elementId),
                     padding = 20,
                     width = containerEl.clientWidth - padding,
-                    height = containerEl.clientHeight - padding,
-                    radius = Math.min(width * 4 / 5, height * 4 / 5) / 2,
+                    height = containerEl.clientHeight - padding ,
+                    radius = Math.min(width*4/5, height*4/5) / 2,
                     DURATION = 1500,
                     DELAY = 500,
                     container = d3.select(containerEl),
                     svg = container.select("svg")
-                    .attr("width", width)
-                    .attr("height", height);
+                        .attr("width", width)
+                        .attr("height", height);
+
 
                 var pie = svg.append('g').attr('transform', 'translate(' + width / 2 + ',' + height / 2 + ')');
                 var detailedInfo = svg.append('g').attr('class', 'pieChart--detailedInformation');
@@ -801,8 +807,10 @@ $(document).ready(function() {
                         return arc(interpolate(t));
                     };
                 }).each('end', function handleAnimationEnd(d) {
+
                     if (d.data.value != 0)
                         drawDetailedInformation(d.data, this);
+
                 });
                 drawChartCenter();
 
@@ -817,11 +825,13 @@ $(document).ready(function() {
                         infoWidth = width * 0.3,
                         anchor, infoContainer, position;
                     if (bBox.x + bBox.width / 2 > 0) {
+
                         infoContainer = detailedInfo.append('g').attr('width', infoWidth).attr('transform', 'translate(' + (width - infoWidth) + ',' + (bBox.height + bBox.y + height / 3) + ')');
                         anchor = 'end';
                         position = 'right';
                     } else {
                         infoContainer = detailedInfo.append('g').attr('width', infoWidth).attr('transform', 'translate(' + 0 + ',' + (bBox.height + bBox.y + height / 3) + ')');
+
                         anchor = 'start';
                         position = 'left';
                     }
@@ -855,16 +865,17 @@ $(document).ready(function() {
 
 
 
-function renderUserInfo(json) {
+
+function renderUserInfo(json){
     console.log(json);
     $(".source-name a").text(json['name']);
-    $("#avatar").attr("src", json['avatar']);
+    $("#avatar").attr("src",json['avatar']);
     $("#followCount").text(json['followCount']);
     $("#fanCount").text(json['fanCount']);
     $("#weiboCount").text(json['weiboCount']);
 }
 
-function renderWeiboInfo(json) {
+function renderWeiboInfo(json){
     console.log(json);
     $(".text").text(json['content']);
     $(".client").text(json['client']);
