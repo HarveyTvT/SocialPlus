@@ -38,15 +38,16 @@ public class AuthAction extends Controller {
 
                 User user = User.getUser(email);
                 HashMap<String, String> tokenMap = new HashMap<>();
+                session("token",weiboToken);
                 tokenMap.put("token", weiboToken);
                 tokenMap.put("expire", String.format("%d",System.currentTimeMillis() + weiboExpireTime));
                 user.getToken().setWeibo(tokenMap);
                 User.saveUser(user);
 
-                return ok(authResult.render("微博","成功"));
+                return redirect(routes.UserAction.index());
             }
             catch (Exception e){
-                return forbidden(authResult.render("微博","失败"));
+                return redirect(routes.UserAction.login());
             }
         });
     }

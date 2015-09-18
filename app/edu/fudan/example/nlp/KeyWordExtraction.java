@@ -30,7 +30,6 @@ public class KeyWordExtraction {
 
 	public static List<String> getKeyExtract(String content) {
 
-		Logger.error(Paths.get("./").toAbsolutePath().toString());
 		StopWords sw= new StopWords("./resource/stopwords");
 		CWSTagger seg = null;
 		try {
@@ -42,6 +41,7 @@ public class KeyWordExtraction {
 		Map<String,Integer> result = key.extract(content, 20);
 		Set<String> keys = result.keySet();
 		List<String> keyWords = new ArrayList<>(keys);
+		Logger.info(keyWords.toString());
 		return keyWords;
 	}
 }

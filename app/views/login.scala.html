@@ -1,3 +1,4 @@
+@(weiboAuthUrl:String)
 <!DOCTYPE html>
 <html>
 
@@ -10,18 +11,21 @@
     <title>Homepage-Socailplus</title>
     <link rel="stylesheet" type="text/css" href="@routes.Assets.versioned("stylesheets/semantic.min.css")">
     <link rel="stylesheet" type="text/css" href="@routes.Assets.versioned("stylesheets/login.css")" />
+    <script src="@routes.Assets.versioned("javascripts/jquery.min.js")"></script>
+    <script src="@routes.Assets.versioned("javascripts/semantic.min.js")"></script>
+    <script src="@routes.Assets.versioned("javascripts/login.js")"></script>
 </head>
 
-<body class background="http://i3.tietuku.com/e2c76404844922eb.jpg">
+<body>
     <div class="pusher">
         <div class="ui inverted vertical masthead center aligned segment">
             <div class="ui container">
                 <div class="ui large secondary inverted pointing menu">
                     <div class="ui container">
-                        <a href="#" class="header item">
+                        <a href="/" class="header item">
                             Socialplus
                         </a>
-                        <a href="#" class="active item">
+                        <a href="/" class="active item">
                             主页
                         </a>
                         <div class="right item">
@@ -59,7 +63,8 @@
                         <div class="ui inverted horizontal divider">
                             Or
                         </div>
-                        <div class="ui labeled icon button">
+                        <div class="ui labeled icon button" onclick="
+                        window.location.href='@weiboAuthUrl'">
                             微博授权
                             <i class="weibo icon"></i>
                         </div>
@@ -89,7 +94,7 @@
                                 <div class="field">
                                     <div class="ui left icon transparent input">
                                         <i class="lock icon"></i>
-                                        <input type="confirmpswd" name="password2" placeholder="确认密码">
+                                        <input type="password" name="password2" placeholder="确认密码">
                                     </div>
                                 </div>
                                 <button class="ui fluid large teal submit button" id="submit_btn" type="submit">注册</button>
@@ -99,16 +104,7 @@
                 </div>
             </div>
         </div>
-        <!-- <div class="ui vertical center aligned footer segment">
-            <div class="ui container">
-                <span>Copyright&nbsp;&nbsp;©&nbsp;2015&nbsp;Socialplus&nbsp;&nbsp;</span>
-            </div>
-        </div>
- -->
     </div>
-    <script src="@routes.Assets.versioned("javascripts/jquery.min.js")"></script>
-    <script src="@routes.Assets.versioned("javascripts/semantic.min.js")"></script>
-    <script src="@routes.Assets.versioned("javascripts/login.js")"></script>
 </body>
 
 </html>

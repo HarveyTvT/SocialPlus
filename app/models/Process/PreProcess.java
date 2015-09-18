@@ -20,15 +20,17 @@ public class PreProcess {
     private int count = 500;
     private String weiboToken;
     private WeiboAPI weiboAPI;
+    private Boolean finish = false;
 
     public PreProcess(String token){
         weiboToken = token;
         weiboAPI = new WeiboAPI(weiboToken);
     }
 
-    public void workFlow(SocialMessage message){
+    public Boolean workFlow(SocialMessage message){
         String id = message.getId();
         getMessageRecursion(id);
+        return true;
     }
 
     public void getMessage(List<String> ids){
@@ -50,16 +52,14 @@ public class PreProcess {
 
     public void getMessageOnce(String id,Callback<List<String>> callback){
         SocialMessage message = SocialMessage.getSocialMessage(id);
-        if (message == null || message.getRepostList().length != 0){
+        if (message == null || message.getRepostList() == null || message.getRepostList().length == 0){
             return;
         }
-
         Promise<JsonNode> userPromise = weiboAPI.getSocialUser(message.getAuthor());
         Promise<JsonNode> repostListPromise = weiboAPI.getSocialMessageList(message.getId());
 
         Promise.sequence(userPromise,repostListPromise).onRedeem(results -> {
             JsonNode userJson = results.get(0);
-            Logger.info(userJson.toString());
             JsonNode repostListJson = results.get(1);
             SocialUser user = ConverterUtil.getUser(userJson);
             List<String> repostArray = ConverterUtil.getRepostList(repostListJson);
@@ -77,6 +77,7 @@ public class PreProcess {
         List<String> ids = new ArrayList<>();
         ids.add(id);
         getMessage(ids);
+
     }
 
 

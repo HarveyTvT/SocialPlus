@@ -1,0 +1,122 @@
+/* 
+* @Author: gyl
+* @Date:   2015-09-18 03:02:32
+* @Last Modified by:   gyl
+* @Last Modified time: 2015-09-18 07:15:49
+*/
+
+body {
+    background-color: #F7F7F7;
+}
+
+#top-menu {
+    height: 70px;
+    z-index: 1;
+}
+
+#top-menu #query-btn {
+    margin-left: 20px;
+}
+
+#top-menu .userName {
+    font-size: 20px;
+    line-height: 40px;
+    text-align: center;
+    height: 40px;
+    margin: auto;
+    position: relative;
+    color: white;
+}
+
+#top-menu #user-icon {
+    margin-right: 0;
+}
+
+#vertify-msg {
+	color: #333;
+    z-index: 2;
+    margin: auto;
+    width: -moz-fit-content;
+    width:-webkit-fit-content;
+}
+#vertify-msg a{
+	color: #999;
+}
+
+
+#user-box {
+    margin-top: 70px;
+}
+
+.ui.grid {
+    padding-left: 120px;
+    padding-right: 120px;
+}
+
+.ui.grid>.column:not(.row) {
+    margin-bottom: 1rem;
+    display: inline-block;
+    text-align: left;
+    font-size: 1rem;
+    padding-top: 0;
+}
+
+.myHistory {
+    background-color: #fff;
+    padding: 10px;
+}
+
+.ui.dividing.header {
+    margin: 1em 0 1rem;
+    padding: 0;
+    font-size: 18px;
+    padding-bottom: 10px;
+    font-weight: 400;
+    border-bottom: 1px solid rgba(0, 0, 0, .1);
+}
+
+.more-link {
+    float: right;
+    font-size: 14px;
+    color: #555;
+    margin-top: 5px;
+    margin-left: 10px;
+}
+
+#history-list {
+    margin: 1em 0;
+    padding: 0;
+}
+
+#history-list .item {
+    position: relative;
+    margin: 5px;
+    vertical-align: top;
+    text-align: center;
+    font-size: 12px;
+    width: 220px;
+    padding-left: 1.25em;
+    padding-right: 1.25em;
+}
+
+.noHistory {
+    float: left;
+    width: 215px;
+    height: 217px;
+    border: 1px dashed #CCC;
+    vertical-align: middle;
+    text-align: center;
+    line-height: 119px;
+    display: inline-block;
+    margin: 0 0 15px;
+    padding: 0;
+}
+
+.noHistory .history-name {
+    margin-top: 80px;
+}
+
+#updateAthor .header {
+    background-color: grey;
+    color: white;
+}

@@ -7,6 +7,8 @@ GET         /                             controllers.UserAction.login()
 
 #Entrance of analysis
 
+GET         /history                      controllers.Service.getHistory()
+
 GET         /service                      controllers.UserAction.index()
 
 POST        /service                      controllers.Service.analysis()

@@ -11,6 +11,7 @@ import org.mongodb.morphia.query.UpdateResults;
 import utils.DbUtil;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -20,12 +21,6 @@ import java.util.Map;
 @Entity("user")
 public class User  {
 
-    public User(){
-        for(int i=0;i<10;i++){
-            result_id.add("");
-        }
-    }
-
     @Id
     private String id;
 
@@ -33,14 +28,14 @@ public class User  {
 
     private String password;
 
-    private boolean validated = false;
+    private boolean validated;
 
     @Embedded("token")
     private Token token = new Token();
 
 
-    @Embedded("result_id")
-    private List<String> result_id = new ArrayList<String>();
+    @Embedded("resultList")
+    private List<HashMap<String,String>> resultList = new ArrayList<>();
 
     /*****************************************************************
                                some useful methods to access database
@@ -113,12 +108,12 @@ public class User  {
                                setter and getter of all attributes
      ******************************************************************/
 
-    public List<String> getResult_id() {
-        return result_id;
+    public List<HashMap<String,String>> getResultList() {
+        return resultList;
     }
 
-    public void setResult_id(List<String> result_id) {
-        this.result_id = result_id;
+    public void setResultList(List<HashMap<String,String>> resultList) {
+        this.resultList = resultList;
     }
 
     public Token getToken() {

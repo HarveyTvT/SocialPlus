@@ -116,7 +116,9 @@ public class AfterProcess {
                 content += tempContent;
             }
         }
+        Logger.debug("Content : " + content);
         List<String> keyWords = KeyWordExtraction.getKeyExtract(content);
+        Logger.debug("List : " + keyWords.toString());
         outcome.setTags(keyWords);
     }
 
@@ -129,25 +131,22 @@ public class AfterProcess {
     private void getEmotion(SocialMessage message, Outcome outcome) {
         //get content
         String content = message.getContent();
-        List<String> contents = new ArrayList<>();
-        contents.add(content);
-        JsonNode json = Json.toJson(contents);
+        Logger.info("Weibo content : " + content);
+        String param = "[\"" + content + "\"]";
         //web request
         String url = "http://api.bosonnlp.com/sentiment/analysis?weibo";
         String token = "JI1cZUGm.3765.PHr4LP7cYiO4";
-        JsonNode node;
-        try {
-            String result = Jsoup.connect(url).header("Accept","application/json").header("X-token",token)
-                    .data(json.toString()).post().toString();
-            node = Json.parse(result);
-            JsonNode emotionJson = node.get(0);
-            ObjectMapper om = new ObjectMapper();
-            List<Double> repostList = om.convertValue(emotionJson, new ArrayList<Double>().getClass());
-            Double emotion = repostList.get(0);
-            outcome.setEmotion(emotion);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        WSClient ws = WS.client();
+
+        WSRequest request = ws.url(url).setHeader("Content-Type", "application/json")
+                .setHeader("X-Token",token)
+                .setHeader("Accept", "application/json");
+
+        Promise<WSResponse> response = request.post(param);
+        JsonNode json = response.get(5000).asJson();
+        Double emotion = json.get(0).get(0).asDouble();
+        Logger.debug("Emotion : " + emotion.toString());
+        outcome.setEmotion(emotion);
     }
 
 
@@ -206,7 +205,6 @@ public class AfterProcess {
             times.add(convertTime(repost.getCreateTime()));
         }
         java.util.Collections.sort(times);
-        ;
         int dot = 0;
         HashMap<String, Long> temp = new HashMap<>();
         temp.put("date", times.get(dot));

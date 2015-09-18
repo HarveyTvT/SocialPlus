@@ -29,10 +29,11 @@ public class UserAction extends Controller{
     public Result index(){
         String email = session("email");
         User user = User.getUser(email);
+        String weiboAuthUrl = ConstUtil.weiboAuthUrl;
         if(user!=null)
-            return ok(query.render(user));
+            return ok(query.render(user,weiboAuthUrl));
         else
-        return badRequest("Internal Error");
+            return badRequest("Internal Error");
     }
     //登录验证
     public  Result authenticate(){
@@ -122,7 +123,13 @@ public class UserAction extends Controller{
     }
     //渲染登录页面
     public  Result login() {
-        return ok(login.render());
+        String weiboAuthUrl = ConstUtil.weiboAuthUrl;
+        if (session("email") != null){
+            return redirect(routes.UserAction.index());
+        }
+        else{
+            return ok(login.render(weiboAuthUrl));
+        }
     }
     //渲染输入邮箱页面
     public Result InputEmail(){

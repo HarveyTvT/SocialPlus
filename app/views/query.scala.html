@@ -1,5 +1,5 @@
 @import models.Account.User
-@(user:User)
+@(user:User,weiboAuthUrl:String)
 
 <!DOCTYPE html>
 <html lang="en">
@@ -18,13 +18,6 @@
 </style>
 
 <body>
-    <!--  <div class="ui inverted menu">
-        <a class="active item">Home </a>
-        <a class="item"> 更新授权 </a>
-        <a class="item"> 历史纪录 </a>
-        </div>
-
- -->
     <div class="ui container">
         <div class="ui inverted fixed menu">
             <div class="ui container">
@@ -34,10 +27,10 @@
                 <a href="#" class="active item">
                             开始分析
                         </a>
-                <a href="#" class="item">
+                <a href="/history" class="item">
                             历史纪录
                         </a>
-                <a href="/user/admin" class="item">
+                <a href="@weiboAuthUrl" class="item">
                             更新授权
                         </a>
                 <div class="right item">

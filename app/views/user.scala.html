@@ -1,0 +1,105 @@
+@(result:List[HashMap[String,String]],userName:String,validated:Boolean,weiboAuthUrl:String)
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" type="text/css" href="assets/stylesheets/semantic.min.css">
+    <link rel="stylesheet" type="text/css" href="assets/stylesheets/user.css">
+    <script type="text/javascript" src="assets/javascripts/jquery.min.js"></script>
+    <script type="text/javascript" src="assets/javascripts/semantic.min.js"></script>
+    <script type="text/javascript">
+    $(document)
+        .ready(function() {
+            $('.overlay').visibility({
+                type: 'fixed',
+                offset: 80
+            });
+            $('.main.menu .ui.dropdown').dropdown({
+                on: 'hover'
+            });
+            $('.message .close')
+                .on('click', function() {
+                    $(this)
+                        .closest('.message')
+                        .transition('fade');
+                });
+        });
+    </script>
+</head>
+
+<body>
+    @if(!(validated)){
+    <div class="ui teal message" id="vertify-msg">
+        <i class="close icon"></i>
+        <div class="header">欢迎注册Socialplus! </div>
+        <p>我们需要验证你的电子邮件地址。请点击我们发送到邮件里的链接。</p>
+        <a href="">重新发送</a>
+    </div>
+    }
+    <div class="ui inverted fixed main top menu" id="top-menu">
+        <div class="ui container">
+            <div class="left item">
+                <a href="/" class="header item">
+                            Socialplus
+                        </a>
+                <a href="/service" class="ui teal button" id="query-btn">
+                            开始分析
+                    </a>
+            </div>
+            <div class="userName">
+                <span id="userName">@userName</span>
+            </div>
+            <div class="right item">
+                <a class="ui dropdown item">
+                    <i class="circular grey inverted large user icon" id="user-icon"></i>
+                    <i class="dropdown icon" id="dropdown-icon"></i>
+                    <div class="menu">
+                        <div class="item" id="query-item">
+                            开始分析
+                        </div>
+                        <div class="item" id="history-item">
+                            查询历史
+                        </div>
+                        <div class="item" id="user-item">
+                            账户设置
+                        </div>
+                        <div class="item" id="logout-item">退出</div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="ui grid container" id="user-box">
+        <div class="thirteen wide column" id="history-box">
+            <div class="myHistory">
+                <div class="ui dividing header">
+                    历史记录
+                    <a href="" class="more-link">查看所有</a>
+                </div>
+                <div class="ui relaxed horizontal selection list" id="history-list">
+                @for(map <- result) {
+                    <a class="item" href="">
+                    <div class="noHistory" onclick="window.location.href='/result?url=@map.get("url")'">
+                        <i class="huge minus icon"></i>
+                    </div>
+                    <p class="history-name">查询微博：@map.get("url")</p>
+                    <p class="history-time">查询日期：@map.get("time")</p>
+                    </a>
+                }
+                </div>
+            </div>
+        </div>
+        <div class="overlay" id="updateAthor">
+            <div class="ui labeled icon vertical menu">
+                <div class="header">更新授权</div>
+                <a class="item" href="@weiboAuthUrl"><i class="weibo icon"></i> Weibo</a>
+                <a class="item"><i class="facebook icon"></i> Facebook</a>
+                <a class="item"><i class="twitter icon"></i> Twitter</a>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

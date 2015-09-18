@@ -232,7 +232,7 @@ $(document).ready(function(){
                     transitionMs: 4000,
                 });
                 powerGauge.render();
-                powerGauge.update(data.emotion);
+                powerGauge.update((data.emotion * 100).toFixed(2));
             }
 
             function drawTimeChart(elementId) {
@@ -427,7 +427,7 @@ $(document).ready(function(){
                 height = containerEl.clientHeight - padding,
                 force = d3.layout.force().charge(-80).linkDistance(50).size([width, height]);
                 container = d3.select(containerEl);
-                svg = container.append("svg").attr("width", width).attr("height", height);
+                svg = container.append("svg").attr("width", width).attr("height", height).call(d3.behavior.zoom().scaleExtent([0.3, 8]).on("zoom", zoom)).append("g");;
                 force.nodes(data.nodes).links(data.links).start();
                 var link = svg.selectAll(".link").data(data.links).enter().append("line").attr("class", "link").style("stroke-width", 1);
                 var node = svg.selectAll(".node").data(data.nodes).enter().append("circle").attr("class", "node").attr("r", function(d) {
@@ -451,6 +451,10 @@ $(document).ready(function(){
                     }).attr("cy", function(d) {
                         return d.y;
                     });
+
+                    function zoom() {
+                        svg.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
+                    }
                 });
             }
 

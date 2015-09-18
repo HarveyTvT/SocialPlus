@@ -18,7 +18,9 @@ import play.mvc.Controller;
 import models.Results.Outcome;
 import play.mvc.Result;
 import play.mvc.Security;
+import utils.ConstUtil;
 import views.html.result;
+import views.html.user;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -26,6 +28,9 @@ import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by harvey on 15-9-9.
@@ -49,16 +54,25 @@ public class Service extends Controller {
         SocialMessage message = SocialMessage.getSocialMessage(id);
 
         if (message == null){
-            return notFound("Not found this message");
+            return redirect("/service");
         }
         Outcome outcome = Outcome.getResult(id);
-//        if(outcome == null) {
+        if(outcome == null) {
             AfterProcess afterProcess = new AfterProcess();
             PreProcess preProcess = new PreProcess(weiboToken);
             preProcess.workFlow(message);
             outcome = afterProcess.workFlow(message);
             Outcome.save(outcome);
-//        }
+            String resultId = outcome.getId();
+            String resultUrl = url;
+            HashMap<String,String> tempMap = new HashMap<>();
+            tempMap.put("url",resultUrl);
+            tempMap.put("time",time);
+            List lastResult = user.getResultList();
+            lastResult.add(tempMap);
+            user.setResultList(lastResult);
+            User.saveUser(user);
+        }
         return ok(result.render(url,time));
     }
 
@@ -74,6 +88,17 @@ public class Service extends Controller {
     }
 
     @Security.Authenticated(Secured.class)
+    public Result getHistory(){
+        String email = session("email");
+        User loginUser = User.getUser(email);
+        String userName = loginUser.getId();
+        Boolean validated = loginUser.isValidated();
+        String weiboAuthUrl = ConstUtil.weiboAuthUrl;
+        List<HashMap<String,String>> resultList = loginUser.getResultList();
+        return ok(user.render(resultList,userName,validated,weiboAuthUrl));
+    }
+
+    @Security.Authenticated(Secured.class)
     public Result getMap() throws FileNotFoundException {
         response().setContentType("application/json;charset=utf-8");
         File file = new File("./public/data/China.json");
@@ -84,9 +109,23 @@ public class Service extends Controller {
 
     @Security.Authenticated(Secured.class)
     public Result getWeiboInfo(String url){
+        String id = WeiboUtils.parseUrlToId(url);
+        SocialMessage message = SocialMessage.getSocialMessage(id);
+
+        if (message != null) {
+            ObjectNode json = Json.newObject();
+
+            json.put("content", message.getContent());
+            json.put("client", "微博 weibo.com");
+            json.put("datetime", message.getCreateTime());
+            json.put("repostCount", message.getRepostCount());
+            json.put("commentCount", message.getCommentCount());
+
+            return ok(json);
+        }
+
         String baseUrl = "http://sinacn.weibodangan.com/user/%s/?status=%s";
         String uid = WeiboUtils.parseUrlToUid(url);
-        String id = WeiboUtils.parseUrlToId(url);
         String thirdPartUrl = String.format(baseUrl, uid, id);
         Logger.error(thirdPartUrl);
         Document document;

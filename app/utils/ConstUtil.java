@@ -9,9 +9,9 @@ import com.typesafe.config.ConfigFactory;
 public class ConstUtil {
     static {
         Config config = ConfigFactory.load();
-        weiboAppKey = config.getString("max.weibo.appkey");
-        weiboSecret = config.getString("max.weibo.secret");
-        weiboRedirectUrl = config.getString("max.weibo.redirectURL");
+        weiboAppKey = config.getString("app.weibo.appkey");
+        weiboSecret = config.getString("app.weibo.secret");
+        weiboRedirectUrl = config.getString("app.weibo.redirectURL");
         twitterAppKey = config.getString("app.twitter.appkey");
         twitterSecret = config.getString("app.twitter.secret");
         twitterRedirectUrl = config.getString("app.twitter.redirectURL");
