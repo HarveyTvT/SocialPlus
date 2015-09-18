@@ -48,10 +48,16 @@
 ##开发
 
 1.导入数据库
+首先下载MongoDB，版本为3.0+即可，对应操作系统下载对应的Server端，以下命令行以OS X为例，对应操作系统请选择对应的软件和命令。
+
+```bash
+brew install mongodb
+```
+
 使用MongoDB自带mongorestore，导入bson文件到MongoDB数据库
 
 ```bash
-mongorestore --host YOUR_HOST_IP --port 37017 --username YOUR_USER_NAME --password YOUR_PASSWORD /path/to/bson/file.bson
+mongorestore --host YOUR_HOST_IP --port 27017 --username YOUR_USER_NAME --password YOUR_PASSWORD /path/to/bson/file.bson
 ```
 包括数据库文件，路径在`database/`下
 
@@ -77,6 +83,8 @@ app.weibo.redirectURL = "http://YOUR_IP:9000/api/weibo/auth"
 ```
 
 3.运行构建
+
+注：Windows下构建请使用`activator.bat`批处理代替`activator`脚本
 
 首先确保可执行权限
 
